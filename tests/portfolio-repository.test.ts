@@ -1,0 +1,136 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+type RecordedFilter = {
+  table: string;
+  column: string;
+  value: unknown;
+};
+
+type QueryResult = {
+  data: unknown;
+  error: null;
+};
+
+type QueryBuilder = {
+  select(columns: string): QueryBuilder;
+  eq(column: string, value: unknown): QueryBuilder;
+  order(column: string, options?: unknown): QueryBuilder;
+  limit(count: number): QueryBuilder;
+  maybeSingle(): QueryBuilder;
+  then(
+    onFulfilled: (value: QueryResult) => unknown,
+    onRejected?: (reason: unknown) => unknown,
+  ): Promise<unknown>;
+};
+
+const repositoryHarness = vi.hoisted(() => {
+  const filters: RecordedFilter[] = [];
+
+  const detailCase = {
+    slug: "global-technical-talent-strategy",
+    title: "Global Technical Talent Strategy",
+    summary: "채용 전략 요약",
+    category: "People Strategy",
+    sort_order: 1,
+    metrics: [],
+    tags: [],
+    sections: [
+      {
+        kind: "challenge",
+        title: "의사결정 문제",
+        body: "결정해야 할 내용",
+        sort_order: 1,
+      },
+      {
+        kind: "execution",
+        title: "실행 설계",
+        body: "실행 기여 내용",
+        sort_order: 2,
+      },
+    ],
+  };
+
+  return {
+    filters,
+    client: {
+      from(table: string) {
+        let selectsSingleRow = false;
+        let selectsSlug = false;
+
+        const builder: QueryBuilder = {
+          select() {
+            return builder;
+          },
+          eq(column, value) {
+            filters.push({ table, column, value });
+            if (column === "slug") {
+              selectsSlug = true;
+            }
+            return builder;
+          },
+          order() {
+            return builder;
+          },
+          limit() {
+            return builder;
+          },
+          maybeSingle() {
+            selectsSingleRow = true;
+            return builder;
+          },
+          then(onFulfilled, onRejected) {
+            let data: unknown = [];
+
+            if (table === "site_profile") {
+              data = {
+                headline: "복잡한 신호를, 실행 가능한 전략으로.",
+                summary: "근거에서 실행까지",
+              };
+            } else if (table === "case_studies" && selectsSlug) {
+              data = detailCase;
+            } else if (selectsSingleRow) {
+              data = null;
+            }
+
+            return Promise.resolve({ data, error: null }).then(
+              onFulfilled,
+              onRejected,
+            );
+          },
+        };
+
+        return builder;
+      },
+    },
+  };
+});
+
+vi.mock("server-only", () => ({}));
+vi.mock("@/lib/supabase/server", () => ({
+  createSupabaseServerClient: () => repositoryHarness.client,
+}));
+
+import { createPortfolioRepository } from "@/lib/portfolio/repository";
+
+describe("PortfolioRepository metric query filters", () => {
+  beforeEach(() => {
+    repositoryHarness.filters.length = 0;
+  });
+
+  it("qualifies both embedded verified filters with the selected metrics alias", async () => {
+    const repository = createPortfolioRepository();
+
+    await repository.getHomePageData();
+    await repository.getCaseStudy("global-technical-talent-strategy");
+
+    const verifiedFilterColumns = repositoryHarness.filters
+      .filter((filter) => filter.column.endsWith(".verified"))
+      .map((filter) => filter.column);
+
+    expect(verifiedFilterColumns).toEqual([
+      "metrics.verified",
+      "metrics.verified",
+    ]);
+    expect(verifiedFilterColumns).not.toContain("case_study_metrics.verified");
+  });
+});

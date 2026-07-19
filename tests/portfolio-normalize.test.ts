@@ -191,6 +191,30 @@ describe("normalizeHomeData", () => {
     ).toThrow("Raw candidate sample value 40 is forbidden");
   });
 
+  it("allows a legitimate verified 40 for an unrelated case", () => {
+    const result = normalizeHomeData({
+      profile: { headline: approvedHeadline, summary: "근거에서 실행까지" },
+      cases: [
+        makeCase({
+          slug: "re100-cf100-transition-strategy",
+          metrics: [
+            {
+              value_text: "40",
+              label: "검증된 분석 범위",
+              source_status: "documented_project",
+              verified: true,
+              sort_order: 1,
+            },
+          ],
+        }),
+      ],
+    });
+
+    expect(result.cases[0]?.metrics.map((metric) => metric.value)).toEqual([
+      "40",
+    ]);
+  });
+
   it("fails clearly when required public data is malformed", () => {
     expect(() =>
       normalizeHomeData({

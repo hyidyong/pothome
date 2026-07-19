@@ -101,7 +101,7 @@ export function createPortfolioRepository(): PortfolioRepository {
         .from("case_studies")
         .select(HOME_CASE_COLUMNS)
         .eq("status", "published")
-        .eq("case_study_metrics.verified", true)
+        .eq("metrics.verified", true)
         .order("display_order", { ascending: true });
 
       const [profileResult, casesResult] = await Promise.all([
@@ -132,7 +132,7 @@ export function createPortfolioRepository(): PortfolioRepository {
         .select(DETAIL_CASE_COLUMNS)
         .eq("status", "published")
         .eq("slug", slug)
-        .eq("case_study_metrics.verified", true)
+        .eq("metrics.verified", true)
         .maybeSingle();
 
       if (error) {

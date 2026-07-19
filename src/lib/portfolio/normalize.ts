@@ -43,13 +43,6 @@ const metricSchema = z
         path: ["value_text"],
       });
     }
-    if (metric.value_text === "40") {
-      context.addIssue({
-        code: "custom",
-        message: "Raw candidate sample value 40 is forbidden",
-        path: ["value_text"],
-      });
-    }
   });
 
 const verifiedMetricArraySchema = z.preprocess((value) => {
@@ -71,15 +64,25 @@ const tagJoinSchema = z.object({
   tag: z.object({ label: nonBlankText }),
 });
 
-const caseSummarySchema = z.object({
-  slug: nonBlankText,
-  title: nonBlankText,
-  summary: nonBlankText,
-  category: nonBlankText,
-  sort_order: sortOrder,
-  metrics: verifiedMetricArraySchema,
-  tags: z.array(tagJoinSchema),
-});
+const caseSummarySchema = z
+  .object({
+    slug: nonBlankText,
+    title: nonBlankText,
+    summary: nonBlankText,
+    category: nonBlankText,
+    sort_order: sortOrder,
+    metrics: verifiedMetricArraySchema,
+    tags: z.array(tagJoinSchema),
+  })
+  .refine(
+    (caseStudy) =>
+      caseStudy.slug !== "global-technical-talent-strategy" ||
+      caseStudy.metrics.every((metric) => metric.value_text !== "40"),
+    {
+      message: "Raw candidate sample value 40 is forbidden",
+      path: ["metrics"],
+    },
+  );
 
 const sectionSchema = z.object({
   kind: z.enum([
@@ -95,7 +98,7 @@ const sectionSchema = z.object({
   sort_order: sortOrder,
 });
 
-const caseDetailSchema = caseSummarySchema.extend({
+const caseDetailSchema = caseSummarySchema.safeExtend({
   sections: z.array(sectionSchema),
 });
 
