@@ -211,11 +211,14 @@ it("composes the homepage in the approved order with exact evidence and six case
 });
 
 it("renders the complete strategy-first case narrative without invented evidence", () => {
-  render(<CaseStudyPage caseStudy={caseStudy} />);
+  const { container } = render(<CaseStudyPage caseStudy={caseStudy} />);
 
-  expect(
-    screen.getByRole("link", { name: "전체 프로젝트로 돌아가기" }),
-  ).toHaveAttribute("href", "/#work");
+  const backLink = screen.getByRole("link", {
+    name: "전체 프로젝트로 돌아가기",
+  });
+  expect(backLink).toHaveAttribute("href", "/#work");
+  expect(backLink.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+  expect(container).not.toHaveTextContent("←");
   expect(
     screen.getByRole("heading", { level: 1, name: caseStudy.title }),
   ).toBeInTheDocument();
@@ -247,6 +250,12 @@ it("renders the complete strategy-first case narrative without invented evidence
 it("renders only the supplied public resume entries and omits null organizations", () => {
   const { container } = render(<ResumePage data={resumeData} />);
 
+  const backLink = screen.getByRole("link", {
+    name: "포트폴리오 홈으로 돌아가기",
+  });
+  expect(backLink).toHaveAttribute("href", "/");
+  expect(backLink.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+  expect(container).not.toHaveTextContent("←");
   expect(
     screen.getByRole("heading", { level: 1, name: "공개 이력" }),
   ).toBeInTheDocument();

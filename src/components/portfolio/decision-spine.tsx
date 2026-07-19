@@ -40,6 +40,13 @@ export function DecisionSpine() {
 
   useGSAP(
     () => {
+      if (
+        typeof window === "undefined" ||
+        typeof window.matchMedia !== "function"
+      ) {
+        return;
+      }
+
       const section = containerRef.current;
       if (!section) {
         return;

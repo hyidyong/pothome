@@ -15,6 +15,7 @@ const gsapHarness = vi.hoisted(() => {
       reduceMotion: false,
     },
     conditions: null as Record<string, string> | null,
+    matchMedia: vi.fn(),
     matchMediaRevert: vi.fn(),
     refresh: vi.fn(),
     registerPlugin: vi.fn(),
@@ -46,20 +47,7 @@ vi.mock("gsap", () => {
 
   return {
     gsap: {
-      matchMedia: vi.fn(() => ({
-        add: vi.fn(
-          (
-            conditions: Record<string, string>,
-            callback: (context: {
-              conditions: typeof gsapHarness.activeConditions;
-            }) => void,
-          ) => {
-            gsapHarness.conditions = conditions;
-            callback({ conditions: gsapHarness.activeConditions });
-          },
-        ),
-        revert: gsapHarness.matchMediaRevert,
-      })),
+      matchMedia: gsapHarness.matchMedia,
       registerPlugin: gsapHarness.registerPlugin,
       set: gsapHarness.set,
       timeline: vi.fn((config: Record<string, unknown>) => {
@@ -79,6 +67,7 @@ vi.mock("gsap/ScrollTrigger", () => ({
 import { DecisionSpine } from "@/components/portfolio/decision-spine";
 
 const originalFonts = document.fonts;
+const originalMatchMedia = window.matchMedia;
 
 function deferred<T>() {
   let resolve!: (value: T | PromiseLike<T>) => void;
@@ -89,6 +78,10 @@ function deferred<T>() {
 }
 
 beforeEach(() => {
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: vi.fn(),
+  });
   gsapHarness.activeConditions = {
     isDesktop: true,
     isMobile: false,
@@ -97,6 +90,27 @@ beforeEach(() => {
   gsapHarness.conditions = null;
   gsapHarness.scope = null;
   gsapHarness.timelineConfig = null;
+  gsapHarness.matchMedia.mockReset();
+  gsapHarness.matchMedia.mockImplementation(() => {
+    if (typeof window.matchMedia !== "function") {
+      throw new TypeError("window.matchMedia is unavailable");
+    }
+
+    return {
+      add: vi.fn(
+        (
+          conditions: Record<string, string>,
+          callback: (context: {
+            conditions: typeof gsapHarness.activeConditions;
+          }) => void,
+        ) => {
+          gsapHarness.conditions = conditions;
+          callback({ conditions: gsapHarness.activeConditions });
+        },
+      ),
+      revert: gsapHarness.matchMediaRevert,
+    };
+  });
   gsapHarness.matchMediaRevert.mockClear();
   gsapHarness.refresh.mockClear();
   gsapHarness.registerPlugin.mockClear();
@@ -110,9 +124,28 @@ afterEach(() => {
     configurable: true,
     value: originalFonts,
   });
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: originalMatchMedia,
+  });
 });
 
 describe("DecisionSpine GSAP contract", () => {
+  it("keeps static content when browser media queries are unavailable", () => {
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      value: undefined,
+    });
+
+    expect(() => render(<DecisionSpine />)).not.toThrow();
+
+    const section = screen.getByRole("region", { name: "Decision Spine." });
+    expect(within(section).getAllByRole("article")).toHaveLength(4);
+    expect(section).not.toHaveAttribute("data-motion-state");
+    expect(gsapHarness.matchMedia).not.toHaveBeenCalled();
+    expect(gsapHarness.timelineConfig).toBeNull();
+  });
+
   it("creates one scoped desktop timeline with the exact scroll policy", () => {
     Object.defineProperty(document, "fonts", {
       configurable: true,

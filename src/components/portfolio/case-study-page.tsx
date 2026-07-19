@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeftIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import type {
@@ -34,7 +35,7 @@ export function CaseStudyPage({ caseStudy }: CaseStudyPageProps) {
     <main className="case-study-page">
       <nav className="case-study-page__nav" aria-label="프로젝트 경로">
         <Link href="/#work" aria-label="전체 프로젝트로 돌아가기">
-          <span aria-hidden="true">←</span>
+          <ArrowLeftIcon aria-hidden="true" />
           <span>Selected Work</span>
         </Link>
       </nav>

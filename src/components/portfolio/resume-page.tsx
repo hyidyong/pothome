@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeftIcon } from "lucide-react";
 
 import type { ResumeData } from "@/lib/portfolio/types";
 
@@ -11,7 +12,7 @@ export function ResumePage({ data }: ResumePageProps) {
     <main className="resume-page">
       <nav className="resume-page__nav" aria-label="이력서 경로">
         <Link href="/" aria-label="포트폴리오 홈으로 돌아가기">
-          <span aria-hidden="true">←</span>
+          <ArrowLeftIcon aria-hidden="true" />
           <span>Portfolio</span>
         </Link>
       </nav>
