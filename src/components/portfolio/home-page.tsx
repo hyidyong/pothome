@@ -17,7 +17,7 @@ export function HomePage({ data }: HomePageProps) {
   return (
     <div className="home-page">
       <SiteHeader />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <HeroSection profile={data.profile} />
         <Reveal>
           <EvidenceRail />

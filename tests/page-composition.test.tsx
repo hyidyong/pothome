@@ -172,6 +172,7 @@ it("composes the homepage in the approved order with exact evidence and six case
   ).toBeInTheDocument();
 
   const header = container.querySelector("header.site-header");
+  const main = container.querySelector("main#main-content");
   const hero = container.querySelector("section.hero-section");
   const evidence = screen.getByRole("region", { name: "대표 검증 수치" });
   const leadWork = screen.getByRole("region", {
@@ -188,7 +189,7 @@ it("composes the homepage in the approved order with exact evidence and six case
   });
   const footer = container.querySelector("footer.site-footer");
 
-  for (const landmark of [header, hero, footer]) {
+  for (const landmark of [header, main, hero, footer]) {
     expect(landmark).not.toBeNull();
   }
   expectBefore(header!, hero!);

@@ -38,7 +38,8 @@ export function HeroSection({
           src={imageSrc}
           alt={imageAlt}
           fill
-          sizes="(max-width: 900px) 100vw, 46vw"
+          preload
+          sizes="(max-width: 900px) 100vw, 48vw"
         />
       </div>
     </section>

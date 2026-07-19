@@ -58,4 +58,7 @@ it("switches the Decision Spine to a normal single-column list at 767px", () => 
   expect(mobile).toContain(".decision-spine__step");
   expect(mobile).toContain("opacity: 1 !important");
   expect(mobile).toContain("transform: none !important");
+  expect(mobile).toContain('.reveal[data-reveal-state="ready"]');
+  expect(mobile).toContain("opacity: 1 !important");
+  expect(mobile).toContain("transform: none !important");
 });

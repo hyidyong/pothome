@@ -6,21 +6,19 @@
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\신분증 사본.pdf | identity | 신원 증빙 원본이 포함될 수 있음
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\피토리 멤버 이력서 | personnel | 제3자 이력과 연락 정보가 포함될 수 있음
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\각종 지원사업 최종본 | application | 신청서·증빙·개인 및 사업 식별 정보가 혼재
-[REVIEW] C:\Users\a\OneDrive\Desktop\피토리\Fitory_합류제안서.pdf | contract | 합류 조건과 인력 정보가 포함될 수 있음
-[REVIEW] C:\Users\a\OneDrive\Desktop\피토리\Fitory_합류제안서.docx | contract | 합류 조건과 인력 정보가 포함될 수 있음
-[REVIEW] C:\Users\a\OneDrive\Desktop\피토리\피토리 화면 로직.pdf | identity | 본인인증 UI와 문서 메타데이터를 공개 전 확인해야 함
-[REVIEW] C:\Users\a\OneDrive\Desktop\피토리\Fitory — 잠든 옷장에 이자가 쌓인다.html | identity | 연락 정보가 포함되어 공개 전 제거 또는 승인이 필요함
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\Fitory_합류제안서.pdf | contract | 사용자 결정: 모든 합류제안서·계약 관련 자료는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\Fitory_합류제안서.docx | contract | 사용자 결정: 모든 합류제안서·계약 관련 자료는 접근 및 공개에서 제외
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 - 외국인 채용\foreign-tech-visualization\app\date.csv | raw-research | 원시 설문 응답 행이 포함됨
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 - 외국인 채용\인터뷰 원본 스크립트 .htm | raw-research | 원시 인터뷰 내용이 포함됨
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 - 외국인 채용\foreign-tech-visualization\analysis_output.txt | raw-research | 원시 조사 중간값이 포함됨
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 - 외국인 채용\foreign-tech-visualization\calculation_results.txt | raw-research | 원시 조사 계산값이 포함됨
-[REVIEW] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 프로젝트 | contract | 계약·활용동의서와 공개 가능한 산출물이 혼재
-[REVIEW] C:\Users\a\OneDrive\Desktop\ylc 자료\YLC 사유서 자동 생성 폼 | personnel | 인사 사유서 템플릿과 생성 문서가 포함될 수 있음
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 프로젝트\17조_프로젝트 활용동의서_중소기업기술혁신협회.hwp | contract | 사용자 결정: 모든 활용동의서는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 프로젝트\17조_프로젝트 활용동의서_중소기업기술혁신협회.pdf | contract | 사용자 결정: 모든 활용동의서는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 프로젝트\9.손희정_프로그램 표준 계약서_중소기업기술혁신협회.pdf | contract | 사용자 결정: 모든 계약서는 접근 및 공개에서 제외
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\AI 교육 PaceMate\work\2026-07-03\dlrj\.env.local | credential | 로컬 환경값과 접근 자격 정보가 포함될 수 있음
-[REVIEW] C:\Users\a\OneDrive\Desktop\KakaoTalk_Longtxt_20260719_2045_52_374.txt | uncertain | 개인 대화·연락 정보 가능성을 수동 검토해야 함
-[REVIEW] C:\Users\a\OneDrive\Desktop\학교 과제 모음 zip | uncertain | 압축·복제 산출물과 메타데이터가 혼재할 수 있음
-[REVIEW] C:\Users\a\OneDrive\Desktop\AMOREPACIFIC_Vietnam_Strategy_Portfolio_51p.zip | uncertain | 압축 내부 파일과 메타데이터를 공개 전 확인해야 함
-[REVIEW] C:\Users\a\OneDrive\Desktop\AMOREPACIFIC_Vietnam_Strategy_Portfolio_51p_last.zip | uncertain | 중복 압축 내부 파일과 메타데이터를 공개 전 확인해야 함
-[REVIEW] C:\Users\a\OneDrive\Desktop\~$수정전최종AMOREPACIFIC_Vietnam_Strategy_Portfolio_51p_Readability_Notes_Refined_EDITABLE.pptx | uncertain | Office 임시 파일과 작성자 메타데이터 가능성
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\KakaoTalk_Longtxt_20260719_2045_52_374.txt | identity | 사용자 결정: 개인 대화와 개인 식별 가능 콘텐츠는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\학교 과제 모음 zip | uncertain | 혼합 압축물에 강의자료·복제물이 포함될 수 있어 접근 제외; 별도로 분리된 직접 작성 과제만 허용
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\AMOREPACIFIC_Vietnam_Strategy_Portfolio_51p_last.zip | uncertain | 사용자 결정: 중복·복사본은 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\~$수정전최종AMOREPACIFIC_Vietnam_Strategy_Portfolio_51p_Readability_Notes_Refined_EDITABLE.pptx | uncertain | 사용자 결정: 모든 ~$ Office 임시 파일은 접근 및 공개에서 제외
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\work-home\.superpowers\brainstorm\.last-token | credential | 로컬 미리보기 세션 접근값
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\work-home\.superpowers\brainstorm\173-1784464204\state | credential | 로컬 미리보기 세션 상태와 접근값이 포함될 수 있음

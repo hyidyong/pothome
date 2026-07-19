@@ -14,7 +14,7 @@ export function getMotionPolicy({ width, reducedMotion }: MotionPolicyInput) {
 
   if (width < 768) {
     return {
-      reveal: true,
+      reveal: false,
       pinDecisionSpine: false,
       scrubDecisionSpine: false,
     } as const;

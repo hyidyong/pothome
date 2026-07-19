@@ -23,6 +23,9 @@ const destinations = [
 export function SiteHeader() {
   return (
     <header className="site-header">
+      <Link className="site-header__skip-link" href="#main-content">
+        본문으로 건너뛰기
+      </Link>
       <div className="site-header__inner">
         <Link
           className="site-header__wordmark"

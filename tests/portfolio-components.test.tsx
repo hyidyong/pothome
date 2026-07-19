@@ -100,6 +100,10 @@ it("renders only the approved editorial evidence values", () => {
 it("provides matching desktop and accessible mobile navigation", async () => {
   render(<SiteHeader />);
 
+  expect(
+    screen.getByRole("link", { name: "본문으로 건너뛰기" }),
+  ).toHaveAttribute("href", "#main-content");
+
   const desktopNavigation = screen.getByRole("navigation", {
     name: "주요 탐색",
   });

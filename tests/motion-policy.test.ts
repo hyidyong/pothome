@@ -19,9 +19,9 @@ describe("getMotionPolicy", () => {
     });
   });
 
-  it("keeps one-time reveal but disables the spine sequence on mobile", () => {
+  it("keeps mobile content static and disables the spine sequence", () => {
     expect(getMotionPolicy({ width: 390, reducedMotion: false })).toEqual({
-      reveal: true,
+      reveal: false,
       pinDecisionSpine: false,
       scrubDecisionSpine: false,
     });
@@ -37,7 +37,7 @@ describe("getMotionPolicy", () => {
 
   it("switches the spine policy at the exact 767/768 boundary", () => {
     expect(getMotionPolicy({ width: 767, reducedMotion: false })).toEqual({
-      reveal: true,
+      reveal: false,
       pinDecisionSpine: false,
       scrubDecisionSpine: false,
     });
