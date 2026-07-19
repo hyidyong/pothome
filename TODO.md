@@ -15,8 +15,9 @@
 
 ## 로컬 릴리스 후보 검증 상태
 
-- 완료: 앱 테스트 91/91, Supabase pgTAP 53/53, DB reset·lint·advisor, ESLint, TypeScript, 공개 콘텐츠 guard, frozen lockfile, Prettier, 프로덕션 빌드와 브라우저 반응형·키보드·모션 검증을 통과했다.
+- 완료: 앱 테스트 103/103, Supabase pgTAP 61/61, DB reset·lint·advisor, ESLint, TypeScript, 공개 콘텐츠 guard, frozen lockfile, 변경 파일 Prettier, 프로덕션 빌드와 브라우저 반응형·키보드·모션 검증을 통과했다.
 - 민감자료 선별 결정 반영 완료: 계약·동의서·합류제안서, 개인 대화, 강의자료 복사본·중복본, `~$` 임시 파일은 내용에 접근하지 않고 제외했다.
 - 직접 작성한 과제·포트폴리오·화면 로직·웹서비스 산출물·사유서 폼은 읽기 허용으로 분류했지만, 공개 승인으로 간주하지 않는다.
 - 호스팅 Supabase 프로젝트 생성·연결은 보류한다. 로컬 Supabase에서 스키마·RLS·시드·테스트만 검증한다.
 - Vercel 배포는 보류한다. 사용자 승인 뒤 별도 작업으로 진행한다.
+- 현재 운영 기준은 로컬 개발 모드다. Auth·Realtime·Storage·Studio·Analytics는 비활성화하고, DB 네트워크는 loopback CIDR만 허용한다.

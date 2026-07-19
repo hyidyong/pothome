@@ -40,7 +40,7 @@
 
 - Hero는 SHA-256 `F48EA2A64F7DC9380EA6AFC314DBD21ECE082A8CCD37011024CDB357F84EA40C`인 수정하지 않은 1672×941 원본에서 AVIF 64,206B와 WebP 82,712B를 만들었다. 커밋된 CI 계약은 로컬 전용 원본에 의존하지 않고 감사된 stem `hero-strategy-signal-f48ea2a6`과 결과 파일 자체를 검사한다. 원본을 임시 분리한 회귀 실행에서도 미디어 테스트 3/3이 통과했고 동일 해시로 복원됐다. Next Image가 AVIF를 전송했으며 첫 로컬 측정은 transfer 13,970B, 약 131ms였다.
 - Supabase는 server-only repository로만 접근한다. 브라우저 공개 환경변수, localStorage, 런타임 JSON CMS, Auth·Realtime은 사용하지 않는다.
-- 로컬 Supabase reset, pgTAP 53/53, database lint, security/performance advisor를 검증했다. 호스팅 프로젝트 생성·연결과 Vercel 배포는 사용자 승인 전까지 보류한다.
+- 로컬 Supabase reset, pgTAP 61/61, database lint, security/performance advisor를 검증했다. Auth·Realtime·Storage·Studio·Analytics는 비활성화했고 DB 네트워크는 loopback CIDR만 허용한다. 호스팅 프로젝트 생성·연결과 Vercel 배포는 사용자 승인 전까지 보류한다.
 - 사용자가 확정한 민감자료 선별 결정을 반영했다. 계약·동의서·합류제안서, 개인 대화, 혼합 강의자료·복제물, 중복본과 `~$` 파일은 내용을 열지 않고 경로만 EXCLUDE 처리했다. 후속 파일명 전용 스캔에서 발견한 카카오톡 이름 이미지 7개도 경로 메타데이터만 기록했으며 이미지 내용·해시·미리보기에는 접근하지 않았다. 직접 작성한 과제·포트폴리오·화면 로직 등은 읽기 허용일 뿐 공개 승인으로 간주하지 않는다. 절대 Desktop 경로의 존재 여부는 로컬에서 한 번 확인했지만 커밋된 테스트는 사용자 머신 경로 존재에 의존하지 않는다.
 
 ## 최종 판정
