@@ -29,3 +29,6 @@ Thumbs.db
 
 # Local Superpowers state, sessions, and credentials
 /.superpowers/
+
+# Isolated implementation worktrees
+/.worktrees/
