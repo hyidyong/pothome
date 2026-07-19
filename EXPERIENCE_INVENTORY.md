@@ -64,3 +64,14 @@
 - **결과·상태:** 미게재 연구 초안이다.
 - **한계:** 게재 심사를 거치지 않았으며 법률 자문이 아니다.
 - **안전한 저장소 근거:** `docs/superpowers/specs/2026-07-19-strategy-portfolio-design.md`, `supabase/migrations/20260719145439_initial_public_content.sql`
+
+## 7. 공개 이력 타임라인
+
+- **2026:** AI Solution Challenge Program 우수상, 퓨처리더스캠프 기업가정신 경연 장려상, FKI 소속 경제·경영 학술 동아리 인사팀장 활동 및 우수 운영진상, YLC 수료 및 인사팀 부팀장 활동, 그리고 공개 문서화된 AI Prediction Regulation·Global Technical Talent Strategy·RE100 × CF100 Transition Strategy·Fitory Market Validation·PaceMate Academic OS·Vietnam Beauty Growth Thesis.
+- **2025:** YLC 수료, AI Solution Challenge 단기 집중 과정 팀장 참여, 데일리 코인 노래방 매장 스태프.
+- **2024:** 단디모바일 비산점 경리 사무원, 업기 떡볶이 대구비산점 매장 스태프.
+- **2023:** 달서구청 영어 멘토, 달서구청 코디네이터, 한국청년지도자연합회 대구지부 지도자. 복수 연도 활동은 종료 연도에 한 번만 기록한다.
+- **2022:** 반기문 재단 기후리더양성과정 1기 참여, 계명대학교 법학과 재학 시작.
+- **연도 미상 교육 및 수료:** 첨단산업 인재양성 AI 부트캠프 Human AI Foundation, (재)대구디지털혁신진흥원 바이브코딩 중급 교육 과정, (재)대구디지털혁신진흥원 AI 기반 코딩 교육 과정, DSAC 데이터 사이언티스트 능력인증 교육 과정, ADsP 데이터분석준전문가 취득 대비 과정, 에이블런 & 한국지능정보사회진흥원(NIA) 디지털 마케터 양성 프로젝트 도약 과정, AI 디지털 학습 Change & Learn 노션 특강, 국제법 대학 교육.
+
+포트폴리오 프로젝트의 2026 표기는 공개 문서화 시점이며 실제 수행 연도를 주장하지 않는다.
