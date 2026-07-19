@@ -432,6 +432,29 @@ describe("normalizeResumeData", () => {
     ]);
   });
 
+  it("preserves an explicit null year from repository training aliases", () => {
+    const result = normalizeResumeData([
+      {
+        section: "training",
+        year: null,
+        kind: "training",
+        title: "Human AI Foundation completion",
+        organization: null,
+        role: null,
+        period: "Year undisclosed",
+        summary: "A publicly listed training completion.",
+        evidence_note: null,
+        case_study_slug: null,
+        sort_order: 1,
+      },
+    ]);
+
+    expect(result).toEqual({
+      timeline: [],
+      training: [{ title: "Human AI Foundation completion" }],
+    });
+  });
+
   it("rejects invalid timeline and training year shapes", () => {
     expect(() =>
       normalizeResumeData([{ ...timelineEntry, display_year: null }]),

@@ -176,8 +176,8 @@ const resumeEntryArraySchema = z.preprocess((value) => {
     const row = entry as Record<string, unknown>;
     return {
       ...row,
-      year: row.year ?? row.display_year,
-      kind: row.kind ?? row.entry_kind,
+      year: Object.hasOwn(row, "year") ? row.year : row.display_year,
+      kind: Object.hasOwn(row, "kind") ? row.kind : row.entry_kind,
     };
   });
 }, z.array(resumeEntrySchema));

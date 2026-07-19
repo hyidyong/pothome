@@ -75,6 +75,35 @@ const repositoryHarness = vi.hoisted(() => {
     ],
   };
 
+  const resumeEntries = [
+    {
+      section: "timeline",
+      year: 2026,
+      kind: "activity",
+      title: "YLC completion and HR deputy activity",
+      organization: "YLC",
+      role: "HR deputy",
+      period: "First half of 2026",
+      summary: "Supported YLC completion and HR operations.",
+      evidence_note: null,
+      case_study_slug: null,
+      sort_order: 2,
+    },
+    {
+      section: "training",
+      year: null,
+      kind: "training",
+      title: "Human AI Foundation completion",
+      organization: null,
+      role: null,
+      period: "Year undisclosed",
+      summary: "A publicly listed training completion.",
+      evidence_note: null,
+      case_study_slug: null,
+      sort_order: 1,
+    },
+  ];
+
   return {
     filters,
     selections,
@@ -122,6 +151,8 @@ const repositoryHarness = vi.hoisted(() => {
               };
             } else if (table === "case_studies" && selectsSlug) {
               data = detailCase;
+            } else if (table === "experience_entries") {
+              data = resumeEntries;
             } else if (selectsSingleRow) {
               data = null;
             }
@@ -189,7 +220,7 @@ describe("PortfolioRepository metric query filters", () => {
   it("retrieves only published structured resume data in chronological order", async () => {
     const repository = createPortfolioRepository();
 
-    await repository.getResumeData();
+    const resume = await repository.getResumeData();
 
     expect(repositoryHarness.selections).toContainEqual({
       table: "experience_entries",
@@ -212,6 +243,26 @@ describe("PortfolioRepository metric query filters", () => {
         column: "display_order",
         options: { ascending: true },
       },
+    ]);
+    expect(resume.timeline).toEqual([
+      {
+        year: 2026,
+        entries: [
+          {
+            title: "YLC completion and HR deputy activity",
+            organization: "YLC",
+            role: "HR deputy",
+            period: "First half of 2026",
+            kind: "activity",
+            summary: "Supported YLC completion and HR operations.",
+            evidenceNote: null,
+            caseStudySlug: null,
+          },
+        ],
+      },
+    ]);
+    expect(resume.training).toEqual([
+      { title: "Human AI Foundation completion" },
     ]);
   });
 });
