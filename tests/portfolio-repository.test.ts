@@ -37,16 +37,33 @@ const repositoryHarness = vi.hoisted(() => {
     tags: [],
     sections: [
       {
-        kind: "challenge",
-        title: "의사결정 문제",
-        body: "결정해야 할 내용",
+        kind: "decision",
+        title: "결정",
+        body: "결정 내용",
         sort_order: 1,
+      },
+      { kind: "context", title: "맥락", body: "맥락 내용", sort_order: 2 },
+      { kind: "evidence", title: "근거", body: "근거 내용", sort_order: 3 },
+      { kind: "insight", title: "통찰", body: "통찰 내용", sort_order: 4 },
+      { kind: "options", title: "대안", body: "대안 내용", sort_order: 5 },
+      {
+        kind: "recommendation",
+        title: "권고",
+        body: "권고 내용",
+        sort_order: 6,
       },
       {
         kind: "execution",
         title: "실행 설계",
-        body: "실행 기여 내용",
-        sort_order: 2,
+        body: "실행 내용",
+        sort_order: 7,
+      },
+      { kind: "limits", title: "한계", body: "한계 내용", sort_order: 8 },
+      {
+        kind: "contribution",
+        title: "담당 범위",
+        body: "기여 내용",
+        sort_order: 9,
       },
     ],
   };

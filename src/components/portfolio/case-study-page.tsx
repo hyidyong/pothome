@@ -24,9 +24,10 @@ export function CaseStudyPage({ caseStudy }: CaseStudyPageProps) {
   const sectionByKind = new Map<CaseStudySection["kind"], CaseStudySection>(
     caseStudy.sections.map((section) => [section.kind, section]),
   );
-  const challenge = sectionByKind.get("challenge");
+  const context = sectionByKind.get("context");
   const evidence = sectionByKind.get("evidence");
   const insight = sectionByKind.get("insight");
+  const options = sectionByKind.get("options");
   const recommendation = sectionByKind.get("recommendation");
   const execution = sectionByKind.get("execution");
   const limits = sectionByKind.get("limits");
@@ -103,7 +104,12 @@ export function CaseStudyPage({ caseStudy }: CaseStudyPageProps) {
               <h2 id="context-title">Context</h2>
             </div>
             <div className="case-study-page__prose">
-              {challenge ? <h3>{challenge.title}</h3> : null}
+              {context ? (
+                <>
+                  <h3>{context.title}</h3>
+                  <p>{context.body}</p>
+                </>
+              ) : null}
             </div>
           </section>
 
@@ -143,7 +149,12 @@ export function CaseStudyPage({ caseStudy }: CaseStudyPageProps) {
               <h2 id="options-title">Options and criteria</h2>
             </div>
             <div className="case-study-page__prose">
-              {recommendation ? <h3>{recommendation.title}</h3> : null}
+              {options ? (
+                <>
+                  <h3>{options.title}</h3>
+                  <p>{options.body}</p>
+                </>
+              ) : null}
             </div>
           </section>
 
@@ -163,7 +174,12 @@ export function CaseStudyPage({ caseStudy }: CaseStudyPageProps) {
               <h2 id="execution-title">Execution</h2>
             </div>
             <div className="case-study-page__prose">
-              {execution ? <h3>{execution.title}</h3> : null}
+              {execution ? (
+                <>
+                  <h3>{execution.title}</h3>
+                  <p>{execution.body}</p>
+                </>
+              ) : null}
             </div>
           </section>
 

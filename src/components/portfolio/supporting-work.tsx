@@ -1,4 +1,5 @@
 import { CaseStudyCard } from "@/components/portfolio/case-study-card";
+import { Reveal } from "@/components/portfolio/reveal";
 import type { HomePageData } from "@/lib/portfolio/types";
 
 type SupportingWorkProps = {
@@ -24,12 +25,14 @@ export function SupportingWork({ cases }: SupportingWorkProps) {
         </h2>
       </header>
       <div className="supporting-work__grid">
-        {supportCases.map((caseStudy) => (
-          <CaseStudyCard
+        {supportCases.map((caseStudy, index) => (
+          <Reveal
             key={caseStudy.slug}
-            caseStudy={caseStudy}
-            presentation="support"
-          />
+            className="case-study-card-reveal"
+            delayMs={index * 80}
+          >
+            <CaseStudyCard caseStudy={caseStudy} presentation="support" />
+          </Reveal>
         ))}
       </div>
     </section>

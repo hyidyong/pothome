@@ -22,16 +22,12 @@ export function HomePage({ data }: HomePageProps) {
         <Reveal>
           <EvidenceRail />
         </Reveal>
-        <Reveal>
-          <SelectedWork cases={data.cases} />
-        </Reveal>
+        <SelectedWork cases={data.cases} />
         <DecisionSpine />
         <Reveal>
           <LawLensSection />
         </Reveal>
-        <Reveal>
-          <SupportingWork cases={data.cases} />
-        </Reveal>
+        <SupportingWork cases={data.cases} />
       </main>
       <Reveal>
         <SiteFooter />

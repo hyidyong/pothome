@@ -1,4 +1,5 @@
 import { CaseStudyCard } from "@/components/portfolio/case-study-card";
+import { Reveal } from "@/components/portfolio/reveal";
 import type { HomePageData } from "@/lib/portfolio/types";
 
 type SelectedWorkProps = {
@@ -21,12 +22,14 @@ export function SelectedWork({ cases }: SelectedWorkProps) {
         </h2>
       </header>
       <div className="selected-work__grid">
-        {leadCases.map((caseStudy) => (
-          <CaseStudyCard
+        {leadCases.map((caseStudy, index) => (
+          <Reveal
             key={caseStudy.slug}
-            caseStudy={caseStudy}
-            presentation="lead"
-          />
+            className="case-study-card-reveal"
+            delayMs={index * 80}
+          >
+            <CaseStudyCard caseStudy={caseStudy} presentation="lead" />
+          </Reveal>
         ))}
       </div>
     </section>

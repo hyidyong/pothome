@@ -111,19 +111,29 @@ const caseStudy = {
   contribution: "리서치 구조와 실행 로드맵을 설계했습니다.",
   sections: [
     {
-      kind: "challenge",
+      kind: "decision",
+      title: "결정",
+      body: "양면 시장의 병목을 어디에서 먼저 해소할지 결정했습니다.",
+    },
+    {
+      kind: "context",
       title: "의사결정 문제",
-      body: "기업과 후보자의 상반된 요구를 같은 기준으로 비교해야 했습니다.",
+      body: "CONTEXT_SECTION_BODY",
     },
     {
       kind: "evidence",
       title: "근거 범위",
-      body: "기업 21명과 유효 후보자 38명의 응답을 분리해 분석했습니다.",
+      body: "21개 기업과 유효 후보자 38명의 응답을 분리해 분석했습니다.",
     },
     {
       kind: "insight",
       title: "핵심 인사이트",
       body: "정보 부족보다 전환 과정의 마찰이 더 큰 병목이었습니다.",
+    },
+    {
+      kind: "options",
+      title: "비교한 대안",
+      body: "OPTIONS_SECTION_BODY",
     },
     {
       kind: "recommendation",
@@ -133,12 +143,17 @@ const caseStudy = {
     {
       kind: "execution",
       title: "실행 설계",
-      body: "우선순위와 다음 검증 질문을 로드맵에 연결했습니다.",
+      body: "EXECUTION_SECTION_BODY",
     },
     {
       kind: "limits",
       title: "결과와 한계",
       body: "최종 채택 여부는 확인되지 않아 제안 단계로 표시합니다.",
+    },
+    {
+      kind: "contribution",
+      title: "담당 범위",
+      body: "리서치 구조와 실행 로드맵을 설계했습니다.",
     },
   ],
 } satisfies CaseStudyDetail;
@@ -216,6 +231,29 @@ it("composes the homepage in the approved order with exact evidence and six case
   );
 });
 
+it("reveals every work card independently with a short capped stagger and no nested opacity", () => {
+  const { container } = render(<HomePage data={homePageData} />);
+  const cardReveals = Array.from(
+    container.querySelectorAll<HTMLElement>(".case-study-card-reveal"),
+  );
+
+  expect(cardReveals).toHaveLength(6);
+  expect(cardReveals.map((element) => element.dataset.revealDelayMs)).toEqual([
+    "0",
+    "80",
+    "160",
+    "0",
+    "80",
+    "160",
+  ]);
+
+  for (const reveal of cardReveals) {
+    expect(reveal).toHaveAttribute("data-reveal-state", "visible");
+    expect(reveal.querySelector(".case-study-card")).not.toBeNull();
+    expect(reveal.parentElement?.closest(".reveal")).toBeNull();
+  }
+});
+
 it("renders the complete strategy-first case narrative without invented evidence", () => {
   const { container } = render(<CaseStudyPage caseStudy={caseStudy} />);
 
@@ -251,6 +289,20 @@ it("renders the complete strategy-first case narrative without invented evidence
   expect(screen.queryByText("59")).not.toBeInTheDocument();
   expect(screen.queryByText("40")).not.toBeInTheDocument();
   expect(screen.getByText(caseStudy.contribution)).toBeInTheDocument();
+
+  const expectedNarrativeBodies = [
+    ["Context", "CONTEXT_SECTION_BODY"],
+    ["Options and criteria", "OPTIONS_SECTION_BODY"],
+    ["Execution", "EXECUTION_SECTION_BODY"],
+  ] as const;
+
+  for (const [heading, body] of expectedNarrativeBodies) {
+    const section = screen
+      .getByRole("heading", { level: 2, name: heading })
+      .closest("section");
+    expect(section).not.toBeNull();
+    expect(within(section!).getByText(body)).toBeInTheDocument();
+  }
 });
 
 it("renders only the supplied public resume entries and omits null organizations", () => {

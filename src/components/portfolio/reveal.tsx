@@ -1,16 +1,28 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
 import { getMotionPolicy } from "@/components/portfolio/motion-policy";
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
+  delayMs?: number;
 };
 
-export function Reveal({ children, className }: RevealProps) {
+const MAX_REVEAL_DELAY_MS = 160;
+
+type RevealStyle = CSSProperties & { "--reveal-delay": string };
+
+export function Reveal({ children, className, delayMs = 0 }: RevealProps) {
   const elementRef = useRef<HTMLDivElement>(null);
+  const normalizedDelayMs = Math.min(
+    MAX_REVEAL_DELAY_MS,
+    Math.max(0, Math.round(delayMs)),
+  );
+  const style: RevealStyle | undefined = normalizedDelayMs
+    ? { "--reveal-delay": `${normalizedDelayMs}ms` }
+    : undefined;
 
   useEffect(() => {
     const element = elementRef.current;
@@ -60,7 +72,9 @@ export function Reveal({ children, className }: RevealProps) {
     <div
       ref={elementRef}
       className={["reveal", className].filter(Boolean).join(" ")}
+      data-reveal-delay-ms={normalizedDelayMs}
       data-reveal-state="visible"
+      style={style}
     >
       {children}
     </div>

@@ -30,12 +30,15 @@ export type HomePageData = {
 
 export type CaseStudySection = {
   kind:
-    | "challenge"
+    | "decision"
+    | "context"
     | "evidence"
     | "insight"
+    | "options"
     | "recommendation"
     | "execution"
-    | "limits";
+    | "limits"
+    | "contribution";
   title: string;
   body: string;
 };

@@ -105,15 +105,20 @@ const caseSummarySchema = z
     },
   );
 
+const narrativeSectionKinds = [
+  "decision",
+  "context",
+  "evidence",
+  "insight",
+  "options",
+  "recommendation",
+  "execution",
+  "limits",
+  "contribution",
+] as const;
+
 const sectionSchema = z.object({
-  kind: z.enum([
-    "challenge",
-    "evidence",
-    "insight",
-    "recommendation",
-    "execution",
-    "limits",
-  ]),
+  kind: z.enum(narrativeSectionKinds),
   title: nonBlankText,
   body: nonBlankText,
   sort_order: sortOrder,
@@ -225,19 +230,26 @@ export function normalizeCaseStudy(input: unknown): CaseStudyDetail {
   const sections = [...parsed.sections].sort(
     (left, right) => left.sort_order - right.sort_order,
   );
-  const challenge = sections.find((section) => section.kind === "challenge");
-  const execution = sections.find((section) => section.kind === "execution");
+  const sectionByKind = new Map(
+    sections.map((section) => [section.kind, section]),
+  );
+  const missingKinds = narrativeSectionKinds.filter(
+    (kind) => !sectionByKind.has(kind),
+  );
 
-  if (!challenge || !execution) {
+  if (missingKinds.length > 0) {
     throw new Error(
-      "Published case study requires challenge and execution sections",
+      `Published case study requires all narrative sections: ${missingKinds.join(", ")}`,
     );
   }
 
+  const decision = sectionByKind.get("decision")!;
+  const contribution = sectionByKind.get("contribution")!;
+
   return {
     ...normalizeCaseSummary(parsed),
-    decision: challenge.body,
-    contribution: execution.body,
+    decision: decision.body,
+    contribution: contribution.body,
     sections: sections.map<CaseStudySection>((section) => ({
       kind: section.kind,
       title: section.title,

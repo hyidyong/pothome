@@ -86,6 +86,21 @@ afterEach(() => {
 });
 
 describe("Reveal progressive enhancement", () => {
+  it("applies a capped entry delay without changing the visible SSR default", () => {
+    Object.defineProperty(window, "IntersectionObserver", {
+      configurable: true,
+      value: undefined,
+    });
+
+    render(<Reveal delayMs={999}>Observed content</Reveal>);
+
+    expect(getRevealElement()).toHaveAttribute("data-reveal-state", "visible");
+    expect(getRevealElement()).toHaveAttribute("data-reveal-delay-ms", "160");
+    expect(getRevealElement()).toHaveStyle({
+      "--reveal-delay": "160ms",
+    });
+  });
+
   it("keeps content visible and skips observation for reduced motion", () => {
     const harness = installIntersectionObserver();
     installMatchMedia(true);

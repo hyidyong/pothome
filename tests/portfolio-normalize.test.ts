@@ -287,49 +287,73 @@ describe("normalizeHomeData", () => {
 });
 
 describe("normalizeCaseStudy", () => {
-  it("sorts sections and derives required detail copy from stored sections", () => {
+  it("sorts sections and derives decision and contribution from their own stored sections", () => {
     const result = normalizeCaseStudy(
       makeCase({
         sections: [
           {
-            kind: "execution",
-            title: "실행 설계",
-            body: "실행 기여 내용",
-            sort_order: 2,
+            kind: "contribution",
+            title: "담당 범위",
+            body: "기여 내용",
+            sort_order: 9,
           },
           {
-            kind: "challenge",
-            title: "의사결정 문제",
-            body: "결정해야 할 내용",
+            kind: "decision",
+            title: "선택",
+            body: "결정 내용",
             sort_order: 1,
           },
+          { kind: "context", title: "맥락", body: "맥락 내용", sort_order: 2 },
+          { kind: "evidence", title: "근거", body: "근거 내용", sort_order: 3 },
+          { kind: "insight", title: "통찰", body: "통찰 내용", sort_order: 4 },
+          { kind: "options", title: "대안", body: "대안 내용", sort_order: 5 },
+          {
+            kind: "recommendation",
+            title: "권고",
+            body: "권고 내용",
+            sort_order: 6,
+          },
+          {
+            kind: "execution",
+            title: "실행",
+            body: "실행 내용",
+            sort_order: 7,
+          },
+          { kind: "limits", title: "한계", body: "한계 내용", sort_order: 8 },
         ],
       }),
     );
 
-    expect(result.decision).toBe("결정해야 할 내용");
-    expect(result.contribution).toBe("실행 기여 내용");
+    expect(result.decision).toBe("결정 내용");
+    expect(result.contribution).toBe("기여 내용");
     expect(result.sections.map((section) => section.kind)).toEqual([
-      "challenge",
+      "decision",
+      "context",
+      "evidence",
+      "insight",
+      "options",
+      "recommendation",
       "execution",
+      "limits",
+      "contribution",
     ]);
   });
 
-  it("fails clearly when required decision or contribution sections are absent", () => {
+  it("fails clearly when the complete narrative section set is absent", () => {
     expect(() =>
       normalizeCaseStudy(
         makeCase({
           sections: [
             {
-              kind: "challenge",
-              title: "의사결정 문제",
-              body: "결정해야 할 내용",
+              kind: "decision",
+              title: "선택",
+              body: "결정 내용",
               sort_order: 1,
             },
           ],
         }),
       ),
-    ).toThrow("Published case study requires challenge and execution sections");
+    ).toThrow("Published case study requires all narrative sections");
   });
 });
 

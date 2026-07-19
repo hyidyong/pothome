@@ -227,8 +227,8 @@ select results_eq(
 
 select results_eq(
   $$select count(distinct kind)::bigint from public.case_study_sections$$,
-  array[6::bigint],
-  'all six approved section kinds are represented'
+  array[9::bigint],
+  'all nine approved narrative section kinds are represented'
 );
 
 select results_eq(
@@ -319,7 +319,7 @@ select results_eq(
       join public.case_studies as cases
         on cases.id = sections.case_study_id
       where cases.slug = 'fitory-market-validation'
-        and sections.kind in ('challenge', 'insight', 'recommendation', 'execution')
+        and sections.kind in ('context', 'insight', 'recommendation', 'execution')
     ) as fitory_copy
     order by display_order
   $$,
@@ -329,7 +329,7 @@ select results_eq(
       '유휴 의류와 로컬 재고가 발견에서 대여·픽업까지 이어지는 과정의 마찰을 조사하고 순환 패션 MVP의 검증 범위를 좁힌 사례입니다.'::text
     ),
     (
-      'challenge'::text,
+      'context'::text,
       E'관심에서 문의·예약까지의 실제 행동 구분\n유휴 의류와 로컬 재고의 발견 신호가 실제 문의, 대여 예약, 픽업 행동으로 이어지는지 구분하며 순환 패션 MVP의 범위를 좁혀야 했습니다.'::text
     ),
     (
