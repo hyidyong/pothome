@@ -159,19 +159,66 @@ const caseStudy = {
 } satisfies CaseStudyDetail;
 
 const resumeData = {
-  entries: [
+  timeline: [
     {
-      title: "전략 리서치 및 의사결정 설계",
-      organization: null,
-      period: "2025",
-      summary: "복수 근거를 비교해 권고안과 실행 순서를 설계했습니다.",
+      year: 2026,
+      entries: [
+        {
+          title: "YLC 수료 및 인사팀 부팀장 활동",
+          organization: "YLC",
+          role: "인사팀 부팀장",
+          period: "2026",
+          kind: "activity",
+          summary: "조직 운영과 구성원 경험 개선 활동을 수행했습니다.",
+          evidenceNote: null,
+          caseStudySlug: null,
+        },
+        {
+          title: "AI Prediction Regulation",
+          organization: null,
+          role: "Research · AI",
+          period: "2026",
+          kind: "project",
+          summary: "분절된 규율을 위험기반의 단계 모델로 번역했습니다.",
+          evidenceNote: "2026 · 문서화된 연구 초안",
+          caseStudySlug: "ai-prediction-regulation",
+        },
+      ],
     },
     {
-      title: "제품 가설 검증",
-      organization: null,
-      period: "2024",
-      summary: "정량·정성 신호를 MVP 우선순위로 연결했습니다.",
+      year: 2025,
+      entries: [
+        {
+          title: "글로벌 기술인재 전략 리서치",
+          organization: null,
+          role: "Strategy · People",
+          period: "2025",
+          kind: "work",
+          summary: "복수 근거를 비교해 권고안과 실행 순서를 설계했습니다.",
+          evidenceNote: null,
+          caseStudySlug: null,
+        },
+      ],
     },
+    {
+      year: 2022,
+      entries: [
+        {
+          title: "법학 학부 과정",
+          organization: null,
+          role: null,
+          period: "2022",
+          kind: "education",
+          summary: "구조적 사고와 논증의 기초를 학습했습니다.",
+          evidenceNote: null,
+          caseStudySlug: null,
+        },
+      ],
+    },
+  ],
+  training: [
+    { title: "Human AI Foundation" },
+    { title: "Data-driven Decision Making" },
   ],
 } satisfies ResumeData;
 
@@ -305,7 +352,7 @@ it("renders the complete strategy-first case narrative without invented evidence
   }
 });
 
-it("renders only the supplied public resume entries and omits null organizations", () => {
+it("renders the public resume as a semantic timeline without private data", () => {
   const { container } = render(<ResumePage data={resumeData} />);
 
   const backLink = screen.getByRole("link", {
@@ -317,8 +364,38 @@ it("renders only the supplied public resume entries and omits null organizations
   expect(
     screen.getByRole("heading", { level: 1, name: "공개 이력" }),
   ).toBeInTheDocument();
-  expect(screen.getAllByRole("article")).toHaveLength(2);
-  expect(screen.getByText(resumeData.entries[0]!.summary)).toBeInTheDocument();
+  expect(
+    screen.getByRole("region", { name: "연도별 공개 이력" }),
+  ).toBeInTheDocument();
+  expect(
+    screen
+      .getAllByRole("heading", { level: 2 })
+      .map((node) => node.textContent),
+  ).toContain("2026");
+  expect(
+    screen.getByText("YLC 수료 및 인사팀 부팀장 활동"),
+  ).toBeInTheDocument();
+  expect(screen.getByText("2026 · 문서화된 연구 초안")).toBeInTheDocument();
+  expect(
+    screen.getByRole("link", {
+      name: "프로젝트 보기: AI Prediction Regulation",
+    }),
+  ).toHaveAttribute("href", "/work/ai-prediction-regulation");
+  expect(
+    screen.getByRole("region", { name: "교육 및 수료" }),
+  ).toHaveTextContent("Human AI Foundation");
+  expect(container).not.toHaveTextContent(
+    "Strategy Research & Decision Design",
+  );
+
+  const articles = screen.getAllByRole("article");
+  expect(articles).toHaveLength(4);
+  for (const article of articles) {
+    const reveal = article.closest(".reveal");
+    expect(reveal).not.toBeNull();
+    expect(reveal!.querySelectorAll(".resume-page__entry")).toHaveLength(1);
+  }
+
   expect(container).not.toHaveTextContent(/null|undefined/i);
   expect(container).not.toHaveTextContent(/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/);
   expect(container).not.toHaveTextContent(/01[016789][ -]?\d{3,4}[ -]?\d{4}/);
