@@ -1,6 +1,6 @@
 begin;
 
-select plan(51);
+select plan(53);
 
 -- The public portfolio contract consists of exactly these seven application tables.
 select has_table('public', 'site_profile', 'site_profile exists');
@@ -254,6 +254,77 @@ select results_eq(
   $$select headline from public.site_profile where published is true$$,
   $$values ('복잡한 신호를, 실행 가능한 전략으로.'::text)$$,
   'the approved strategy-first headline is exact'
+);
+
+select results_eq(
+  $$
+    select copy_key, copy_value
+    from (
+      select
+        'summary'::text as copy_key,
+        cases.summary as copy_value,
+        0 as display_order
+      from public.case_studies as cases
+      where cases.slug = 'fitory-market-validation'
+
+      union all
+
+      select
+        sections.kind as copy_key,
+        sections.heading || E'\n' || sections.body as copy_value,
+        sections.display_order
+      from public.case_study_sections as sections
+      join public.case_studies as cases
+        on cases.id = sections.case_study_id
+      where cases.slug = 'fitory-market-validation'
+        and sections.kind in ('challenge', 'insight', 'recommendation', 'execution')
+    ) as fitory_copy
+    order by display_order
+  $$,
+  $$values
+    (
+      'summary'::text,
+      '유휴 의류와 로컬 재고가 발견에서 대여·픽업까지 이어지는 과정의 마찰을 조사하고 순환 패션 MVP의 검증 범위를 좁힌 사례입니다.'::text
+    ),
+    (
+      'challenge'::text,
+      E'관심에서 문의·예약까지의 실제 행동 구분\n유휴 의류와 로컬 재고의 발견 신호가 실제 문의, 대여 예약, 픽업 행동으로 이어지는지 구분하며 순환 패션 MVP의 범위를 좁혀야 했습니다.'::text
+    ),
+    (
+      'insight'::text,
+      E'추천만으로는 행동 경로가 완성되지 않는다는 가설\n추천만으로는 충분하지 않으며 가까운 재고 확인, 예약, 로컬 픽업이 함께 연결되어야 한다는 가설을 다음 검증 대상으로 두었습니다.'::text
+    ),
+    (
+      'recommendation'::text,
+      E'추천에서 공급자 재고까지 잇는 흐름\nAI 코디 추천, 지도 탐색, 대여 예약, 로컬 픽업, 공급자 재고 관리로 이어지는 MVP 흐름을 우선 검증하도록 제안했습니다.'::text
+    ),
+    (
+      'execution'::text,
+      E'화면 흐름과 단계별 행동 검토\n화면 흐름과 MVP 프로토타입을 구성하고 조사, 메시지 반응, 문의 행동을 단계별로 검토했습니다.'::text
+    )
+  $$,
+  'Fitory uses the approved circular-fashion decision narrative'
+);
+
+select ok(
+  not exists (
+    select 1
+    from (
+      select cases.summary as copy_value
+      from public.case_studies as cases
+      where cases.slug = 'fitory-market-validation'
+
+      union all
+
+      select sections.heading || ' ' || sections.body as copy_value
+      from public.case_study_sections as sections
+      join public.case_studies as cases
+        on cases.id = sections.case_study_id
+      where cases.slug = 'fitory-market-validation'
+    ) as fitory_copy
+    where fitory_copy.copy_value ~ '(운동|주간[[:space:]]*계획|계획[[:space:]]*수정|피드백[[:space:]]*루프)'
+  ),
+  'Fitory contains no exercise or weekly-planning narrative'
 );
 
 -- Add non-public fixtures inside this transaction so the policies are exercised as anon.
