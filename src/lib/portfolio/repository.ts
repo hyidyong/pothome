@@ -173,8 +173,11 @@ export function createPortfolioRepository(): PortfolioRepository {
     async getResumeData() {
       const { data, error } = await supabase
         .from("experience_entries")
-        .select("title, period:period_label, summary, sort_order:display_order")
+        .select(
+          "section, year:display_year, kind:entry_kind, title, organization, role, period:period_label, summary, evidence_note, case_study_slug, sort_order:display_order",
+        )
         .eq("published", true)
+        .order("display_year", { ascending: false })
         .order("display_order", { ascending: true });
 
       if (error) {

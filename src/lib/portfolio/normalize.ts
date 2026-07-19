@@ -128,12 +128,59 @@ const caseDetailSchema = caseSummarySchema.safeExtend({
   sections: z.array(sectionSchema),
 });
 
-const resumeEntrySchema = z.object({
+const nullableNonBlankText = nonBlankText.nullable();
+
+const resumeTimelineEntrySchema = z.object({
+  section: z.literal("timeline"),
+  year: z.number().int().min(1900).max(2100),
+  kind: z.enum(["work", "project", "activity", "award", "education"]),
   title: nonBlankText,
+  organization: nullableNonBlankText,
+  role: nullableNonBlankText,
   period: nonBlankText,
   summary: nonBlankText,
+  evidence_note: nullableNonBlankText,
+  case_study_slug: nullableNonBlankText,
   sort_order: sortOrder,
 });
+
+const resumeTrainingEntrySchema = z.object({
+  section: z.literal("training"),
+  year: z.null(),
+  kind: z.literal("training"),
+  title: nonBlankText,
+  organization: nullableNonBlankText,
+  role: nullableNonBlankText,
+  period: nonBlankText,
+  summary: nonBlankText,
+  evidence_note: nullableNonBlankText,
+  case_study_slug: nullableNonBlankText,
+  sort_order: sortOrder,
+});
+
+const resumeEntrySchema = z.union([
+  resumeTimelineEntrySchema,
+  resumeTrainingEntrySchema,
+]);
+
+const resumeEntryArraySchema = z.preprocess((value) => {
+  if (!Array.isArray(value)) {
+    return value;
+  }
+
+  return value.map((entry) => {
+    if (typeof entry !== "object" || entry === null) {
+      return entry;
+    }
+
+    const row = entry as Record<string, unknown>;
+    return {
+      ...row,
+      year: row.year ?? row.display_year,
+      kind: row.kind ?? row.entry_kind,
+    };
+  });
+}, z.array(resumeEntrySchema));
 
 const sourceStatusMap = {
   measured: "measured",
@@ -259,17 +306,37 @@ export function normalizeCaseStudy(input: unknown): CaseStudyDetail {
 }
 
 export function normalizeResumeData(input: unknown): ResumeData {
-  const parsed = parsePublicData(z.array(resumeEntrySchema), input);
+  const parsed = parsePublicData(resumeEntryArraySchema, input);
+  const timelineEntries = new Map<number, ResumeData["timeline"][number]["entries"]>();
+  const training = [] as ResumeData["training"];
+
+  for (const entry of [...parsed].sort(
+    (left, right) => left.sort_order - right.sort_order,
+  )) {
+    if (entry.section === "training") {
+      training.push({ title: entry.title });
+      continue;
+    }
+
+    const entries = timelineEntries.get(entry.year) ?? [];
+    entries.push({
+        title: entry.title,
+        organization: entry.organization,
+        role: entry.role,
+        period: entry.period,
+        kind: entry.kind,
+        summary: entry.summary,
+        evidenceNote: entry.evidence_note,
+        caseStudySlug: entry.case_study_slug,
+      });
+    timelineEntries.set(entry.year, entries);
+  }
 
   return {
-    entries: [...parsed]
-      .sort((left, right) => left.sort_order - right.sort_order)
-      .map((entry) => ({
-        title: entry.title,
-        organization: null,
-        period: entry.period,
-        summary: entry.summary,
-      })),
+    timeline: [...timelineEntries.entries()]
+      .map(([year, entries]) => ({ year, entries }))
+      .sort((left, right) => right.year - left.year),
+    training,
   };
 }
 
