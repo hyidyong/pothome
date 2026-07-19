@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { isAbsolute, join, relative, resolve } from "node:path";
+import { extname, isAbsolute, join, relative, resolve } from "node:path";
 
 const ROOT_FLAG = "--root";
 const rootFlagIndex = process.argv.indexOf(ROOT_FLAG);
@@ -17,6 +17,34 @@ const root = requestedRoot
     : resolve(process.cwd(), requestedRoot)
   : process.cwd();
 const inventoryPath = join(root, "EXPERIENCE_INVENTORY.md");
+const approvedPublicBinaries = new Map([
+  [
+    "public/images/hero-strategy-signal-f48ea2a6.avif",
+    (buffer) =>
+      buffer.length >= 12 &&
+      buffer.toString("ascii", 4, 8) === "ftyp" &&
+      buffer.toString("ascii", 8, 12) === "avif",
+  ],
+  [
+    "public/images/hero-strategy-signal-f48ea2a6.webp",
+    (buffer) =>
+      buffer.length >= 12 &&
+      buffer.toString("ascii", 0, 4) === "RIFF" &&
+      buffer.toString("ascii", 8, 12) === "WEBP",
+  ],
+]);
+const publicTextExtensions = new Set([
+  ".css",
+  ".html",
+  ".js",
+  ".json",
+  ".map",
+  ".mjs",
+  ".svg",
+  ".txt",
+  ".webmanifest",
+  ".xml",
+]);
 
 if (!existsSync(inventoryPath)) {
   console.error("FAIL: required file EXPERIENCE_INVENTORY.md is missing.");
@@ -119,7 +147,32 @@ const violations = [];
 
 for (const file of files) {
   const buffer = readFileSync(file);
+  const relativePath = relative(root, file).replaceAll("\\", "/");
+  const approvedSignature = approvedPublicBinaries.get(relativePath);
+
+  if (approvedSignature) {
+    if (!approvedSignature(buffer)) {
+      violations.push({
+        file: relativePath,
+        rule: "invalid-approved-public-binary",
+      });
+    }
+    continue;
+  }
+
   const text = decodeText(buffer);
+
+  if (
+    relativePath.startsWith("public/") &&
+    (text === null || !publicTextExtensions.has(extname(relativePath)))
+  ) {
+    violations.push({
+      file: relativePath,
+      rule: "unapproved-public-binary",
+    });
+    continue;
+  }
+
   if (text === null) {
     continue;
   }
@@ -129,7 +182,7 @@ for (const file of files) {
     for (const rule of rules) {
       if (rule.pattern.test(line)) {
         violations.push({
-          file: relative(root, file).replaceAll("\\", "/"),
+          file: relativePath,
           line: index + 1,
           rule: rule.id,
         });
@@ -140,9 +193,10 @@ for (const file of files) {
 
 if (violations.length > 0) {
   for (const violation of violations) {
-    console.error(
-      `VIOLATION ${violation.file}:${violation.line} [${violation.rule}]`,
-    );
+    const location = violation.line
+      ? `${violation.file}:${violation.line}`
+      : violation.file;
+    console.error(`VIOLATION ${location} [${violation.rule}]`);
   }
   console.error(
     `FAIL: public content guard found ${violations.length} violation(s).`,

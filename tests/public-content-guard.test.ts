@@ -50,6 +50,26 @@ afterEach(() => {
 });
 
 describe("public content guard", () => {
+  it("ignores every local .superpowers artifact", () => {
+    const result = spawnSync(
+      "git",
+      [
+        "check-ignore",
+        "--no-index",
+        ".superpowers/session/credential-state.json",
+      ],
+      {
+        cwd: process.cwd(),
+        encoding: "utf8",
+      },
+    );
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain(
+      ".superpowers/session/credential-state.json",
+    );
+  });
+
   it("fails clearly when the required inventory is missing", () => {
     const result = runGuard(createRoot({ inventory: false }));
 
@@ -169,10 +189,10 @@ describe("public content guard", () => {
     expect(output).not.toContain("NEXT_PUBLIC_TOKEN");
   });
 
-  it("skips true binary data with NUL bytes and no supported text BOM", () => {
+  it("keeps source-code binary handling outside public unchanged", () => {
     const root = createRoot();
     writeFileSync(
-      join(root, "public", "binary.bin"),
+      join(root, "src", "binary.bin"),
       Buffer.concat([
         Buffer.from([0x00, 0x01, 0x02]),
         Buffer.from("service_role"),
@@ -184,6 +204,103 @@ describe("public content guard", () => {
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("PASS: public content guard");
   });
+
+  it.each([
+    {
+      path: ["documents", "private.pdf"],
+      bytes: Buffer.concat([
+        Buffer.from("%PDF-1.7\n", "ascii"),
+        Buffer.from([0x00, 0x01]),
+        Buffer.from("sensitive-payload-marker", "ascii"),
+      ]),
+    },
+    {
+      path: ["archives", "private.zip"],
+      bytes: Buffer.concat([
+        Buffer.from([0x50, 0x4b, 0x03, 0x04, 0x00]),
+        Buffer.from("sensitive-payload-marker", "ascii"),
+      ]),
+    },
+    {
+      path: ["images", "unapproved.png"],
+      bytes: Buffer.concat([
+        Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]),
+        Buffer.from("sensitive-payload-marker", "ascii"),
+      ]),
+    },
+  ])("rejects unapproved public binary $path", ({ path, bytes }) => {
+    const root = createRoot();
+    const target = join(root, "public", ...path);
+    mkdirSync(resolve(target, ".."), { recursive: true });
+    writeFileSync(target, bytes);
+
+    const result = runGuard(root);
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output).toContain(
+      `public/${path.join("/")} [unapproved-public-binary]`,
+    );
+    expect(output).not.toContain("sensitive-payload-marker");
+  });
+
+  it("allows only the approved fingerprinted Hero binaries with valid signatures", () => {
+    const root = createRoot();
+    const mediaDirectory = join(root, "public", "images");
+    mkdirSync(mediaDirectory, { recursive: true });
+    writeFileSync(
+      join(mediaDirectory, "hero-strategy-signal-f48ea2a6.avif"),
+      Buffer.concat([
+        Buffer.from([0x00, 0x00, 0x00, 0x1c]),
+        Buffer.from("ftypavif", "ascii"),
+        Buffer.alloc(16),
+      ]),
+    );
+    writeFileSync(
+      join(mediaDirectory, "hero-strategy-signal-f48ea2a6.webp"),
+      Buffer.concat([
+        Buffer.from("RIFF", "ascii"),
+        Buffer.from([0x04, 0x00, 0x00, 0x00]),
+        Buffer.from("WEBP", "ascii"),
+      ]),
+    );
+
+    const result = runGuard(root);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("PASS: public content guard");
+    expect(result.stderr).toBe("");
+  });
+
+  it.each(["avif", "webp"])(
+    "rejects an approved Hero path with an invalid %s signature",
+    (extension) => {
+      const root = createRoot();
+      const target = join(
+        root,
+        "public",
+        "images",
+        `hero-strategy-signal-f48ea2a6.${extension}`,
+      );
+      mkdirSync(resolve(target, ".."), { recursive: true });
+      writeFileSync(
+        target,
+        Buffer.concat([
+          Buffer.from([0x00, 0x01, 0x02]),
+          Buffer.from("sensitive-payload-marker", "ascii"),
+        ]),
+      );
+
+      const result = runGuard(root);
+      const output = `${result.stdout}${result.stderr}`;
+
+      expect(result.status).toBe(1);
+      expect(output).toContain(
+        `public/images/hero-strategy-signal-f48ea2a6.${extension} [invalid-approved-public-binary]`,
+      );
+      expect(output).not.toContain("sensitive-payload-marker");
+    },
+  );
 
   it.each([
     "POSTGRES_URL",
