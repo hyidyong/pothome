@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:local": "next dev --hostname 127.0.0.1",
+    "supabase:local:start": "pnpm exec supabase start",
+    "supabase:local:stop": "pnpm exec supabase stop",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
