@@ -51,16 +51,17 @@ const rules = [
   {
     id: "credential-assignment",
     pattern:
-      /\b(?:[A-Z][A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL)|(?:SUPABASE|DATABASE)_[A-Z0-9_]*URL)\s*=\s*(?!["']?\s*(?:$|<|your-|replace|example|placeholder))\S+/,
+      /\b(?:[A-Z][A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL)|(?:(?:SUPABASE|DATABASE|POSTGRES|POSTGRESQL|PG)_[A-Z0-9_]*(?:URL|URI|CONNECTION_STRING)[A-Z0-9_]*|DIRECT_URL))\s*=\s*(?!["']?\s*(?:$|<|your-|replace|example|placeholder))\S+/,
   },
   {
     id: "raw-candidate-sample",
     pattern:
-      /(?:\b40\s+(?:candidate\s+rows?|candidate\s+responses?|candidates?|voices?)\b|(?:후보자|지원자|응답자).{0,12}(?:원본|원시|행|응답|표본)?.{0,4}40\s*(?:명|개|건)?|40\s*(?:명|개|건)?.{0,12}(?:후보자|지원자|응답자))/i,
+      /(?:\b40\s+(?:candidate\s+rows?|candidate\s+responses?|candidates?|voices?)\b|\b(?:candidates?|applicants?|respondents?)\s+(?:raw|original)\s+(?:sample\s+)?(?:count|size|rows?|responses?)\s*[:=]\s*40\b|(?:후보자|지원자|응답자).{0,12}(?:원본|원시|행|응답|표본)?.{0,4}40\s*(?:명|개|건)?|40\s*(?:명|개|건)?.{0,12}(?:후보자|지원자|응답자))/i,
   },
   {
     id: "forbidden-case-count",
-    pattern: /(?:\b07\s+cases?\b|07\s*개\s*사례|사례\s*07\s*(?:개|건)?)/i,
+    pattern:
+      /(?:\b07\s+cases?\b|\bcases?\s*[:=]\s*07\b|\bcase\s+count\s*[:=]\s*07\b|07\s*개\s*사례|사례\s*07\s*(?:개|건)?)/i,
   },
 ];
 
@@ -86,6 +87,28 @@ function collectFiles(path) {
   return files;
 }
 
+function decodeText(buffer) {
+  if (buffer.length >= 2 && buffer[0] === 0xff && buffer[1] === 0xfe) {
+    return buffer.subarray(2).toString("utf16le");
+  }
+
+  if (buffer.length >= 2 && buffer[0] === 0xfe && buffer[1] === 0xff) {
+    const littleEndian = Buffer.from(buffer.subarray(2));
+    for (let index = 0; index + 1 < littleEndian.length; index += 2) {
+      const first = littleEndian[index];
+      littleEndian[index] = littleEndian[index + 1];
+      littleEndian[index + 1] = first;
+    }
+    return littleEndian.toString("utf16le");
+  }
+
+  if (buffer.includes(0)) {
+    return null;
+  }
+
+  return buffer.toString("utf8").replace(/^\uFEFF/u, "");
+}
+
 const files = [
   ...collectFiles(join(root, "src")),
   ...collectFiles(join(root, "public")),
@@ -96,11 +119,12 @@ const violations = [];
 
 for (const file of files) {
   const buffer = readFileSync(file);
-  if (buffer.includes(0)) {
+  const text = decodeText(buffer);
+  if (text === null) {
     continue;
   }
 
-  const lines = buffer.toString("utf8").split(/\r?\n/u);
+  const lines = text.split(/\r?\n/u);
   lines.forEach((line, index) => {
     for (const rule of rules) {
       if (rule.pattern.test(line)) {

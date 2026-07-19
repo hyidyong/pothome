@@ -3,10 +3,11 @@
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\이력서 | application | 개인 이력·연락 정보·지원 정보가 포함될 수 있음
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\자기소개서 자료 | application | 지원 문구와 개인 경험 식별 정보가 포함될 수 있음
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\대외 활동 지원 관련 자료 | application | 지원서·연락 정보·식별 정보가 포함될 수 있음
-[EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\신원 증빙 자료 | identity | 신원 증빙 원본이 포함될 수 있음
-[EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\멤버 이력 자료 | personnel | 제3자 이력과 연락 정보가 포함될 수 있음
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\신분증 사본.pdf | identity | 신원 증빙 원본이 포함될 수 있음
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\피토리 멤버 이력서 | personnel | 제3자 이력과 연락 정보가 포함될 수 있음
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\각종 지원사업 최종본 | application | 신청서·증빙·개인 및 사업 식별 정보가 혼재
-[REVIEW] C:\Users\a\OneDrive\Desktop\피토리\합류 제안 자료 | contract | 합류 조건과 인력 정보가 포함될 수 있음
+[REVIEW] C:\Users\a\OneDrive\Desktop\피토리\Fitory_합류제안서.pdf | contract | 합류 조건과 인력 정보가 포함될 수 있음
+[REVIEW] C:\Users\a\OneDrive\Desktop\피토리\Fitory_합류제안서.docx | contract | 합류 조건과 인력 정보가 포함될 수 있음
 [REVIEW] C:\Users\a\OneDrive\Desktop\피토리\피토리 화면 로직.pdf | identity | 본인인증 UI와 문서 메타데이터를 공개 전 확인해야 함
 [REVIEW] C:\Users\a\OneDrive\Desktop\피토리\Fitory — 잠든 옷장에 이자가 쌓인다.html | identity | 연락 정보가 포함되어 공개 전 제거 또는 승인이 필요함
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 - 외국인 채용\foreign-tech-visualization\app\date.csv | raw-research | 원시 설문 응답 행이 포함됨
@@ -16,7 +17,6 @@
 [REVIEW] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 프로젝트 | contract | 계약·활용동의서와 공개 가능한 산출물이 혼재
 [REVIEW] C:\Users\a\OneDrive\Desktop\ylc 자료\YLC 사유서 자동 생성 폼 | personnel | 인사 사유서 템플릿과 생성 문서가 포함될 수 있음
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\AI 교육 PaceMate\work\2026-07-03\dlrj\.env.local | credential | 로컬 환경값과 접근 자격 정보가 포함될 수 있음
-[REVIEW] C:\Users\a\OneDrive\Desktop\KakaoTalk_Longtxt_20260719_2043_55_076.txt | uncertain | 개인 대화·연락 정보 가능성을 수동 검토해야 함
 [REVIEW] C:\Users\a\OneDrive\Desktop\KakaoTalk_Longtxt_20260719_2045_52_374.txt | uncertain | 개인 대화·연락 정보 가능성을 수동 검토해야 함
 [REVIEW] C:\Users\a\OneDrive\Desktop\학교 과제 모음 zip | uncertain | 압축·복제 산출물과 메타데이터가 혼재할 수 있음
 [REVIEW] C:\Users\a\OneDrive\Desktop\AMOREPACIFIC_Vietnam_Strategy_Portfolio_51p.zip | uncertain | 압축 내부 파일과 메타데이터를 공개 전 확인해야 함

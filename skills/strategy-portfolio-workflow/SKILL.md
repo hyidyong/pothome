@@ -17,7 +17,7 @@ Publish a claim only when its source, population, status, approval, and limit re
 4. **Write the narrative.** Structure each case as decision → constraints → evidence → insight → options → recommendation → execution → outcome status → limits. Correct domain-mismatched copy before publication.
 5. **Design responsive motion.** Use auto-layout, visible server-rendered content, one-time reveals, and motion that explains decisions. Provide a static reduced-motion mode. Verify narrow mobile width, 200% zoom, keyboard access, and no horizontal overflow.
 6. **Persist safely.** Use migrations, row-level security, explicit public read grants, and server-only environment access. Keep deployable content in Supabase; do not substitute tracked runtime JSON or browser storage.
-7. **Verify before claiming completion.** Run content guards, tests, lint, type checks, secret scans, and production builds. Inspect the rendered site in a browser at desktop, 390px, 200% zoom, and reduced motion. Report only checks actually run.
+7. **Verify before claiming completion.** Run content guards, tests, lint, type checks, secret scans, and production builds. Inspect the rendered site in a browser at desktop, the narrowest supported mobile viewport, 200% zoom, and reduced motion. Report only checks actually run.
 
 ## Quick reference
 

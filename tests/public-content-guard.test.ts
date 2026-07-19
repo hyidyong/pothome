@@ -32,6 +32,17 @@ function runGuard(root: string) {
   });
 }
 
+function encodeUtf16Be(value: string) {
+  const encoded = Buffer.from(value, "utf16le");
+  for (let index = 0; index + 1 < encoded.length; index += 2) {
+    const first = encoded[index]!;
+    encoded[index] = encoded[index + 1]!;
+    encoded[index + 1] = first;
+  }
+
+  return Buffer.concat([Buffer.from([0xfe, 0xff]), encoded]);
+}
+
 afterEach(() => {
   for (const root of temporaryRoots.splice(0)) {
     rmSync(root, { force: true, recursive: true });
@@ -125,5 +136,107 @@ describe("public content guard", () => {
 
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("PASS: public content guard");
+  });
+
+  it("scans UTF-16LE BOM text instead of treating it as binary", () => {
+    const root = createRoot();
+    const encoded = Buffer.concat([
+      Buffer.from([0xff, 0xfe]),
+      Buffer.from("safe\nservice_role\n", "utf16le"),
+    ]);
+    writeFileSync(join(root, "src", "utf16le.txt"), encoded);
+
+    const result = runGuard(root);
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output).toContain("src/utf16le.txt:2 [privileged-keyword]");
+    expect(output).not.toContain("service_role");
+  });
+
+  it("scans UTF-16BE BOM text instead of treating it as binary", () => {
+    const root = createRoot();
+    writeFileSync(
+      join(root, "src", "utf16be.txt"),
+      encodeUtf16Be("safe\nNEXT_PUBLIC_TOKEN\n"),
+    );
+
+    const result = runGuard(root);
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output).toContain("src/utf16be.txt:2 [browser-env]");
+    expect(output).not.toContain("NEXT_PUBLIC_TOKEN");
+  });
+
+  it("skips true binary data with NUL bytes and no supported text BOM", () => {
+    const root = createRoot();
+    writeFileSync(
+      join(root, "public", "binary.bin"),
+      Buffer.concat([
+        Buffer.from([0x00, 0x01, 0x02]),
+        Buffer.from("service_role"),
+      ]),
+    );
+
+    const result = runGuard(root);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("PASS: public content guard");
+  });
+
+  it.each([
+    "POSTGRES_URL",
+    "POSTGRES_PRISMA_URL",
+    "POSTGRES_URL_NON_POOLING",
+    "POSTGRES_CONNECTION_STRING",
+    "DIRECT_URL",
+  ])("rejects exposed database connection alias %s", (alias) => {
+    const root = createRoot();
+    const exposedValue = "postgresql://db.invalid/example";
+    writeFileSync(
+      join(root, "src", "connection.txt"),
+      `${alias}=${exposedValue}\n`,
+      "utf8",
+    );
+
+    const result = runGuard(root);
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output).toContain("src/connection.txt:1 [credential-assignment]");
+    expect(output).not.toContain(exposedValue);
+  });
+
+  it("rejects a reversed English raw candidate sample phrase", () => {
+    const root = createRoot();
+    writeFileSync(
+      join(root, "public", "raw-sample.txt"),
+      "candidate raw sample count: 40\n",
+      "utf8",
+    );
+
+    const result = runGuard(root);
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output).toContain("public/raw-sample.txt:1 [raw-candidate-sample]");
+    expect(output).not.toContain("candidate raw sample count: 40");
+  });
+
+  it("rejects a label-first forbidden case count", () => {
+    const root = createRoot();
+    writeFileSync(
+      join(root, "public", "case-count.txt"),
+      "cases: 07\n",
+      "utf8",
+    );
+
+    const result = runGuard(root);
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output).toContain("public/case-count.txt:1 [forbidden-case-count]");
+    expect(output).not.toContain("cases: 07");
   });
 });
