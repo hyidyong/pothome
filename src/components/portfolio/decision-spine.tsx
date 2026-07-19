@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef } from "react";
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
 }
 
