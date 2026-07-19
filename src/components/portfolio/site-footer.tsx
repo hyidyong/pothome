@@ -14,7 +14,7 @@ export function SiteFooter() {
         </p>
         <Link
           className={cn(
-            buttonVariants({ variant: "outline", size: "lg" }),
+            buttonVariants({ variant: "default", size: "lg" }),
             "site-footer__cta",
           )}
           href="/work/global-technical-talent-strategy"

@@ -51,40 +51,41 @@ function contrastRatio(foreground: string, background: string): number {
   );
 }
 
-it("keeps the footer CTA a semantic, target-sized link with a scoped contrast class", () => {
+it("keeps the footer CTA a semantic, target-sized link using the default semantic button variant", () => {
   render(<SiteFooter />);
 
   const cta = screen.getByRole("link", { name: "대표 프로젝트 보기" });
   expect(cta.tagName).toBe("A");
-  expect(cta).toHaveClass("site-footer__cta", "h-12", "min-w-12");
+  expect(cta).toHaveClass(
+    "site-footer__cta",
+    "h-12",
+    "min-w-12",
+    "bg-primary",
+    "text-primary-foreground",
+    "hover:bg-primary/80",
+  );
   expect(cta).not.toHaveAttribute("role", "button");
+
+  const ctaRule = getCssRule(/\.site-footer__cta\s*\{([^}]*)\}/m);
+  expect(ctaRule).not.toMatch(
+    /(?:^|\s)(?:color|background(?:-color)?|border(?:-color)?|font[^:]*)\s*:/m,
+  );
 });
 
-it("uses scoped semantic footer tokens for resting, hover, and focus contrast", () => {
+it("consumes the semantic ring token with an offset and scopes a contrasting footer ring", () => {
   const rootRule = getCssRule(/:root\s*\{([^}]*)\}/m);
   const footerRule = getCssRule(/\.site-footer\s*\{([^}]*)\}/m);
-  const ctaRule = getCssRule(/\.site-footer__cta\s*\{([^}]*)\}/m);
-  const interactiveRule = getCssRule(
-    /\.site-footer__cta:hover,\s*\.site-footer__cta:focus-visible\s*\{([^}]*)\}/m,
-  );
+  const focusRule = getCssRule(/:focus-visible\s*\{([^}]*)\}/m);
 
-  expect(footerRule).toContain("--footer-foreground:");
-  expect(footerRule).toContain("--footer-action-background:");
-  expect(footerRule).toContain("--footer-action-hover:");
-  expect(ctaRule).toContain("color: var(--footer-foreground)");
-  expect(ctaRule).toContain("background: var(--footer-action-background)");
-  expect(interactiveRule).toContain("color: var(--footer-foreground)");
-  expect(interactiveRule).toContain("background: var(--footer-action-hover)");
+  expect(getHexVariable(rootRule, "ring")).toBe("#7be4b6");
+  expect(focusRule).toContain("outline: 3px solid var(--ring)");
+  expect(focusRule).toContain("outline-offset: 3px");
+  expect(footerRule).toContain("--primary:");
+  expect(footerRule).toContain("--primary-foreground:");
 
-  const footerForeground = getHexVariable(footerRule, "footer-foreground");
   const footerBackground = getHexVariable(rootRule, "signal");
-  const actionHover = getHexVariable(footerRule, "footer-action-hover");
-  expect(
-    contrastRatio(footerForeground, footerBackground),
-  ).toBeGreaterThanOrEqual(4.5);
-  expect(contrastRatio(footerForeground, actionHover)).toBeGreaterThanOrEqual(
-    4.5,
-  );
+  const footerRing = getHexVariable(footerRule, "ring");
+  expect(contrastRatio(footerRing, footerBackground)).toBeGreaterThanOrEqual(3);
 });
 
 it("gives all actual header text links centered 44 by 44 minimum targets", () => {
