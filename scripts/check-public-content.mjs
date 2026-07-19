@@ -51,7 +51,7 @@ const rules = [
   {
     id: "credential-assignment",
     pattern:
-      /\b(?:[A-Z][A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL)|(?:(?:SUPABASE|DATABASE|POSTGRES|POSTGRESQL|PG)_[A-Z0-9_]*(?:URL|URI|CONNECTION_STRING)[A-Z0-9_]*|DIRECT_URL))\s*=\s*(?!["']?\s*(?:$|<|your-|replace|example|placeholder))\S+/,
+      /\b(?:[A-Z][A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL)|(?:(?:SUPABASE|DATABASE|POSTGRES|POSTGRESQL|PG|DB)_[A-Z0-9_]*(?:URL|URI|CONNECTION_STRING)[A-Z0-9_]*|DIRECT_URL))\s*=\s*(?!["']?\s*(?:$|<|your-|replace|example|placeholder))\S+/,
   },
   {
     id: "raw-candidate-sample",

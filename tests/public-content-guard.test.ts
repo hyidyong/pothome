@@ -208,6 +208,28 @@ describe("public content guard", () => {
     expect(output).not.toContain(exposedValue);
   });
 
+  it.each(["DB_URL", "DB_URI", "DB_CONNECTION_STRING"])(
+    "rejects generic database credential alias %s",
+    (alias) => {
+      const root = createRoot();
+      const exposedValue = "postgresql://db.invalid/generic";
+      writeFileSync(
+        join(root, "src", "generic-connection.txt"),
+        `${alias}=${exposedValue}\n`,
+        "utf8",
+      );
+
+      const result = runGuard(root);
+      const output = `${result.stdout}${result.stderr}`;
+
+      expect(result.status).toBe(1);
+      expect(output).toContain(
+        "src/generic-connection.txt:1 [credential-assignment]",
+      );
+      expect(output).not.toContain(exposedValue);
+    },
+  );
+
   it("rejects a reversed English raw candidate sample phrase", () => {
     const root = createRoot();
     writeFileSync(
