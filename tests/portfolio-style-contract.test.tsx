@@ -100,7 +100,7 @@ it("gives all actual header text links centered 44 by 44 minimum targets", () =>
 
 it("keeps every narrative portfolio copy style at one rem or larger", () => {
   const narrativeRules = [
-    getCssRule(/\.hero-section__role-block span\s*\{([^}]*)\}/m),
+    getCssRule(/\.hero-section__role-block > p\s*\{([^}]*)\}/m),
     getCssRule(/\.evidence-rail__item > p:last-child\s*\{([^}]*)\}/m),
     getCssRule(/\.case-study-card__copy > p\s*\{([^}]*)\}/m),
     getCssRule(/\.law-lens__note p\s*\{([^}]*)\}/m),

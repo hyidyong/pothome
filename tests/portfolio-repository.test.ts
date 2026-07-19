@@ -25,6 +25,7 @@ type QueryBuilder = {
 
 const repositoryHarness = vi.hoisted(() => {
   const filters: RecordedFilter[] = [];
+  const selections: Array<{ table: string; columns: string }> = [];
 
   const detailCase = {
     slug: "global-technical-talent-strategy",
@@ -52,13 +53,15 @@ const repositoryHarness = vi.hoisted(() => {
 
   return {
     filters,
+    selections,
     client: {
       from(table: string) {
         let selectsSingleRow = false;
         let selectsSlug = false;
 
         const builder: QueryBuilder = {
-          select() {
+          select(columns) {
+            selections.push({ table, columns });
             return builder;
           },
           eq(column, value) {
@@ -85,6 +88,11 @@ const repositoryHarness = vi.hoisted(() => {
               data = {
                 headline: "복잡한 신호를, 실행 가능한 전략으로.",
                 summary: "근거에서 실행까지",
+                profile_focus: [
+                  { role: "전략기획", percentage: 65 },
+                  { role: "HR", percentage: 20 },
+                  { role: "PM", percentage: 15 },
+                ],
               };
             } else if (table === "case_studies" && selectsSlug) {
               data = detailCase;
@@ -115,6 +123,23 @@ import { createPortfolioRepository } from "@/lib/portfolio/repository";
 describe("PortfolioRepository metric query filters", () => {
   beforeEach(() => {
     repositoryHarness.filters.length = 0;
+    repositoryHarness.selections.length = 0;
+  });
+
+  it("selects and returns the profile focus from the server repository", async () => {
+    const repository = createPortfolioRepository();
+
+    const home = await repository.getHomePageData();
+
+    expect(repositoryHarness.selections).toContainEqual({
+      table: "site_profile",
+      columns: "headline, summary, profile_focus",
+    });
+    expect(home.profile.focus).toEqual([
+      { role: "전략기획", percentage: 65 },
+      { role: "HR", percentage: 20 },
+      { role: "PM", percentage: 15 },
+    ]);
   });
 
   it("qualifies both embedded verified filters with the selected metrics alias", async () => {

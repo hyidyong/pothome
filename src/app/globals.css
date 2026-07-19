@@ -256,20 +256,44 @@ button:not(:disabled),
 .hero-section__role-block {
   display: flex;
   max-width: 36rem;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 12px 20px;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.hero-section__role-block strong {
+.hero-section__role-mix {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 3vw, 32px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-section__role-mix li {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hero-section__role-mix strong {
   color: var(--signal);
   font-family: "Instrument Serif", Georgia, serif;
-  font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+  font-size: clamp(2.75rem, 5vw, 5.5rem);
   font-weight: 400;
-  line-height: 1.1;
+  line-height: 0.86;
+  letter-spacing: -0.055em;
 }
 
-.hero-section__role-block span {
+.hero-section__role-mix span {
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.hero-section__role-block > p {
   color: var(--muted-foreground);
   font-size: 1rem;
   line-height: 1.6;

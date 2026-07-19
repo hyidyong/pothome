@@ -96,6 +96,11 @@ const homePageData = {
     headline: "복잡한 신호를, 실행 가능한 전략으로.",
     summary:
       "법학의 구조적 사고로 시장·사람·제품의 근거를 읽고 실행 로드맵으로 바꿉니다.",
+    focus: [
+      { role: "전략기획", percentage: 65 },
+      { role: "HR", percentage: 20 },
+      { role: "PM", percentage: 15 },
+    ],
   },
   cases,
 } satisfies HomePageData;

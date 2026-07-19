@@ -6,6 +6,11 @@ const repositoryHarness = vi.hoisted(() => ({
     profile: {
       headline: "복잡한 신호를, 실행 가능한 전략으로.",
       summary: "근거를 실행 가능한 전략으로 연결합니다.",
+      focus: [
+        { role: "전략기획", percentage: 65 },
+        { role: "HR", percentage: 20 },
+        { role: "PM", percentage: 15 },
+      ],
     },
     cases: [],
   }),

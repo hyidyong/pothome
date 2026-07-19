@@ -13,6 +13,27 @@ const nonBlankText = z
   .string()
   .refine((value) => value.trim().length > 0, "must not be blank");
 const sortOrder = z.number().int().positive();
+const profileFocusSchema = z
+  .array(
+    z.object({
+      role: nonBlankText,
+      percentage: z.number().int().positive().max(100),
+    }),
+  )
+  .min(1)
+  .superRefine((focus, context) => {
+    const total = focus.reduce(
+      (sum, focusItem) => sum + focusItem.percentage,
+      0,
+    );
+
+    if (total !== 100) {
+      context.addIssue({
+        code: "custom",
+        message: "Profile focus percentages must total 100",
+      });
+    }
+  });
 
 const sourceStatusSchema = z.enum([
   "measured",
@@ -180,6 +201,7 @@ export function normalizeHomeData(input: unknown): HomePageData {
       profile: z.object({
         headline: nonBlankText,
         summary: nonBlankText,
+        profile_focus: profileFocusSchema,
       }),
       cases: z.array(caseSummarySchema),
     }),
@@ -187,7 +209,11 @@ export function normalizeHomeData(input: unknown): HomePageData {
   );
 
   return {
-    profile: parsed.profile,
+    profile: {
+      headline: parsed.profile.headline,
+      summary: parsed.profile.summary,
+      focus: parsed.profile.profile_focus,
+    },
     cases: [...parsed.cases]
       .sort((left, right) => left.sort_order - right.sort_order)
       .map(normalizeCaseSummary),

@@ -1,6 +1,6 @@
 begin;
 
-select plan(53);
+select plan(57);
 
 -- The public portfolio contract consists of exactly these seven application tables.
 select has_table('public', 'site_profile', 'site_profile exists');
@@ -258,6 +258,48 @@ select results_eq(
 
 select results_eq(
   $$
+    select metrics.value_text, metrics.label
+    from public.case_study_metrics as metrics
+    join public.case_studies as cases on cases.id = metrics.case_study_id
+    where cases.slug = 'global-technical-talent-strategy'
+      and metrics.value_text = '21'
+  $$,
+  $$values ('21'::text, '개 기업'::text)$$,
+  'the 21 metric is explicitly a company count'
+);
+
+select results_eq(
+  $$
+    select sections.body
+    from public.case_study_sections as sections
+    join public.case_studies as cases on cases.id = sections.case_study_id
+    where cases.slug = 'global-technical-talent-strategy'
+      and sections.kind = 'evidence'
+  $$,
+  $$values ('21개 기업과 유효 후보자 38명의 응답을 별도 표본으로 검토하고 13개국의 후보자 범위를 함께 기록했습니다.'::text)$$,
+  'the talent evidence keeps company and candidate units separate'
+);
+
+select col_type_is(
+  'public',
+  'site_profile',
+  'profile_focus',
+  'jsonb',
+  'profile focus is stored as structured jsonb'
+);
+
+select results_eq(
+  $$select profile_focus from public.site_profile where published is true$$,
+  $$values ('[
+    {"role": "전략기획", "percentage": 65},
+    {"role": "HR", "percentage": 20},
+    {"role": "PM", "percentage": 15}
+  ]'::jsonb)$$,
+  'the approved role mix is seeded exactly'
+);
+
+select results_eq(
+  $$
     select copy_key, copy_value
     from (
       select
@@ -328,8 +370,14 @@ select ok(
 );
 
 -- Add non-public fixtures inside this transaction so the policies are exercised as anon.
-insert into public.site_profile (slug, headline, summary, role_focus, published)
-values ('hidden-profile', 'Hidden profile', 'Must remain private.', 'Hidden', false);
+insert into public.site_profile (slug, headline, summary, profile_focus, published)
+values (
+  'hidden-profile',
+  'Hidden profile',
+  'Must remain private.',
+  '[{"role": "Hidden", "percentage": 100}]'::jsonb,
+  false
+);
 
 insert into public.case_studies (
   slug,

@@ -8,6 +8,20 @@ import {
 } from "@/lib/portfolio/normalize";
 
 const approvedHeadline = "복잡한 신호를, 실행 가능한 전략으로.";
+const approvedProfileFocus = [
+  { role: "전략기획", percentage: 65 },
+  { role: "HR", percentage: 20 },
+  { role: "PM", percentage: 15 },
+];
+
+function makeProfile(overrides: Record<string, unknown> = {}) {
+  return {
+    headline: approvedHeadline,
+    summary: "근거에서 실행까지",
+    profile_focus: approvedProfileFocus,
+    ...overrides,
+  };
+}
 
 function makeCase(overrides: Record<string, unknown> = {}) {
   return {
@@ -46,16 +60,46 @@ describe("normalizeHomeData", () => {
 
   it("preserves the approved Hero copy exactly", () => {
     const result = normalizeHomeData({
-      profile: { headline: approvedHeadline, summary: "근거에서 실행까지" },
+      profile: makeProfile(),
       cases: [],
     });
 
     expect(result.profile.headline).toBe(approvedHeadline);
   });
 
+  it("normalizes the approved profile focus from Supabase data", () => {
+    const result = normalizeHomeData({
+      profile: makeProfile(),
+      cases: [],
+    });
+
+    expect(result.profile.focus).toEqual(approvedProfileFocus);
+    expect(
+      result.profile.focus.reduce(
+        (total, focus) => total + focus.percentage,
+        0,
+      ),
+    ).toBe(100);
+  });
+
+  it("rejects a profile focus whose percentages do not total 100", () => {
+    expect(() =>
+      normalizeHomeData({
+        profile: makeProfile({
+          profile_focus: [
+            { role: "전략기획", percentage: 60 },
+            { role: "HR", percentage: 20 },
+            { role: "PM", percentage: 15 },
+          ],
+        }),
+        cases: [],
+      }),
+    ).toThrow("Profile focus percentages must total 100");
+  });
+
   it("sorts cases and verified metrics by sort_order", () => {
     const result = normalizeHomeData({
-      profile: { headline: approvedHeadline, summary: "근거에서 실행까지" },
+      profile: makeProfile(),
       cases: [
         makeCase({
           slug: "second",
@@ -93,7 +137,7 @@ describe("normalizeHomeData", () => {
 
   it("filters unverified rows before strict public metric validation", () => {
     const result = normalizeHomeData({
-      profile: { headline: approvedHeadline, summary: "근거에서 실행까지" },
+      profile: makeProfile(),
       cases: [
         makeCase({
           metrics: [
@@ -114,7 +158,7 @@ describe("normalizeHomeData", () => {
 
   it("keeps 21 and 38 separate and never exposes 59", () => {
     const result = normalizeHomeData({
-      profile: { headline: approvedHeadline, summary: "근거에서 실행까지" },
+      profile: makeProfile(),
       cases: [
         makeCase({
           metrics: [
@@ -152,7 +196,7 @@ describe("normalizeHomeData", () => {
   it("rejects a verified invented total defensively", () => {
     expect(() =>
       normalizeHomeData({
-        profile: { headline: approvedHeadline, summary: "근거에서 실행까지" },
+        profile: makeProfile(),
         cases: [
           makeCase({
             metrics: [
@@ -173,7 +217,7 @@ describe("normalizeHomeData", () => {
   it("rejects the known raw candidate sample value defensively", () => {
     expect(() =>
       normalizeHomeData({
-        profile: { headline: approvedHeadline, summary: "근거에서 실행까지" },
+        profile: makeProfile(),
         cases: [
           makeCase({
             metrics: [
@@ -193,7 +237,7 @@ describe("normalizeHomeData", () => {
 
   it("allows a legitimate verified 40 for an unrelated case", () => {
     const result = normalizeHomeData({
-      profile: { headline: approvedHeadline, summary: "근거에서 실행까지" },
+      profile: makeProfile(),
       cases: [
         makeCase({
           slug: "re100-cf100-transition-strategy",
@@ -218,7 +262,7 @@ describe("normalizeHomeData", () => {
   it("fails clearly when required public data is malformed", () => {
     expect(() =>
       normalizeHomeData({
-        profile: { headline: approvedHeadline, summary: "" },
+        profile: makeProfile({ summary: "" }),
         cases: [],
       }),
     ).toThrow("Malformed public portfolio data");
@@ -226,7 +270,7 @@ describe("normalizeHomeData", () => {
 
   it("normalizes nested tag join rows to labels in stable order", () => {
     const result = normalizeHomeData({
-      profile: { headline: approvedHeadline, summary: "근거에서 실행까지" },
+      profile: makeProfile(),
       cases: [
         makeCase({
           tags: [

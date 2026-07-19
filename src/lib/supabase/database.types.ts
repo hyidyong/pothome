@@ -239,7 +239,7 @@ export type Database = {
           headline: string
           id: number
           published: boolean
-          role_focus: string
+          profile_focus: Json
           slug: string
           summary: string
           updated_at: string
@@ -249,7 +249,7 @@ export type Database = {
           headline: string
           id?: never
           published?: boolean
-          role_focus: string
+          profile_focus: Json
           slug: string
           summary: string
           updated_at?: string
@@ -259,7 +259,7 @@ export type Database = {
           headline?: string
           id?: never
           published?: boolean
-          role_focus?: string
+          profile_focus?: Json
           slug?: string
           summary?: string
           updated_at?: string

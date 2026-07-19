@@ -14,8 +14,17 @@ export type CaseStudySummary = {
   tags: string[];
 };
 
+export type ProfileFocus = {
+  role: string;
+  percentage: number;
+};
+
 export type HomePageData = {
-  profile: { headline: string; summary: string };
+  profile: {
+    headline: string;
+    summary: string;
+    focus: ProfileFocus[];
+  };
   cases: CaseStudySummary[];
 };
 

@@ -25,10 +25,15 @@ export function HeroSection({
         </div>
 
         <div className="hero-section__role-block">
-          <strong>Strategy Planning · HR · PM</strong>
-          <span>
-            법학 전공의 구조적 사고를 쟁점, 근거, 실행안으로 연결합니다.
-          </span>
+          <ul aria-label="희망 직무 비중" className="hero-section__role-mix">
+            {profile.focus.map((focus) => (
+              <li key={focus.role}>
+                <strong>{focus.percentage}%</strong>
+                <span>{focus.role}</span>
+              </li>
+            ))}
+          </ul>
+          <p>법학 전공의 구조적 사고를 쟁점, 근거, 실행안으로 연결합니다.</p>
         </div>
       </div>
 

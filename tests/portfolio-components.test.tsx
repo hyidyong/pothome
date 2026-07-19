@@ -82,6 +82,11 @@ const homePageData = {
     headline: "복잡한 신호를, 실행 가능한 전략으로.",
     summary:
       "법학의 구조적 사고로 시장·사람·제품의 근거를 읽고, 의사결정 문서와 실행 로드맵으로 바꿉니다.",
+    focus: [
+      { role: "전략기획", percentage: 65 },
+      { role: "HR", percentage: 20 },
+      { role: "PM", percentage: 15 },
+    ],
   },
   cases,
 } satisfies HomePageData;
@@ -91,6 +96,7 @@ it("renders only the approved editorial evidence values", () => {
 
   const region = screen.getByRole("region", { name: "대표 검증 수치" });
   expect(within(region).getByText("21 + 38")).toBeInTheDocument();
+  expect(within(region).getByText(/21개 기업/)).toBeInTheDocument();
   expect(within(region).getByText("57")).toBeInTheDocument();
   expect(within(region).getByText("118")).toBeInTheDocument();
   expect(within(region).queryByText("59")).not.toBeInTheDocument();
@@ -156,7 +162,13 @@ it("renders the typed profile, exact promise, and descriptive hero image", () =>
     }),
   ).toBeInTheDocument();
   expect(screen.getByText(homePageData.profile.summary)).toBeInTheDocument();
-  expect(screen.getByText("Strategy Planning · HR · PM")).toBeInTheDocument();
+  const focus = screen.getByRole("list", { name: "희망 직무 비중" });
+  expect(within(focus).getByText("65%")).toBeInTheDocument();
+  expect(within(focus).getByText("전략기획")).toBeInTheDocument();
+  expect(within(focus).getByText("20%")).toBeInTheDocument();
+  expect(within(focus).getByText("HR")).toBeInTheDocument();
+  expect(within(focus).getByText("15%")).toBeInTheDocument();
+  expect(within(focus).getByText("PM")).toBeInTheDocument();
 
   const image = screen.getByRole("img", {
     name: "문서, 시장 지도와 의사결정 노드가 하나의 실행 방향으로 수렴하는 추상 전략 이미지",

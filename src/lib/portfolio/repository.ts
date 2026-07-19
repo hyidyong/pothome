@@ -92,7 +92,7 @@ export function createPortfolioRepository(): PortfolioRepository {
     async getHomePageData() {
       const profileQuery = supabase
         .from("site_profile")
-        .select("headline, summary")
+        .select("headline, summary, profile_focus")
         .eq("published", true)
         .order("id", { ascending: true })
         .limit(1)
