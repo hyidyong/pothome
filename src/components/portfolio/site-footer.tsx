@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function SiteFooter() {
   return (
@@ -12,7 +13,10 @@ export function SiteFooter() {
           해결자입니다.
         </p>
         <Link
-          className={buttonVariants({ variant: "outline", size: "lg" })}
+          className={cn(
+            buttonVariants({ variant: "outline", size: "lg" }),
+            "site-footer__cta",
+          )}
           href="/work/global-technical-talent-strategy"
         >
           대표 프로젝트 보기
