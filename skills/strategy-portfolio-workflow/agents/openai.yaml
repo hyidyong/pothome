@@ -1,0 +1,4 @@
+interface:
+  display_name: "Strategy Portfolio Workflow"
+  short_description: "Build evidence-safe strategy portfolios"
+  default_prompt: "Use $strategy-portfolio-workflow to turn audited evidence into a verified, deployment-ready strategy portfolio."
