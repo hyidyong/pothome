@@ -1,0 +1,28 @@
+# Dependencies
+/node_modules
+
+# Next.js build output
+/.next/
+/out/
+
+# Production output
+/build
+
+# Local environment files
+.env*
+!.env.example
+
+# Logs
+*.log
+pnpm-debug.log*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+
+# TypeScript
+*.tsbuildinfo
+
+# Test output
+/coverage/
