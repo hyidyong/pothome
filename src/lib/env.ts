@@ -1,14 +1,32 @@
 import { z } from "zod";
 
-const serverEnvironmentSchema = z.object({
-  SUPABASE_URL: z.url("must be a valid URL"),
-  SUPABASE_PUBLISHABLE_KEY: z
-    .string()
-    .regex(
-      /^sb_publishable_[A-Za-z0-9_-]+$/,
-      "must be a Supabase publishable key",
-    ),
-});
+const publishableKeyPattern = /^sb_publishable_[A-Za-z0-9_-]+$/;
+const legacyJwtPattern = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
+const loopbackHostnames = new Set(["127.0.0.1", "localhost", "::1", "[::1]"]);
+
+const serverEnvironmentSchema = z
+  .object({
+    SUPABASE_URL: z.url("must be a valid URL"),
+    SUPABASE_PUBLISHABLE_KEY: z.string(),
+  })
+  .superRefine((environment, context) => {
+    if (publishableKeyPattern.test(environment.SUPABASE_PUBLISHABLE_KEY)) {
+      return;
+    }
+
+    const hostname = new URL(environment.SUPABASE_URL).hostname;
+    const isLocalLegacyKey =
+      loopbackHostnames.has(hostname) &&
+      legacyJwtPattern.test(environment.SUPABASE_PUBLISHABLE_KEY);
+
+    if (!isLocalLegacyKey) {
+      context.addIssue({
+        code: "custom",
+        message: "must be a Supabase publishable key",
+        path: ["SUPABASE_PUBLISHABLE_KEY"],
+      });
+    }
+  });
 
 export type ServerEnvironment = z.infer<typeof serverEnvironmentSchema>;
 
