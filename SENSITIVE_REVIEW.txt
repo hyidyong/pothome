@@ -17,6 +17,13 @@
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 프로젝트\9.손희정_프로그램 표준 계약서_중소기업기술혁신협회.pdf | contract | 사용자 결정: 모든 계약서는 접근 및 공개에서 제외
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\AI 교육 PaceMate\work\2026-07-03\dlrj\.env.local | credential | 로컬 환경값과 접근 자격 정보가 포함될 수 있음
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\KakaoTalk_Longtxt_20260719_2045_52_374.txt | identity | 사용자 결정: 개인 대화와 개인 식별 가능 콘텐츠는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\공유캠 첫 해커톤 자료\KakaoTalk_20260705_001712915.jpg | identity | 사용자 결정: 카카오톡/개인 식별 가능 콘텐츠는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\ylc 자료\KakaoTalk_20251004_123329991.png | identity | 사용자 결정: 카카오톡/개인 식별 가능 콘텐츠는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\ylc 자료\KakaoTalk_20251103_143032444_02.jpg | identity | 사용자 결정: 카카오톡/개인 식별 가능 콘텐츠는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\KakaoTalk_20260323_035945325.jpg | identity | 사용자 결정: 카카오톡/개인 식별 가능 콘텐츠는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\KakaoTalk_20260323_045033251.png | identity | 사용자 결정: 카카오톡/개인 식별 가능 콘텐츠는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\피토리\KakaoTalk_20260323_045219352.png | identity | 사용자 결정: 카카오톡/개인 식별 가능 콘텐츠는 접근 및 공개에서 제외
+[EXCLUDE] C:\Users\a\OneDrive\Desktop\미래내일\미래내일 - 외국인 채용\KakaoTalk_20260506_103220579.jpg | identity | 사용자 결정: 카카오톡/개인 식별 가능 콘텐츠는 접근 및 공개에서 제외
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\학교 과제 모음 zip | uncertain | 혼합 압축물에 강의자료·복제물이 포함될 수 있어 접근 제외; 별도로 분리된 직접 작성 과제만 허용
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\AMOREPACIFIC_Vietnam_Strategy_Portfolio_51p_last.zip | uncertain | 사용자 결정: 중복·복사본은 접근 및 공개에서 제외
 [EXCLUDE] C:\Users\a\OneDrive\Desktop\~$수정전최종AMOREPACIFIC_Vietnam_Strategy_Portfolio_51p_Readability_Notes_Refined_EDITABLE.pptx | uncertain | 사용자 결정: 모든 ~$ Office 임시 파일은 접근 및 공개에서 제외

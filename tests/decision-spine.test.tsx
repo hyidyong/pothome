@@ -193,6 +193,35 @@ describe("DecisionSpine GSAP contract", () => {
     expect(section).not.toHaveAttribute("data-motion-state");
   });
 
+  it("fully fades inactive and previous desktop steps to prevent text overlap", () => {
+    Object.defineProperty(document, "fonts", {
+      configurable: true,
+      value: { ready: new Promise(() => undefined) },
+    });
+
+    render(<DecisionSpine />);
+
+    const setVars = gsapHarness.set.mock.calls.map(
+      ([, vars]) => vars as Record<string, unknown>,
+    );
+    const tweenVars = gsapHarness.timeline.to.mock.calls.map(
+      ([, vars]) => vars as Record<string, unknown>,
+    );
+
+    expect(setVars).toContainEqual({ opacity: 0, y: 24, scale: 0.985 });
+    expect(setVars).toContainEqual({ opacity: 1, y: 0, scale: 1 });
+    expect(tweenVars).toContainEqual({ opacity: 0, y: -12, scale: 0.985 });
+    expect(tweenVars).toContainEqual({ opacity: 1, y: 0, scale: 1 });
+    expect(
+      gsapHarness.timeline.to.mock.calls
+        .filter(([, vars]) => (vars as { opacity?: number }).opacity === 1)
+        .map(([, , position]) => position),
+    ).toEqual(["frame", ">", ">", ">"]);
+    expect(
+      [...setVars, ...tweenVars].some((vars) => vars.opacity === 0.36),
+    ).toBe(false);
+  });
+
   it.each([
     {
       mode: "mobile",

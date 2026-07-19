@@ -49,6 +49,19 @@ describe("release readiness handoff", () => {
       /^\[EXCLUDE\].*AMOREPACIFIC_.*_last\.zip \| uncertain \|/m,
     );
     expect(queue).toMatch(/^\[EXCLUDE\].*\\~\$.*\.pptx \| uncertain \|/m);
+    for (const pathSuffix of [
+      "공유캠 첫 해커톤 자료\\KakaoTalk_20260705_001712915.jpg",
+      "ylc 자료\\KakaoTalk_20251004_123329991.png",
+      "ylc 자료\\KakaoTalk_20251103_143032444_02.jpg",
+      "피토리\\KakaoTalk_20260323_035945325.jpg",
+      "피토리\\KakaoTalk_20260323_045033251.png",
+      "피토리\\KakaoTalk_20260323_045219352.png",
+      "미래내일\\미래내일 - 외국인 채용\\KakaoTalk_20260506_103220579.jpg",
+    ]) {
+      expect(queue).toContain(
+        `\\${pathSuffix} | identity | 사용자 결정: 카카오톡/개인 식별 가능 콘텐츠는 접근 및 공개에서 제외`,
+      );
+    }
     expect(queue).not.toContain("피토리 화면 로직.pdf");
     expect(queue).not.toContain("Fitory — 잠든 옷장에 이자가 쌓인다.html");
     expect(queue).not.toContain("YLC 사유서 자동 생성 폼");
@@ -57,7 +70,7 @@ describe("release readiness handoff", () => {
     );
   });
 
-  it("keeps every sensitive queue row path-only, categorized, and resolvable", () => {
+  it("keeps every sensitive queue row path-only and categorized", () => {
     const queue = readFileSync(
       join(workspaceRoot, "SENSITIVE_REVIEW.txt"),
       "utf8",
@@ -89,10 +102,26 @@ describe("release readiness handoff", () => {
 
       expect(allowedCategories.has(category)).toBe(true);
       expect(reason.trim().length).toBeGreaterThan(0);
-      expect(existsSync(path), `missing queue path at line ${index + 1}`).toBe(
-        true,
-      );
     }
+  });
+
+  it("keeps release contracts portable without local-only source dependencies", () => {
+    const mediaContract = readFileSync(
+      join(workspaceRoot, "tests", "release-media-contract.test.ts"),
+      "utf8",
+    );
+    const readinessContract = readFileSync(
+      join(workspaceRoot, "tests", "release-readiness-contract.test.ts"),
+      "utf8",
+    );
+    const machinePathExistenceCall = ["existsSync", "(path)"].join("");
+
+    expect(mediaContract).not.toContain(".superpowers");
+    expect(mediaContract).not.toContain('from "node:crypto"');
+    expect(mediaContract).toContain(
+      'const auditedImageStem = "hero-strategy-signal-f48ea2a6"',
+    );
+    expect(readinessContract).not.toContain(machinePathExistenceCall);
   });
 
   it("keeps comparable 1280px concept and implementation captures", () => {

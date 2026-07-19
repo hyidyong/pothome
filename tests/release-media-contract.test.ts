@@ -1,27 +1,15 @@
-import { createHash } from "node:crypto";
 import { readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
 const workspaceRoot = process.cwd();
-const sourcePath = join(
-  workspaceRoot,
-  ".superpowers",
-  "brainstorm",
-  "173-1784464204",
-  "content",
-  "hero-strategy-signal.png",
-);
-const fingerprint = createHash("sha256")
-  .update(readFileSync(sourcePath))
-  .digest("hex")
-  .slice(0, 8);
+const auditedImageStem = "hero-strategy-signal-f48ea2a6";
 const publicImageStem = join(
   workspaceRoot,
   "public",
   "images",
-  `hero-strategy-signal-${fingerprint}`,
+  auditedImageStem,
 );
 
 function readThreeByteLittleEndian(buffer: Buffer, offset: number) {
@@ -71,9 +59,7 @@ function readAvifDimensions(buffer: Buffer) {
 }
 
 describe("release Hero media", () => {
-  it("uses the approved source fingerprint in both optimized file names", () => {
-    expect(fingerprint).toBe("f48ea2a6");
-
+  it("ships both optimized files under the fixed audited fingerprint stem", () => {
     for (const extension of ["avif", "webp"]) {
       expect(() => statSync(`${publicImageStem}.${extension}`)).not.toThrow();
     }

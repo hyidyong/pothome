@@ -32,8 +32,8 @@ const decisionSteps = [
 ] as const;
 
 const activeStep = { opacity: 1, y: 0, scale: 1 } as const;
-const inactiveStep = { opacity: 0.36, y: 24, scale: 0.985 } as const;
-const previousStep = { opacity: 0.36, y: -12, scale: 0.985 } as const;
+const inactiveStep = { opacity: 0, y: 24, scale: 0.985 } as const;
+const previousStep = { opacity: 0, y: -12, scale: 0.985 } as const;
 
 export function DecisionSpine() {
   const containerRef = useRef<HTMLElement>(null);
@@ -115,15 +115,15 @@ export function DecisionSpine() {
             .to(frameStep, activeStep, "frame")
             .addLabel("evidence", 1)
             .to(frameStep, previousStep, "evidence")
-            .to(evidenceStep, activeStep, "evidence")
+            .to(evidenceStep, activeStep, ">")
             .to(indicator, { scaleY: 0.5 }, "evidence")
-            .addLabel("options", 2)
+            .addLabel("options", 3)
             .to(evidenceStep, previousStep, "options")
-            .to(optionsStep, activeStep, "options")
+            .to(optionsStep, activeStep, ">")
             .to(indicator, { scaleY: 0.75 }, "options")
-            .addLabel("move", 3)
+            .addLabel("move", 5)
             .to(optionsStep, previousStep, "move")
-            .to(moveStep, activeStep, "move")
+            .to(moveStep, activeStep, ">")
             .to(indicator, { scaleY: 1 }, "move");
 
           return () => {
