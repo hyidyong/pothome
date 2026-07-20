@@ -358,27 +358,116 @@ describe("normalizeCaseStudy", () => {
 });
 
 describe("normalizeResumeData", () => {
-  it("returns published entries in stable order without inventing copy", () => {
+  const timelineEntry = {
+    section: "timeline",
+    display_year: 2026,
+    entry_kind: "activity",
+    title: "YLC completion and HR deputy activity",
+    organization: "YLC",
+    role: "HR deputy",
+    period: "First half of 2026",
+    summary: "Supported YLC completion and HR operations.",
+    evidence_note: null,
+    case_study_slug: null,
+    sort_order: 4,
+  };
+
+  it("keeps timeline entries in stable sort order without inventing copy", () => {
     const result = normalizeResumeData([
       {
-        title: "Product Discovery & Execution",
-        period: "Selected proposals and prototypes",
+        ...timelineEntry,
+        title: "YLC activity, later in the year",
+        period: "2026 second half",
         summary: "제품 전략 요약",
         sort_order: 2,
       },
       {
-        title: "Strategy Research & Decision Design",
-        period: "Selected documented projects",
+        ...timelineEntry,
+        title: "YLC activity, earlier in the year",
+        period: "2026 first half",
         summary: "전략 기획 요약",
         sort_order: 1,
       },
     ]);
 
-    expect(result.entries.map((entry) => entry.title)).toEqual([
-      "Strategy Research & Decision Design",
-      "Product Discovery & Execution",
+    expect(result.timeline[0]?.entries.map((entry) => entry.title)).toEqual([
+      "YLC activity, earlier in the year",
+      "YLC activity, later in the year",
     ]);
-    expect(result.entries[0]?.organization).toBeNull();
+    expect(result.timeline[0]?.entries[0]?.organization).toBe("YLC");
+  });
+
+  it("groups timeline entries by descending year and isolates training", () => {
+    const result = normalizeResumeData([
+      { ...timelineEntry, display_year: 2025, sort_order: 2 },
+      timelineEntry,
+      {
+        ...timelineEntry,
+        title: "AI Solution Challenge award",
+        entry_kind: "award",
+        sort_order: 3,
+      },
+      {
+        section: "training",
+        display_year: null,
+        entry_kind: "training",
+        title: "Human AI Foundation completion",
+        organization: null,
+        role: null,
+        period: "Year undisclosed",
+        summary: "A publicly listed training completion.",
+        evidence_note: null,
+        case_study_slug: null,
+        sort_order: 1,
+      },
+    ]);
+
+    expect(result.timeline.map((year) => year.year)).toEqual([2026, 2025]);
+    expect(result.timeline[0]?.entries.map((entry) => entry.title)).toEqual([
+      "AI Solution Challenge award",
+      "YLC completion and HR deputy activity",
+    ]);
+    expect(result.training).toEqual([
+      { title: "Human AI Foundation completion" },
+    ]);
+  });
+
+  it("preserves an explicit null year from repository training aliases", () => {
+    const result = normalizeResumeData([
+      {
+        section: "training",
+        year: null,
+        kind: "training",
+        title: "Human AI Foundation completion",
+        organization: null,
+        role: null,
+        period: "Year undisclosed",
+        summary: "A publicly listed training completion.",
+        evidence_note: null,
+        case_study_slug: null,
+        sort_order: 1,
+      },
+    ]);
+
+    expect(result).toEqual({
+      timeline: [],
+      training: [{ title: "Human AI Foundation completion" }],
+    });
+  });
+
+  it("rejects invalid timeline and training year shapes", () => {
+    expect(() =>
+      normalizeResumeData([{ ...timelineEntry, display_year: null }]),
+    ).toThrow("Malformed public portfolio data");
+    expect(() =>
+      normalizeResumeData([
+        {
+          ...timelineEntry,
+          section: "training",
+          entry_kind: "training",
+        },
+      ]),
+    ).toThrow("Malformed public portfolio data");
   });
 });
 

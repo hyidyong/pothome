@@ -199,47 +199,76 @@ export type Database = {
       }
       experience_entries: {
         Row: {
+          case_study_slug: string | null
           created_at: string
           display_order: number
+          display_year: number | null
+          entry_kind: string | null
+          evidence_note: string | null
           id: number
+          organization: string | null
           period_label: string
           published: boolean
+          role: string | null
+          section: string
           slug: string
           summary: string
           title: string
           updated_at: string
         }
         Insert: {
+          case_study_slug?: string | null
           created_at?: string
           display_order: number
+          display_year?: number | null
+          entry_kind?: string | null
+          evidence_note?: string | null
           id?: never
+          organization?: string | null
           period_label: string
           published?: boolean
+          role?: string | null
+          section?: string
           slug: string
           summary: string
           title: string
           updated_at?: string
         }
         Update: {
+          case_study_slug?: string | null
           created_at?: string
           display_order?: number
+          display_year?: number | null
+          entry_kind?: string | null
+          evidence_note?: string | null
           id?: never
+          organization?: string | null
           period_label?: string
           published?: boolean
+          role?: string | null
+          section?: string
           slug?: string
           summary?: string
           title?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "experience_entries_case_study_slug_fkey"
+            columns: ["case_study_slug"]
+            isOneToOne: false
+            referencedRelation: "case_studies"
+            referencedColumns: ["slug"]
+          },
+        ]
       }
       site_profile: {
         Row: {
           created_at: string
           headline: string
           id: number
-          published: boolean
           profile_focus: Json
+          published: boolean
           slug: string
           summary: string
           updated_at: string
@@ -248,8 +277,8 @@ export type Database = {
           created_at?: string
           headline: string
           id?: never
-          published?: boolean
           profile_focus: Json
+          published?: boolean
           slug: string
           summary: string
           updated_at?: string
@@ -258,8 +287,8 @@ export type Database = {
           created_at?: string
           headline?: string
           id?: never
-          published?: boolean
           profile_focus?: Json
+          published?: boolean
           slug?: string
           summary?: string
           updated_at?: string

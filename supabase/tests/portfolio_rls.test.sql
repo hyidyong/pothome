@@ -451,7 +451,10 @@ insert into public.experience_entries (
   period_label,
   summary,
   display_order,
-  published
+  published,
+  section,
+  display_year,
+  entry_kind
 )
 values (
   'hidden-experience',
@@ -459,7 +462,10 @@ values (
   'Private',
   'Must remain private.',
   99,
-  false
+  false,
+  'timeline',
+  2026,
+  'activity'
 );
 
 set local role anon;

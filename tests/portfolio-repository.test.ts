@@ -6,6 +6,12 @@ type RecordedFilter = {
   value: unknown;
 };
 
+type RecordedOrder = {
+  table: string;
+  column: string;
+  options: unknown;
+};
+
 type QueryResult = {
   data: unknown;
   error: null;
@@ -26,6 +32,7 @@ type QueryBuilder = {
 const repositoryHarness = vi.hoisted(() => {
   const filters: RecordedFilter[] = [];
   const selections: Array<{ table: string; columns: string }> = [];
+  const orders: RecordedOrder[] = [];
 
   const detailCase = {
     slug: "global-technical-talent-strategy",
@@ -68,9 +75,39 @@ const repositoryHarness = vi.hoisted(() => {
     ],
   };
 
+  const resumeEntries = [
+    {
+      section: "timeline",
+      year: 2026,
+      kind: "activity",
+      title: "YLC completion and HR deputy activity",
+      organization: "YLC",
+      role: "HR deputy",
+      period: "First half of 2026",
+      summary: "Supported YLC completion and HR operations.",
+      evidence_note: null,
+      case_study_slug: null,
+      sort_order: 2,
+    },
+    {
+      section: "training",
+      year: null,
+      kind: "training",
+      title: "Human AI Foundation completion",
+      organization: null,
+      role: null,
+      period: "Year undisclosed",
+      summary: "A publicly listed training completion.",
+      evidence_note: null,
+      case_study_slug: null,
+      sort_order: 1,
+    },
+  ];
+
   return {
     filters,
     selections,
+    orders,
     client: {
       from(table: string) {
         let selectsSingleRow = false;
@@ -88,7 +125,8 @@ const repositoryHarness = vi.hoisted(() => {
             }
             return builder;
           },
-          order() {
+          order(column, options) {
+            orders.push({ table, column, options });
             return builder;
           },
           limit() {
@@ -113,6 +151,8 @@ const repositoryHarness = vi.hoisted(() => {
               };
             } else if (table === "case_studies" && selectsSlug) {
               data = detailCase;
+            } else if (table === "experience_entries") {
+              data = resumeEntries;
             } else if (selectsSingleRow) {
               data = null;
             }
@@ -141,6 +181,7 @@ describe("PortfolioRepository metric query filters", () => {
   beforeEach(() => {
     repositoryHarness.filters.length = 0;
     repositoryHarness.selections.length = 0;
+    repositoryHarness.orders.length = 0;
   });
 
   it("selects and returns the profile focus from the server repository", async () => {
@@ -174,5 +215,54 @@ describe("PortfolioRepository metric query filters", () => {
       "metrics.verified",
     ]);
     expect(verifiedFilterColumns).not.toContain("case_study_metrics.verified");
+  });
+
+  it("retrieves only published structured resume data in chronological order", async () => {
+    const repository = createPortfolioRepository();
+
+    const resume = await repository.getResumeData();
+
+    expect(repositoryHarness.selections).toContainEqual({
+      table: "experience_entries",
+      columns:
+        "section, year:display_year, kind:entry_kind, title, organization, role, period:period_label, summary, evidence_note, case_study_slug, sort_order:display_order",
+    });
+    expect(repositoryHarness.filters).toContainEqual({
+      table: "experience_entries",
+      column: "published",
+      value: true,
+    });
+    expect(repositoryHarness.orders).toEqual([
+      {
+        table: "experience_entries",
+        column: "display_year",
+        options: { ascending: false },
+      },
+      {
+        table: "experience_entries",
+        column: "display_order",
+        options: { ascending: true },
+      },
+    ]);
+    expect(resume.timeline).toEqual([
+      {
+        year: 2026,
+        entries: [
+          {
+            title: "YLC completion and HR deputy activity",
+            organization: "YLC",
+            role: "HR deputy",
+            period: "First half of 2026",
+            kind: "activity",
+            summary: "Supported YLC completion and HR operations.",
+            evidenceNote: null,
+            caseStudySlug: null,
+          },
+        ],
+      },
+    ]);
+    expect(resume.training).toEqual([
+      { title: "Human AI Foundation completion" },
+    ]);
   });
 });

@@ -1,10 +1,29 @@
 import Link from "next/link";
-import { ArrowLeftIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  AwardIcon,
+  BriefcaseIcon,
+  FolderKanbanIcon,
+  GraduationCapIcon,
+  UsersIcon,
+} from "lucide-react";
 
-import type { ResumeData } from "@/lib/portfolio/types";
+import { Reveal } from "@/components/portfolio/reveal";
+import type { ResumeData, ResumeEntryKind } from "@/lib/portfolio/types";
 
 type ResumePageProps = {
   data: ResumeData;
+};
+
+const entryKindMeta: Record<
+  ResumeEntryKind,
+  { label: string; Icon: typeof BriefcaseIcon }
+> = {
+  work: { label: "실무", Icon: BriefcaseIcon },
+  project: { label: "프로젝트", Icon: FolderKanbanIcon },
+  activity: { label: "대외활동", Icon: UsersIcon },
+  award: { label: "수상", Icon: AwardIcon },
+  education: { label: "교육", Icon: GraduationCapIcon },
 };
 
 export function ResumePage({ data }: ResumePageProps) {
@@ -26,20 +45,85 @@ export function ResumePage({ data }: ResumePageProps) {
         </p>
       </header>
 
-      <section className="resume-page__entries" aria-label="공개 경험">
-        {data.entries.map((entry) => (
-          <article
-            className="resume-page__entry"
-            key={`${entry.period}-${entry.title}`}
+      <section className="resume-page__timeline" aria-label="연도별 공개 이력">
+        {data.timeline.map(({ year, entries }) => (
+          <section
+            className="resume-page__year"
+            aria-labelledby={`resume-year-${year}`}
+            key={year}
           >
-            <p className="resume-page__period">{entry.period}</p>
-            <div className="resume-page__entry-copy">
-              <h2>{entry.title}</h2>
-              {entry.organization ? <p>{entry.organization}</p> : null}
-              <p>{entry.summary}</p>
-            </div>
-          </article>
+            <h2 id={`resume-year-${year}`}>{year}</h2>
+            <ul className="resume-page__year-list">
+              {entries.map((entry, index) => {
+                const { label, Icon } = entryKindMeta[entry.kind];
+
+                return (
+                  <li
+                    className="resume-page__year-item"
+                    key={`${entry.period}-${entry.title}`}
+                  >
+                    <Reveal
+                      className="resume-page__entry-reveal"
+                      delayMs={(index % 3) * 80}
+                    >
+                      <article className="resume-page__entry">
+                        <div className="resume-page__entry-kind">
+                          <Icon aria-hidden="true" />
+                          <span>{label}</span>
+                        </div>
+                        <div className="resume-page__entry-copy">
+                          <p className="resume-page__period">{entry.period}</p>
+                          <h3>{entry.title}</h3>
+                          {entry.organization ? (
+                            <p className="resume-page__organization">
+                              {entry.organization}
+                            </p>
+                          ) : null}
+                          {entry.role ? (
+                            <p className="resume-page__role">{entry.role}</p>
+                          ) : null}
+                          {entry.summary ? (
+                            <p className="resume-page__summary">
+                              {entry.summary}
+                            </p>
+                          ) : null}
+                          {entry.evidenceNote ? (
+                            <p className="resume-page__evidence-note">
+                              {entry.evidenceNote}
+                            </p>
+                          ) : null}
+                          {entry.caseStudySlug ? (
+                            <Link
+                              href={`/work/${entry.caseStudySlug}`}
+                              aria-label={`프로젝트 보기: ${entry.title}`}
+                            >
+                              프로젝트 보기
+                            </Link>
+                          ) : null}
+                        </div>
+                      </article>
+                    </Reveal>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
         ))}
+      </section>
+
+      <section
+        className="resume-page__training"
+        aria-labelledby="resume-training-heading"
+      >
+        <div className="resume-page__training-heading">
+          <p>Continued learning</p>
+          <h2 id="resume-training-heading">교육 및 수료</h2>
+        </div>
+        <ul className="resume-page__training-list">
+          {data.training.map((entry) => (
+            <li key={entry.title}>{entry.title}</li>
+          ))}
+        </ul>
       </section>
 
       <footer className="resume-page__footer">
