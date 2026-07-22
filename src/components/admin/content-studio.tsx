@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useState, type ClipboardEvent, type FormEvent } from "react";
 
 import type { GalleryAsset, GalleryAssetCategory } from "@/lib/asset-picker/repository";
 import type { PressRelease } from "@/lib/press-room/repository";
@@ -26,6 +26,7 @@ async function request(path: string, options: RequestInit) {
 export function ContentStudio({ assets, releases }: ContentStudioProps) {
   const [notice, setNotice] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [pastedThumbnail, setPastedThumbnail] = useState<File | null>(null);
 
   const updateGallery = async (event: FormEvent<HTMLFormElement>, asset: GalleryAsset) => {
     event.preventDefault();
@@ -92,7 +93,7 @@ export function ContentStudio({ assets, releases }: ContentStudioProps) {
     const form = new FormData(event.currentTarget);
     try {
       let thumbnailAssetId = form.get("thumbnailAssetId") || null;
-      const thumbnailFile = form.get("thumbnailFile");
+      const thumbnailFile = pastedThumbnail ?? form.get("thumbnailFile");
       if (thumbnailFile instanceof File && thumbnailFile.size) {
         const thumbnailForm = new FormData();
         thumbnailForm.set("file", thumbnailFile);
@@ -110,9 +111,18 @@ export function ContentStudio({ assets, releases }: ContentStudioProps) {
         }),
       });
       event.currentTarget.reset();
+      setPastedThumbnail(null);
       setNotice("보도자료를 추가했습니다. 새로고침하면 PR Room에 표시됩니다.");
       window.setTimeout(() => window.location.reload(), 350);
     } catch (error) { setNotice(error instanceof Error ? error.message : "보도자료를 추가하지 못했습니다."); }
+  };
+
+  const pastePressThumbnail = (event: ClipboardEvent<HTMLElement>) => {
+    const image = Array.from(event.clipboardData.files).find((file) => file.type.startsWith("image/"));
+    if (!image) return;
+    event.preventDefault();
+    setPastedThumbnail(image);
+    setNotice(`붙여넣은 이미지 “${image.name || "클립보드 이미지"}”를 대표 이미지로 사용합니다.`);
   };
 
   const removePress = async (release: PressRelease) => {
@@ -143,7 +153,7 @@ export function ContentStudio({ assets, releases }: ContentStudioProps) {
     </section>
     <section aria-labelledby="studio-press"><div className="content-studio__section-heading"><div><p>PR ROOM</p><h2 id="studio-press">보도자료</h2></div></div>
       <form className="content-studio__press-form" onSubmit={createPress} encType="multipart/form-data">
-        <label>언론사/매체<input name="publisher" maxLength={80} required /></label><label>발행일<input name="publishedOn" type="date" required /></label><label className="content-studio__wide">헤드라인<input name="headline" maxLength={200} required /></label><label className="content-studio__wide">요약<textarea name="summary" maxLength={700} rows={4} required /></label><label>기존 대표 이미지<select name="thumbnailAssetId" defaultValue=""><option value="">이미지 없음</option>{assets.map((asset) => <option value={asset.id} key={asset.id}>{asset.title}</option>)}</select></label><label>새 대표 이미지<input name="thumbnailFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /></label><label>기사 링크<input name="externalUrl" type="url" placeholder="https://" /></label><p className="content-studio__press-help">새 이미지를 선택하면 기존 이미지 선택보다 우선해 보도자료 전용 썸네일로 저장합니다.</p><button type="submit">보도자료 추가</button>
+        <label>언론사/매체<input name="publisher" maxLength={80} required /></label><label>발행일<input name="publishedOn" type="date" required /></label><label className="content-studio__wide">헤드라인<input name="headline" maxLength={200} required /></label><label className="content-studio__wide">요약<textarea name="summary" maxLength={700} rows={4} required /></label><label>기존 대표 이미지<select name="thumbnailAssetId" defaultValue=""><option value="">이미지 없음</option>{assets.map((asset) => <option value={asset.id} key={asset.id}>{asset.title}</option>)}</select></label><label>새 대표 이미지<input name="thumbnailFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /></label><div className="content-studio__paste-zone" tabIndex={0} onClick={(event) => event.currentTarget.focus()} onPaste={pastePressThumbnail} aria-label="대표 이미지를 붙여넣으려면 여기에 포커스한 뒤 Ctrl+V를 누르세요"><strong>{pastedThumbnail ? `붙여넣은 이미지: ${pastedThumbnail.name || "클립보드 이미지"}` : "클립보드에서 대표 이미지 붙여넣기"}</strong><span>이 영역을 클릭한 뒤 Ctrl+V를 누르세요.</span>{pastedThumbnail ? <button type="button" onClick={() => setPastedThumbnail(null)}>붙여넣기 취소</button> : null}</div><label>기사 링크<input name="externalUrl" type="url" placeholder="https://" /></label><p className="content-studio__press-help">붙여넣은 이미지가 가장 우선이며, 그다음 새 파일, 기존 갤러리 이미지 순으로 적용됩니다.</p><button type="submit">보도자료 추가</button>
       </form>
       <div className="content-studio__press-list">{releases.map((release) => <article key={release.id}><div><strong>{release.publisher}</strong><span>{release.publishedOn}</span><h3>{release.headline}</h3></div><button type="button" onClick={() => removePress(release)}>삭제</button></article>)}</div>
     </section>

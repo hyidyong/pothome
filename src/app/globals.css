@@ -831,6 +831,11 @@ button:not(:disabled),
 .content-studio__move button:hover, .content-studio__move button:focus-visible { border-color: var(--signal); color: var(--signal); }
 .content-studio__move button:disabled { border-color: color-mix(in srgb, var(--signal) 45%, var(--line)); color: var(--signal); cursor: default; opacity: 0.8; }
 .content-studio__press-help { grid-column: 1 / -1; color: var(--faint-foreground); font-size: 0.78rem; line-height: 1.5; }
+.content-studio__paste-zone { display: grid; align-content: center; gap: 5px; min-height: 94px; padding: 14px; border: 1px dashed color-mix(in srgb, var(--signal) 58%, var(--line)); background: color-mix(in srgb, var(--signal) 6%, transparent); color: var(--foreground); outline: none; }
+.content-studio__paste-zone strong { font-size: 0.82rem; line-height: 1.35; }
+.content-studio__paste-zone span { color: var(--faint-foreground); font-size: 0.75rem; line-height: 1.4; }
+.content-studio__paste-zone button { justify-self: start; min-height: 32px; margin-top: 4px; border: 0; background: transparent; color: var(--signal); font: inherit; font-size: 0.75rem; font-weight: 700; padding: 0; text-decoration: underline; text-underline-offset: 0.3em; }
+.content-studio__paste-zone:hover, .content-studio__paste-zone:focus-visible { border-color: var(--signal); background: color-mix(in srgb, var(--signal) 11%, transparent); }
 .site-footer__admin-link { align-self: start; margin-top: 4px; color: var(--faint-foreground); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 0.35em; transition: color 180ms ease, text-decoration-color 180ms ease; }
 .site-footer__admin-link:hover, .site-footer__admin-link:focus-visible { color: var(--signal); text-decoration-color: currentColor; }
 .content-studio__asset { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 16px; border: 1px solid #d7dbd7; background: #fff; }
