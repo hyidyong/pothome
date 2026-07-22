@@ -61,13 +61,13 @@ function imageSource(asset: GalleryAsset) {
 }
 
 function collectionId(asset: GalleryAsset) {
-  if (asset.title.includes("단디코인노래방 업무 인수인계 자료")) return "daily-coin-handover";
+  if (asset.title.includes("단디모바일 업무 인수인계 자료")) return "dandi-mobile-handover";
   if (asset.sourceGroup === "피토리") return "fitory-product-record";
   return asset.id;
 }
 
 function collectionTitle(asset: GalleryAsset) {
-  if (asset.title.includes("단디코인노래방 업무 인수인계 자료")) return "단디코인노래방 업무 인수인계 자료";
+  if (asset.title.includes("단디모바일 업무 인수인계 자료")) return "단디모바일 업무 인수인계 자료";
   if (asset.sourceGroup === "피토리") return "피토리 제품 화면 기록";
   return asset.title;
 }
