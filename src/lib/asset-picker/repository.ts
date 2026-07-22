@@ -29,6 +29,16 @@ export type GalleryAsset = {
   description: string | null;
 };
 
+export type UploadedGalleryAssetInput = {
+  filePath: string;
+  fileName: string;
+  mimeType: string;
+  byteSize: number;
+  category: GalleryAssetCategory;
+  title: string;
+  description: string | null;
+};
+
 const execFileAsync = promisify(execFile);
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -253,6 +263,46 @@ export async function updateGalleryMetadata(
     .eq("id", id);
 
   if (error) throw new Error(`Gallery metadata update failed: ${error.message}`);
+}
+
+export async function createUploadedGalleryAsset(input: UploadedGalleryAssetInput) {
+  if (!createSupabaseAdminClient() && canUseLocalDatabaseFallback()) {
+    const rows = await queryLocalDatabase(
+      `insert into public.asset_picker_assets (
+        file_path, file_name, source_group, mime_type, byte_size, modified_at,
+        decision, gallery_category, gallery_title, gallery_description
+      ) values (
+        ${sql(input.filePath)}, ${sql(input.fileName)}, ${sql("관리자 업로드")},
+        ${sql(input.mimeType)}, ${input.byteSize}, now(), 'selected',
+        ${sql(input.category)}, ${sql(input.title)}, ${input.description ? sql(input.description) : "null"}
+      ) returning id::text`,
+    );
+    const id = rows[0]?.[0];
+    if (!id) throw new Error("Gallery upload catalog insert failed.");
+    return id;
+  }
+
+  const { data, error } = await getClient()
+    .from("asset_picker_assets")
+    .insert({
+      file_path: input.filePath,
+      file_name: input.fileName,
+      source_group: "관리자 업로드",
+      mime_type: input.mimeType,
+      byte_size: input.byteSize,
+      modified_at: new Date().toISOString(),
+      decision: "selected",
+      gallery_category: input.category,
+      gallery_title: input.title,
+      gallery_description: input.description,
+    })
+    .select("id")
+    .single();
+
+  if (error || !data) {
+    throw new Error(`Gallery upload catalog insert failed: ${error?.message ?? "unknown error"}`);
+  }
+  return data.id;
 }
 
 export async function getPickerAssetPath(id: string) {

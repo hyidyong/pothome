@@ -816,6 +816,15 @@ button:not(:disabled),
 .content-studio__section-heading h2 { font-size: clamp(2rem, 4vw, 4rem); letter-spacing: -0.055em; line-height: 0.94; }
 .content-studio__section-heading > a, .content-studio button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; padding: 8px 12px; border: 1px solid #111513; background: #111513; color: #f7f8f5; cursor: pointer; font: inherit; font-size: 0.8rem; font-weight: 750; text-decoration: none; }
 .content-studio__gallery-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.content-studio__upload-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 0 0 18px; padding: 20px; border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 82%, transparent); }
+.content-studio__upload-form > div { grid-column: 1 / -1; display: grid; gap: 4px; }
+.content-studio__upload-form p { color: var(--signal); font-size: 0.7rem; font-weight: 750; letter-spacing: 0.12em; }
+.content-studio__upload-form h3 { font-size: 1.15rem; letter-spacing: -0.03em; }
+.content-studio__upload-form span { color: var(--muted-foreground); font-size: 0.8rem; line-height: 1.5; }
+.content-studio__upload-form label { display: grid; gap: 7px; color: var(--muted-foreground); font-size: 0.78rem; }
+.content-studio__upload-form input, .content-studio__upload-form select, .content-studio__upload-form textarea { width: 100%; border: 1px solid var(--line); background: var(--background); color: var(--foreground); font: inherit; padding: 10px 11px; }
+.content-studio__upload-form button { justify-self: start; border: 0; background: var(--signal); color: #04130d; cursor: pointer; font: inherit; font-weight: 750; padding: 11px 15px; }
+.content-studio__upload-form button:disabled { cursor: wait; opacity: 0.65; }
 .content-studio__asset { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 16px; border: 1px solid #d7dbd7; background: #fff; }
 .content-studio__asset > img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #e7e9e6; }
 .content-studio__asset > div { display: grid; gap: 10px; }
