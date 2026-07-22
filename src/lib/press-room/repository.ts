@@ -39,6 +39,9 @@ function quote(value: string) {
 }
 
 export async function getPressReleases(): Promise<PressRelease[]> {
+  if (process.env.NODE_ENV === "production" && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return [];
+  }
   const rows = await query(
     "select id, publisher, headline, summary, published_on::text, coalesce(thumbnail_asset_id::text, ''), coalesce(external_url, '') from public.press_releases order by published_on desc, created_at desc",
   );

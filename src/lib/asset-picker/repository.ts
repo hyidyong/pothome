@@ -177,6 +177,9 @@ function mapGalleryAsset(
 }
 
 export async function getSelectedGalleryAssets(): Promise<GalleryAsset[]> {
+  if (!createSupabaseAdminClient() && !canUseLocalDatabaseFallback()) {
+    return [];
+  }
   if (!createSupabaseAdminClient() && canUseLocalDatabaseFallback()) {
     const rows = await queryLocalDatabase(
       "select id, file_name, source_group, mime_type, gallery_category, gallery_title, gallery_description from public.asset_picker_assets where decision = 'selected' order by source_group, file_name",
