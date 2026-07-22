@@ -46,7 +46,19 @@ export function CaseStudyPage({ caseStudy }: CaseStudyPageProps) {
           <p>{caseStudy.role}</p>
           <h1>{caseStudy.title}</h1>
         </div>
-        <p className="case-study-page__summary">{caseStudy.summary}</p>
+        <div className="case-study-page__summary-wrap">
+          <p className="case-study-page__summary">{caseStudy.summary}</p>
+          {caseStudy.slug === "pacemate-academic-os" ? (
+            <a
+              className="case-study-page__live-link"
+              href="https://pacemate-git-main-handhj03-3080s-projects.vercel.app/login"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Substudy 배포 열기 <span aria-hidden="true">↗</span>
+            </a>
+          ) : null}
+        </div>
       </header>
 
       <div className="case-study-page__body">

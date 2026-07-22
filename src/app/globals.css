@@ -1379,6 +1379,10 @@ button:not(:disabled),
   line-height: 1.7;
 }
 
+.case-study-page__summary-wrap { display: grid; align-content: start; gap: 22px; }
+.case-study-page__live-link { display: inline-flex; width: fit-content; align-items: center; gap: 8px; color: var(--signal); font-size: 0.875rem; font-weight: 760; text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--signal) 70%, transparent); text-underline-offset: 0.35em; }
+.case-study-page__live-link:hover { color: var(--foreground); }
+
 .case-study-page__body {
   padding-inline: var(--gutter);
 }
