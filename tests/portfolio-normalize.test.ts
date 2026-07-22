@@ -430,6 +430,7 @@ describe("normalizeResumeData", () => {
     expect(result.training).toEqual([
       { title: "Human AI Foundation completion" },
     ]);
+    expect(result.credentials).toEqual([]);
   });
 
   it("preserves an explicit null year from repository training aliases", () => {
@@ -452,7 +453,59 @@ describe("normalizeResumeData", () => {
     expect(result).toEqual({
       timeline: [],
       training: [{ title: "Human AI Foundation completion" }],
+      credentials: [],
     });
+  });
+
+  it("keeps published credentials renderable in a separate public section", () => {
+    const result = normalizeResumeData([
+      {
+        section: "credential",
+        display_year: null,
+        entry_kind: "credential",
+        title: "Driver license",
+        organization: null,
+        role: null,
+        period: "2025",
+        summary: "A publicly listed credential.",
+        evidence_note: null,
+        case_study_slug: null,
+        sort_order: 1,
+      },
+    ]);
+
+    expect(result).toEqual({
+      timeline: [],
+      training: [],
+      credentials: [
+        {
+          title: "Driver license",
+          period: "2025",
+          summary: "A publicly listed credential.",
+        },
+      ],
+    });
+  });
+
+  it("keeps year-undisclosed education entries in the continued learning list", () => {
+    const result = normalizeResumeData([
+      {
+        section: "training",
+        display_year: null,
+        entry_kind: "education",
+        title: "Law degree studies",
+        organization: "Keimyung University",
+        role: null,
+        period: "2022 to present",
+        summary: "Publicly listed degree studies.",
+        evidence_note: null,
+        case_study_slug: null,
+        sort_order: 1,
+      },
+    ]);
+
+    expect(result.training).toEqual([{ title: "Law degree studies" }]);
+    expect(result.credentials).toEqual([]);
   });
 
   it("rejects invalid timeline and training year shapes", () => {

@@ -114,9 +114,10 @@ it("provides matching desktop and accessible mobile navigation", async () => {
     name: "주요 탐색",
   });
   const destinations = [
-    ["Work", "#work"],
-    ["Decision Spine", "#decision-spine"],
-    ["About", "#about"],
+    ["Work", "/#work"],
+    ["Gallery", "/gallery"],
+    ["PR Room", "/press"],
+    ["About", "/#about"],
     ["Resume", "/resume"],
   ] as const;
 
@@ -152,7 +153,7 @@ it("provides matching desktop and accessible mobile navigation", async () => {
   ).toHaveLength(0);
 });
 
-it("renders the typed profile, exact promise, and descriptive hero image", () => {
+it("renders the typed profile, exact promise, and Son Heejeong portrait", () => {
   render(<HeroSection profile={homePageData.profile} />);
 
   expect(
@@ -162,16 +163,16 @@ it("renders the typed profile, exact promise, and descriptive hero image", () =>
     }),
   ).toBeInTheDocument();
   expect(screen.getByText(homePageData.profile.summary)).toBeInTheDocument();
-  const focus = screen.getByRole("list", { name: "희망 직무 비중" });
-  expect(within(focus).getByText("65%")).toBeInTheDocument();
-  expect(within(focus).getByText("전략기획")).toBeInTheDocument();
-  expect(within(focus).getByText("20%")).toBeInTheDocument();
-  expect(within(focus).getByText("HR")).toBeInTheDocument();
-  expect(within(focus).getByText("15%")).toBeInTheDocument();
-  expect(within(focus).getByText("PM")).toBeInTheDocument();
+  const focus = screen.getByRole("list", { name: "활동 기준 지표" });
+  expect(within(focus).getByText("2022–2026")).toBeInTheDocument();
+  expect(within(focus).getByText("대외·공공 활동 기록")).toBeInTheDocument();
+  expect(within(focus).getByText("3건")).toBeInTheDocument();
+  expect(within(focus).getByText("수상 기록 · 2026")).toBeInTheDocument();
+  expect(within(focus).getByText("6회")).toBeInTheDocument();
+  expect(within(focus).getByText("AI·데이터 교육 수료 · 2026.05–07")).toBeInTheDocument();
 
   const image = screen.getByRole("img", {
-    name: "문서, 시장 지도와 의사결정 노드가 하나의 실행 방향으로 수렴하는 추상 전략 이미지",
+    name: "전략기획자 손희정 프로필 사진",
   });
   expect(image).toHaveAttribute("alt");
   expect(image.getAttribute("alt")?.trim()).not.toBe("");

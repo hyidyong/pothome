@@ -1,21 +1,18 @@
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 
 import type { HomePageData } from "@/lib/portfolio/types";
 
-const defaultImageAlt =
-  "문서, 시장 지도와 의사결정 노드가 하나의 실행 방향으로 수렴하는 추상 전략 이미지";
-
 type HeroSectionProps = {
   profile: HomePageData["profile"];
-  imageSrc?: string | StaticImageData;
-  imageAlt?: string;
 };
 
-export function HeroSection({
-  profile,
-  imageSrc = "/images/hero-strategy-signal-f48ea2a6.avif",
-  imageAlt = defaultImageAlt,
-}: HeroSectionProps) {
+const proofMetrics = [
+  { value: "2022–2026", label: "대외·공공 활동 기록" },
+  { value: "3건", label: "수상 기록 · 2026" },
+  { value: "6회", label: "AI·데이터 교육 수료 · 2026.05–07" },
+] as const;
+
+export function HeroSection({ profile }: HeroSectionProps) {
   return (
     <section className="hero-section" aria-labelledby="hero-title">
       <div className="hero-section__copy">
@@ -25,11 +22,11 @@ export function HeroSection({
         </div>
 
         <div className="hero-section__role-block">
-          <ul aria-label="희망 직무 비중" className="hero-section__role-mix">
-            {profile.focus.map((focus) => (
-              <li key={focus.role}>
-                <strong>{focus.percentage}%</strong>
-                <span>{focus.role}</span>
+          <ul aria-label="활동 기준 지표" className="hero-section__role-mix">
+            {proofMetrics.map((metric) => (
+              <li key={metric.label}>
+                <strong>{metric.value}</strong>
+                <span>{metric.label}</span>
               </li>
             ))}
           </ul>
@@ -38,14 +35,20 @@ export function HeroSection({
       </div>
 
       <div className="hero-section__visual">
-        <Image
-          className="hero-section__image"
-          src={imageSrc}
-          alt={imageAlt}
-          fill
-          preload
-          sizes="(max-width: 900px) 100vw, 48vw"
-        />
+        <div className="hero-section__profile" aria-label="전략기획자 손희정 소개">
+          <Image
+            className="hero-section__profile-image"
+            src="/images/son-heejeong-profile.png"
+            alt="전략기획자 손희정 프로필 사진"
+            width={384}
+            height={512}
+            sizes="(max-width: 900px) 42vw, 24vw"
+          />
+          <div className="hero-section__profile-copy">
+            <strong>손희정</strong>
+            <span>SON HEEJEONG · STRATEGY PLANNER</span>
+          </div>
+        </div>
       </div>
     </section>
   );

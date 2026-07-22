@@ -118,9 +118,7 @@ describe("release readiness handoff", () => {
 
     expect(mediaContract).not.toContain(".superpowers");
     expect(mediaContract).not.toContain('from "node:crypto"');
-    expect(mediaContract).toContain(
-      'const auditedImageStem = "hero-strategy-signal-f48ea2a6"',
-    );
+    expect(mediaContract).toContain("son-heejeong-profile.png");
     expect(readinessContract).not.toContain(machinePathExistenceCall);
   });
 

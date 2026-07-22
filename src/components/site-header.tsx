@@ -14,9 +14,10 @@ import {
 } from "@/components/ui/sheet";
 
 const destinations = [
-  { label: "Work", href: "#work" },
-  { label: "Decision Spine", href: "#decision-spine" },
-  { label: "About", href: "#about" },
+  { label: "Work", href: "/#work" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "PR Room", href: "/press" },
+  { label: "About", href: "/#about" },
   { label: "Resume", href: "/resume" },
 ] as const;
 
@@ -30,10 +31,10 @@ export function SiteHeader() {
         <Link
           className="site-header__wordmark"
           href="/"
-          aria-label="홈: JY Strategy Planner"
+          aria-label="홈: 손희정 전략기획 포트폴리오"
         >
           <span aria-hidden="true" className="site-header__signal" />
-          <span>JY · Strategy Planner</span>
+          <span>손희정 · Strategy Planner</span>
         </Link>
 
         <nav className="site-header__desktop-nav" aria-label="주요 탐색">
