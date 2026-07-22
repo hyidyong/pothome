@@ -54,7 +54,9 @@ function getClient() {
 }
 
 function canUseLocalDatabaseFallback() {
-  return process.env.NODE_ENV !== "production";
+  const configuredUrl = process.env.SUPABASE_URL ?? "";
+  const isLocalSupabase = /^(https?:\/\/)?(localhost|127\.0\.0\.1|\[::1\])(?::\d+)?/i.test(configuredUrl);
+  return process.env.NODE_ENV !== "production" || isLocalSupabase;
 }
 
 async function queryLocalDatabase(query: string) {
