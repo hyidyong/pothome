@@ -91,6 +91,73 @@ const deploymentFallbackGalleryAssets: GalleryAsset[] = [
   },
 ];
 
+const deploymentCategoryLabels: Record<GalleryAssetCategory, string> = {
+  result: "프로젝트 결과물",
+  field: "현장 활동",
+  credential: "수료 · 상장",
+};
+
+type DeploymentGalleryAssetSeed = readonly [
+  fileName: string,
+  sourceGroup: string,
+  mimeType: string,
+  category: GalleryAssetCategory,
+  title: string,
+  description: string,
+  staticImageUrl: string,
+];
+
+const deploymentGalleryAssetSeeds: readonly DeploymentGalleryAssetSeed[] = [
+  ["ai-solution-team-field.jpg", "Admin Upload", "image/jpeg", "field", "AI Solution Challenge 팀 활동", "AI Solution Challenge 팀 협업 현장입니다.", "/images/gallery/selected/01.jpg"],
+  ["global-team-exchange.png", "Admin Upload", "image/png", "field", "글로벌 팀 교류", "다문화 협업과 현장 교류 기록입니다.", "/images/gallery/selected/02.png"],
+  ["hirepass-foreign-talent.png", "Admin Upload", "image/png", "result", "HirePass 외국인 전문인력 채용 서비스", "외국인 전문인력 채용 사전진단 서비스 랜딩 화면입니다.", "/images/gallery/selected/03.png"],
+  ["multicultural-collaboration.png", "Admin Upload", "image/png", "field", "다문화 협업 현장", "온·오프라인 협업 세션 현장입니다.", "/images/gallery/selected/04.png"],
+  ["vision-pruner-presentation.png", "Admin Upload", "image/png", "field", "비전프러너 현대차 PEB 발표", "비전프러너 현대차 PEB 프로젝트 발표 현장입니다.", "/images/gallery/selected/05.png"],
+  ["research-war-room-concept.png", "REWORK 디자인 UI", "image/png", "result", "Research War Room UI 콘셉트", "리서치 의사결정 화면 UI 콘셉트입니다.", "/images/gallery/selected/06.png"],
+  ["KakaoTalk_20260705_001712915.jpg", "공유캠 첫 해커톤 자료", "image/jpeg", "field", "공유캠 첫 해커톤 현장", "공유캠 첫 해커톤 협업 현장입니다.", "/images/gallery/selected/07.jpg"],
+  ["ablearn-nia-certificate.png", "관리자 업로드", "image/png", "credential", "에이블런·NIA 디지털 마케팅 트랙 수료증", "2023년 9월 프로젝트 도약 디지털 마케팅 트랙 수료증입니다.", "/images/gallery/selected/08.png"],
+  ["ai-solution-challenge-excellence-award.png", "관리자 업로드", "image/png", "credential", "AI Solution Challenge 우수상", "AI Solution Challenge Program 우수상 수상 현장입니다.", "/images/gallery/selected/09.png"],
+  ["dsac-data-scientist-certificate.png", "관리자 업로드", "image/png", "credential", "DSAC 데이터 사이언티스트 수료증", "DSAC M1 Data Programming 수료증입니다.", "/images/gallery/selected/10.png"],
+  ["human-ai-foundation-grand-prize.png", "관리자 업로드", "image/png", "credential", "Human AI Foundation 최우수상", "2026 첨단산업 인재양성 AI 부트캠프 최우수상입니다.", "/images/gallery/selected/11.png"],
+  ["future-leaders-encouragement-award.png", "관리자 업로드", "image/png", "credential", "2026 퓨처리더스 캠프 장려상", "한경협 퓨처리더스 캠프 기업가정신 경연 장려상 수상 현장입니다.", "/images/gallery/selected/14.png"],
+  ["vibecoding-basic-certificate.png", "관리자 업로드", "image/png", "credential", "대구디지털혁신진흥원 바이브코딩 초급 수료증", "2026년 6월 바이브코딩 초급 교육 과정 수료증입니다.", "/images/gallery/selected/17.png"],
+  ["vibecoding-intermediate-certificate.png", "관리자 업로드", "image/png", "credential", "대구디지털혁신진흥원 바이브코딩 중급 수료증", "2026년 6월 바이브코딩 중급 교육 과정 수료증입니다.", "/images/gallery/selected/18.png"],
+  ["ylc-excellent-operations-award.png", "관리자 업로드", "image/png", "credential", "YLC 우수 운영진상", "한국경제인협회 YLC 우수 운영진상입니다.", "/images/gallery/selected/19.png"],
+  ["youth-entrepreneurship-committee-plan.jpg", "청년창업위원회 활동", "image/jpeg", "result", "청년창업위원회 사업계획서", "청년창업위원회 활동에서 기획한 사업계획서 결과물입니다.", "/images/gallery/selected/20.jpg"],
+  ["fitory-01.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/21.png"],
+  ["fitory-02.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/22.png"],
+  ["fitory-03.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/23.png"],
+  ["fitory-04.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/24.png"],
+  ["fitory-05.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/25.png"],
+  ["fitory-06.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/26.png"],
+  ["fitory-07.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/27.png"],
+  ["fitory-08.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/28.png"],
+  ["fitory-09.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/29.png"],
+  ["fitory-10.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/30.png"],
+  ["fitory-11.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/31.png"],
+  ["fitory-12.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/32.png"],
+  ["fitory-13.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/33.png"],
+  ["fitory-14.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/34.png"],
+  ["fitory-15.png", "피토리", "image/png", "result", "피토리 제품 화면", "1인 사업 기획 피토리의 MVP 제품 화면입니다.", "/images/gallery/selected/35.png"],
+];
+
+const fullDeploymentFallbackGalleryAssets: GalleryAsset[] = [
+  ...deploymentFallbackGalleryAssets,
+  ...deploymentGalleryAssetSeeds.map(
+    ([fileName, sourceGroup, mimeType, category, title, description, staticImageUrl], index) => ({
+      id: `static-selected-${index + 1}`,
+      fileName,
+      sourceGroup,
+      mimeType,
+      category,
+      label: deploymentCategoryLabels[category],
+      title,
+      description,
+      staticImageUrl,
+    }),
+  ),
+];
+
 function getClient() {
   const client = createSupabaseAdminClient();
   if (!client) {
@@ -226,7 +293,7 @@ function mapGalleryAsset(
 
 export async function getSelectedGalleryAssets(): Promise<GalleryAsset[]> {
   if (!createSupabaseAdminClient() && !canUseLocalDatabaseFallback()) {
-    return deploymentFallbackGalleryAssets;
+    return fullDeploymentFallbackGalleryAssets;
   }
   if (!createSupabaseAdminClient() && canUseLocalDatabaseFallback()) {
     const rows = await queryLocalDatabase(
