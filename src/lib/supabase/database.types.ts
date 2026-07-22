@@ -34,6 +34,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      asset_picker_assets: {
+        Row: {
+          byte_size: number
+          decision: string
+          decision_updated_at: string
+          file_name: string
+          file_path: string
+          gallery_category: string
+          gallery_description: string | null
+          gallery_title: string | null
+          id: string
+          indexed_at: string
+          mime_type: string
+          modified_at: string
+          source_group: string
+        }
+        Insert: {
+          byte_size: number
+          decision?: string
+          decision_updated_at?: string
+          file_name: string
+          file_path: string
+          gallery_category?: string
+          gallery_description?: string | null
+          gallery_title?: string | null
+          id?: string
+          indexed_at?: string
+          mime_type: string
+          modified_at: string
+          source_group: string
+        }
+        Update: {
+          byte_size?: number
+          decision?: string
+          decision_updated_at?: string
+          file_name?: string
+          file_path?: string
+          gallery_category?: string
+          gallery_description?: string | null
+          gallery_title?: string | null
+          id?: string
+          indexed_at?: string
+          mime_type?: string
+          modified_at?: string
+          source_group?: string
+        }
+        Relationships: []
+      }
       case_studies: {
         Row: {
           category: string

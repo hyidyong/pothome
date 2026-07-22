@@ -220,6 +220,7 @@ const resumeData = {
     { title: "Human AI Foundation" },
     { title: "Data-driven Decision Making" },
   ],
+  credentials: [],
 } satisfies ResumeData;
 
 function expectBefore(first: Element, second: Element) {

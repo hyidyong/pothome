@@ -147,7 +147,21 @@ const resumeTimelineEntrySchema = z.object({
 const resumeTrainingEntrySchema = z.object({
   section: z.literal("training"),
   year: z.null(),
-  kind: z.literal("training"),
+  kind: z.enum(["training", "education"]),
+  title: nonBlankText,
+  organization: nullableNonBlankText,
+  role: nullableNonBlankText,
+  period: nonBlankText,
+  summary: nonBlankText,
+  evidence_note: nullableNonBlankText,
+  case_study_slug: nullableNonBlankText,
+  sort_order: sortOrder,
+});
+
+const resumeCredentialEntrySchema = z.object({
+  section: z.literal("credential"),
+  year: z.null(),
+  kind: z.literal("credential"),
   title: nonBlankText,
   organization: nullableNonBlankText,
   role: nullableNonBlankText,
@@ -161,6 +175,7 @@ const resumeTrainingEntrySchema = z.object({
 const resumeEntrySchema = z.union([
   resumeTimelineEntrySchema,
   resumeTrainingEntrySchema,
+  resumeCredentialEntrySchema,
 ]);
 
 const resumeEntryArraySchema = z.preprocess((value) => {
@@ -309,12 +324,22 @@ export function normalizeResumeData(input: unknown): ResumeData {
   const parsed = parsePublicData(resumeEntryArraySchema, input);
   const timelineEntries = new Map<number, ResumeData["timeline"][number]["entries"]>();
   const training = [] as ResumeData["training"];
+  const credentials = [] as ResumeData["credentials"];
 
   for (const entry of [...parsed].sort(
     (left, right) => left.sort_order - right.sort_order,
   )) {
     if (entry.section === "training") {
       training.push({ title: entry.title });
+      continue;
+    }
+
+    if (entry.section === "credential") {
+      credentials.push({
+        title: entry.title,
+        period: entry.period,
+        summary: entry.summary,
+      });
       continue;
     }
 
@@ -337,6 +362,7 @@ export function normalizeResumeData(input: unknown): ResumeData {
       .map(([year, entries]) => ({ year, entries }))
       .sort((left, right) => right.year - left.year),
     training,
+    credentials,
   };
 }
 

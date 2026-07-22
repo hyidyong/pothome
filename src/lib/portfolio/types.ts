@@ -71,7 +71,14 @@ export type ResumeYear = { year: number; entries: ResumeEntry[] };
 
 export type ResumeTrainingEntry = { title: string };
 
+export type ResumeCredentialEntry = {
+  title: string;
+  period: string;
+  summary: string;
+};
+
 export type ResumeData = {
   timeline: ResumeYear[];
   training: ResumeTrainingEntry[];
+  credentials: ResumeCredentialEntry[];
 };

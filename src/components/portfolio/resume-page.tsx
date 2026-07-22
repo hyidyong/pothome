@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   ArrowLeftIcon,
   AwardIcon,
+  BadgeCheckIcon,
   BriefcaseIcon,
   FolderKanbanIcon,
   GraduationCapIcon,
@@ -125,6 +126,30 @@ export function ResumePage({ data }: ResumePageProps) {
           ))}
         </ul>
       </section>
+
+      {data.credentials.length > 0 ? (
+        <section
+          className="resume-page__training resume-page__credentials"
+          aria-labelledby="resume-credentials-heading"
+        >
+          <div className="resume-page__training-heading">
+            <p>Credentials</p>
+            <h2 id="resume-credentials-heading">자격 및 면허</h2>
+          </div>
+          <ul className="resume-page__training-list">
+            {data.credentials.map((entry) => (
+              <li key={`${entry.period}-${entry.title}`}>
+                <BadgeCheckIcon aria-hidden="true" />
+                <div>
+                  <strong>{entry.title}</strong>
+                  <span>{entry.period}</span>
+                  <p>{entry.summary}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <footer className="resume-page__footer">
         <p>Evidence before claims.</p>

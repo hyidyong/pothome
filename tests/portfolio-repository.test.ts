@@ -264,5 +264,6 @@ describe("PortfolioRepository metric query filters", () => {
     expect(resume.training).toEqual([
       { title: "Human AI Foundation completion" },
     ]);
+    expect(resume.credentials).toEqual([]);
   });
 });
