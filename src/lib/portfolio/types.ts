@@ -81,12 +81,6 @@ export type ResumeCredentialEntry = {
   summary: string;
 };
 
-export type ResumeCredentialEntry = {
-  title: string;
-  period: string;
-  summary: string;
-};
-
 export type ResumeData = {
   timeline: ResumeYear[];
   training: ResumeTrainingEntry[];

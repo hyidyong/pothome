@@ -347,15 +347,6 @@ export function normalizeResumeData(input: unknown): ResumeData {
       continue;
     }
 
-    if (entry.section === "credential") {
-      credentials.push({
-        title: entry.title,
-        period: entry.period,
-        summary: entry.summary,
-      });
-      continue;
-    }
-
     const entries = timelineEntries.get(entry.year) ?? [];
     entries.push({
         title: entry.title,

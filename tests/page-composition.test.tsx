@@ -238,7 +238,9 @@ function expectBefore(first: Element, second: Element) {
 }
 
 it("composes the homepage in the approved order with exact evidence and six cases", () => {
-  const { container } = render(<HomePage data={homePageData} />);
+  const { container } = render(
+    <HomePage data={homePageData} galleryAssets={[]} />,
+  );
 
   expect(
     screen.getByRole("heading", {
@@ -288,7 +290,9 @@ it("composes the homepage in the approved order with exact evidence and six case
 });
 
 it("reveals every work card independently with a short capped stagger and no nested opacity", () => {
-  const { container } = render(<HomePage data={homePageData} />);
+  const { container } = render(
+    <HomePage data={homePageData} galleryAssets={[]} />,
+  );
   const cardReveals = Array.from(
     container.querySelectorAll<HTMLElement>(".case-study-card-reveal"),
   );
