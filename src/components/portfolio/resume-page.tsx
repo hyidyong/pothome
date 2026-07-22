@@ -35,6 +35,10 @@ export function ResumePage({ data }: ResumePageProps) {
   const awards = experienceEntries.filter((entry) => entry.kind === "award");
   const summaryAwards = [
     {
+      period: "2026년 7월 15일",
+      title: "Substudy 제품 개발 프로젝트 최우수상(1위)",
+    },
+    {
       period: "2026년 6월 20일",
       title: "YLC 우수 운영진상",
     },
