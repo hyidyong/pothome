@@ -37,6 +37,7 @@ export type UploadedGalleryAssetInput = {
   category: GalleryAssetCategory;
   title: string;
   description: string | null;
+  decision?: AssetDecision;
 };
 
 const execFileAsync = promisify(execFile);
@@ -273,7 +274,7 @@ export async function createUploadedGalleryAsset(input: UploadedGalleryAssetInpu
         decision, gallery_category, gallery_title, gallery_description
       ) values (
         ${sql(input.filePath)}, ${sql(input.fileName)}, ${sql("관리자 업로드")},
-        ${sql(input.mimeType)}, ${input.byteSize}, now(), 'selected',
+        ${sql(input.mimeType)}, ${input.byteSize}, now(), ${sql(input.decision ?? "selected")},
         ${sql(input.category)}, ${sql(input.title)}, ${input.description ? sql(input.description) : "null"}
       ) returning id::text`,
     );
@@ -291,7 +292,7 @@ export async function createUploadedGalleryAsset(input: UploadedGalleryAssetInpu
       mime_type: input.mimeType,
       byte_size: input.byteSize,
       modified_at: new Date().toISOString(),
-      decision: "selected",
+      decision: input.decision ?? "selected",
       gallery_category: input.category,
       gallery_title: input.title,
       gallery_description: input.description,

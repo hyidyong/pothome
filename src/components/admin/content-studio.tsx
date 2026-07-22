@@ -16,7 +16,11 @@ const categories: Array<{ value: GalleryAssetCategory; label: string }> = [
 
 async function request(path: string, options: RequestInit) {
   const response = await fetch(path, options);
-  if (!response.ok) throw new Error("저장하지 못했습니다.");
+  if (!response.ok) {
+    const payload = await response.json().catch(() => null) as { error?: string } | null;
+    throw new Error(payload?.error ?? "저장하지 못했습니다.");
+  }
+  return response;
 }
 
 export function ContentStudio({ assets, releases }: ContentStudioProps) {
@@ -87,18 +91,28 @@ export function ContentStudio({ assets, releases }: ContentStudioProps) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     try {
+      let thumbnailAssetId = form.get("thumbnailAssetId") || null;
+      const thumbnailFile = form.get("thumbnailFile");
+      if (thumbnailFile instanceof File && thumbnailFile.size) {
+        const thumbnailForm = new FormData();
+        thumbnailForm.set("file", thumbnailFile);
+        thumbnailForm.set("title", String(form.get("headline") || "보도자료 썸네일"));
+        const thumbnailResponse = await request("/api/admin/press/thumbnail", { method: "POST", body: thumbnailForm });
+        thumbnailAssetId = (await thumbnailResponse.json() as { id: string }).id;
+      }
       await request("/api/admin/press", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           publisher: form.get("publisher"), headline: form.get("headline"), summary: form.get("summary"),
-          publishedOn: form.get("publishedOn"), thumbnailAssetId: form.get("thumbnailAssetId") || null,
+          publishedOn: form.get("publishedOn"), thumbnailAssetId,
           externalUrl: form.get("externalUrl") || null,
         }),
       });
       event.currentTarget.reset();
       setNotice("보도자료를 추가했습니다. 새로고침하면 PR Room에 표시됩니다.");
-    } catch { setNotice("보도자료를 추가하지 못했습니다."); }
+      window.setTimeout(() => window.location.reload(), 350);
+    } catch (error) { setNotice(error instanceof Error ? error.message : "보도자료를 추가하지 못했습니다."); }
   };
 
   const removePress = async (release: PressRelease) => {
@@ -128,8 +142,8 @@ export function ContentStudio({ assets, releases }: ContentStudioProps) {
       </form>)}</div>
     </section>
     <section aria-labelledby="studio-press"><div className="content-studio__section-heading"><div><p>PR ROOM</p><h2 id="studio-press">보도자료</h2></div></div>
-      <form className="content-studio__press-form" onSubmit={createPress}>
-        <label>언론사/매체<input name="publisher" maxLength={80} required /></label><label>발행일<input name="publishedOn" type="date" required /></label><label className="content-studio__wide">헤드라인<input name="headline" maxLength={200} required /></label><label className="content-studio__wide">요약<textarea name="summary" maxLength={700} rows={4} required /></label><label>대표 이미지<select name="thumbnailAssetId" defaultValue=""><option value="">이미지 없음</option>{assets.map((asset) => <option value={asset.id} key={asset.id}>{asset.title}</option>)}</select></label><label>기사 링크<input name="externalUrl" type="url" placeholder="https://" /></label><button type="submit">보도자료 추가</button>
+      <form className="content-studio__press-form" onSubmit={createPress} encType="multipart/form-data">
+        <label>언론사/매체<input name="publisher" maxLength={80} required /></label><label>발행일<input name="publishedOn" type="date" required /></label><label className="content-studio__wide">헤드라인<input name="headline" maxLength={200} required /></label><label className="content-studio__wide">요약<textarea name="summary" maxLength={700} rows={4} required /></label><label>기존 대표 이미지<select name="thumbnailAssetId" defaultValue=""><option value="">이미지 없음</option>{assets.map((asset) => <option value={asset.id} key={asset.id}>{asset.title}</option>)}</select></label><label>새 대표 이미지<input name="thumbnailFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /></label><label>기사 링크<input name="externalUrl" type="url" placeholder="https://" /></label><p className="content-studio__press-help">새 이미지를 선택하면 기존 이미지 선택보다 우선해 보도자료 전용 썸네일로 저장합니다.</p><button type="submit">보도자료 추가</button>
       </form>
       <div className="content-studio__press-list">{releases.map((release) => <article key={release.id}><div><strong>{release.publisher}</strong><span>{release.publishedOn}</span><h3>{release.headline}</h3></div><button type="button" onClick={() => removePress(release)}>삭제</button></article>)}</div>
     </section>
