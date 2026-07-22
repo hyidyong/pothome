@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 
 import { CaseStudyCard } from "@/components/portfolio/case-study-card";
 import { EvidenceRail } from "@/components/portfolio/evidence-rail";
+import { EvidenceGallery } from "@/components/portfolio/evidence-gallery";
 import { HeroSection } from "@/components/portfolio/hero-section";
 import { LawLensSection } from "@/components/portfolio/law-lens-section";
 import { SelectedWork } from "@/components/portfolio/selected-work";
@@ -239,6 +240,30 @@ it("keeps the first three cases as lead work and the remaining three as support"
   ).toBeInTheDocument();
   expect(
     within(supportRegion).queryByText("Global Technical Talent Strategy"),
+  ).not.toBeInTheDocument();
+});
+
+it("separates project, field, and credential evidence into accessible gallery tabs", () => {
+  render(<EvidenceGallery cases={homePageData.cases} />);
+
+  const gallery = screen.getByRole("region", { name: /결과물과 현장의 장면/ });
+  const tabs = within(gallery).getAllByRole("tab");
+  expect(tabs).toHaveLength(3);
+  expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+  expect(
+    within(gallery).getAllByText("Global Technical Talent Strategy"),
+  ).not.toHaveLength(0);
+
+  fireEvent.click(within(gallery).getByRole("tab", { name: "수료 · 상장" }));
+  expect(within(gallery).getByRole("tab", { name: "수료 · 상장" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  expect(
+    within(gallery).getAllByText("AI Solution Challenge Program 우수상"),
+  ).not.toHaveLength(0);
+  expect(
+    within(gallery).queryByText("Global Technical Talent Strategy"),
   ).not.toBeInTheDocument();
 });
 

@@ -34,28 +34,16 @@
 - **한계:** 시장 확정, 반복 사용, 매출, 제휴, 도입 성과를 입증하지 않는다.
 - **안전한 저장소 근거:** `docs/superpowers/specs/2026-07-19-strategy-portfolio-design.md`, `supabase/migrations/20260719145439_initial_public_content.sql`, `supabase/migrations/20260719180540_correct_fitory_evidence_narrative.sql`
 
-## 4. PaceMate Academic OS
+## 4. Substudy
 
-- **공개 역할:** Product Execution
-- **확인된 팀:** 2명
-- **의사결정:** 서로 충돌하는 4개 역할의 우선순위를 한 주 단위 실행 루프로 어떻게 조정할지 결정했다.
-- **승인된 근거 범위:** 사용자 역할 4개, 15주 로드맵, 팀 2명. 15주는 실행 기간이 아니라 로드맵 범위다.
-- **제안:** 역할 확인, 충돌 탐지, 우선순위 선택, 회고를 연결하는 단계별 프로토타입과 검증 순서를 제안했다.
-- **결과·상태:** 제안·프로토타입과 로드맵이 문서화되었다.
-- **한계:** 실제 도입, 장기 사용, 학업 성과는 검증되지 않았다.
-- **안전한 저장소 근거:** `docs/superpowers/specs/2026-07-19-strategy-portfolio-design.md`, `supabase/migrations/20260719145439_initial_public_content.sql`
+- **공개 역할:** 팀장 · Product Planning · FE · BE
+- **의사결정:** 사용자 문제와 핵심 흐름을 정의한 뒤, 기획·프론트엔드·백엔드 작업을 하나의 제품 단위로 어떻게 연결할지 결정했다.
+- **승인된 근거 범위:** 팀장으로 제품 기획과 FE·BE 구현에 참여했으며, 최우수상(1위)을 수상했다.
+- **결과·상태:** 실무 협력 프로세스를 경험한 제품 개발 프로젝트다.
+- **한계:** 장기 서비스 성과나 상용 운영 성과는 주장하지 않는다.
+- **안전한 저장소 근거:** 공개 승인된 사용자 제공 이력 및 `supabase/migrations/20260722090000_refine_public_resume_and_substudy.sql`
 
-## 5. Vietnam Beauty Growth Thesis
-
-- **공개 역할:** Market Research
-- **의사결정:** 발견·증명 채널과 비교·구매 확정 채널을 구분해 시장 진입 메시지와 실험 순서를 어떻게 배치할지 결정했다.
-- **승인된 근거 범위:** 51장 전략 덱. TikTok Shop과 Shopee는 채널 역할을 설명하는 표식이며 수치 KPI가 아니다.
-- **제안:** 발견 콘텐츠, 사회적 증거, 상품 비교, 구매 확정을 단계별 채널 실험으로 연결하도록 제안했다.
-- **결과·상태:** 독립 전략 연구다.
-- **한계:** 고객사 수행, 캠페인 집행, 매출 성과를 의미하지 않는다.
-- **안전한 저장소 근거:** `docs/superpowers/specs/2026-07-19-strategy-portfolio-design.md`, `supabase/migrations/20260719145439_initial_public_content.sql`
-
-## 6. AI Prediction Regulation
+## 5. AI Prediction Regulation
 
 - **공개 역할:** Legal Strategy
 - **의사결정:** AI 예측 기능의 위험을 입력 적법성, 결과 설명 가능성, 의사결정 권리 영향으로 나눠 어떤 검토 순서가 필요한지 결정했다.
@@ -65,13 +53,13 @@
 - **한계:** 게재 심사를 거치지 않았으며 법률 자문이 아니다.
 - **안전한 저장소 근거:** `docs/superpowers/specs/2026-07-19-strategy-portfolio-design.md`, `supabase/migrations/20260719145439_initial_public_content.sql`
 
-## 7. 공개 이력 타임라인
+## 6. 공개 이력 타임라인
 
-- **2026:** AI Solution Challenge Program 우수상, 퓨처리더스캠프 기업가정신 경연 장려상, FKI 소속 경제·경영 학술 동아리 인사팀장 활동 및 우수 운영진상, YLC 수료 및 인사팀 부팀장 활동, 그리고 공개 문서화된 AI Prediction Regulation·Global Technical Talent Strategy·RE100 × CF100 Transition Strategy·Fitory Market Validation·PaceMate Academic OS·Vietnam Beauty Growth Thesis.
-- **2025:** YLC 수료, AI Solution Challenge 단기 집중 과정 팀장 참여, 데일리 코인 노래방 매장 스태프.
+- **2026:** AI Solution Challenge Program 우수상, 퓨처리더스캠프 기업가정신 경연 장려상, YLC 수료 및 인사팀 부팀장 활동, Substudy 제품 개발 프로젝트 최우수상(1위), 그리고 공개 문서화된 AI Prediction Regulation·Global Technical Talent Strategy·RE100 × CF100 Transition Strategy·Fitory Market Validation.
+- **2025:** YLC 수료, 데일리 코인 노래방 매장 스태프.
 - **2024:** 단디모바일 비산점 경리 사무원, 업기 떡볶이 대구비산점 매장 스태프.
 - **2023:** 달서구청 영어 멘토, 달서구청 코디네이터, 한국청년지도자연합회 대구지부 지도자. 복수 연도 활동은 종료 연도에 한 번만 기록한다.
-- **2022:** 반기문 재단 기후리더양성과정 1기 참여, 계명대학교 법학과 재학 시작.
-- **연도 미상 교육 및 수료:** 첨단산업 인재양성 AI 부트캠프 Human AI Foundation, (재)대구디지털혁신진흥원 바이브코딩 중급 교육 과정, (재)대구디지털혁신진흥원 AI 기반 코딩 교육 과정, DSAC 데이터 사이언티스트 능력인증 교육 과정, ADsP 데이터분석준전문가 취득 대비 과정, 에이블런 & 한국지능정보사회진흥원(NIA) 디지털 마케터 양성 프로젝트 도약 과정, AI 디지털 학습 Change & Learn 노션 특강, 국제법 대학 교육.
+- **교육 및 수료:** 계명대학교 법학과 재학, 반기문 재단 기후리더양성과정 1기, 첨단산업 인재양성 AI 부트캠프 Human AI Foundation, 대구디지털혁신진흥원 바이브코딩·AI 기반 코딩 교육, DSAC, ADsP, 비전프러너 현대차 PEB 프로젝트 교육, 에이블런 & NIA 디지털 마케터 양성 프로젝트, 국제법 대학 교육, AI 디지털 학습 Change & Learn 노션 특강. KDI 2026 청년 경제재정 캠프는 수료 예정으로 표기한다.
+- **자격증:** 1종 보통 운전면허 (2025년 7월경 취득), 한국사능력검정시험 3급 (취득 시기 확인 중).
 
 포트폴리오 프로젝트의 2026 표기는 공개 문서화 시점이며 실제 수행 연도를 주장하지 않는다.

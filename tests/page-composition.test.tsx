@@ -217,8 +217,16 @@ const resumeData = {
     },
   ],
   training: [
-    { title: "Human AI Foundation" },
-    { title: "Data-driven Decision Making" },
+    {
+      title: "Human AI Foundation",
+      period: "2026년 7월",
+      summary: "공개 승인된 수료 과정입니다.",
+    },
+    {
+      title: "Data-driven Decision Making",
+      period: "2025년",
+      summary: "공개 승인된 수료 과정입니다.",
+    },
   ],
   credentials: [],
 } satisfies ResumeData;
@@ -365,8 +373,31 @@ it("renders the public resume as a semantic timeline without private data", () =
   expect(
     screen.getByRole("heading", { level: 1, name: "공개 이력" }),
   ).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "활동 · 프로젝트" })).toHaveAttribute(
+    "href",
+    "#resume-experience",
+  );
+  expect(screen.getByRole("link", { name: "요약" })).toHaveAttribute(
+    "href",
+    "#resume-summary",
+  );
+  expect(screen.getByRole("link", { name: "교육 · 수료" })).toHaveAttribute(
+    "href",
+    "#resume-learning",
+  );
+  expect(screen.getByRole("link", { name: "자격증" })).toHaveAttribute(
+    "href",
+    "#resume-credentials",
+  );
   expect(
-    screen.getByRole("region", { name: "연도별 공개 이력" }),
+    screen.getByRole("region", { name: "활동 · 프로젝트" }),
+  ).toBeInTheDocument();
+  expect(screen.getByRole("region", { name: "요약" })).toBeInTheDocument();
+  expect(
+    screen.getByRole("heading", { name: "대표 프로젝트" }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole("heading", { name: "수상 내역" }),
   ).toBeInTheDocument();
   expect(
     screen
@@ -385,6 +416,7 @@ it("renders the public resume as a semantic timeline without private data", () =
   expect(
     screen.getByRole("region", { name: "교육 및 수료" }),
   ).toHaveTextContent("Human AI Foundation");
+  expect(screen.getByRole("region", { name: "자격증" })).toBeInTheDocument();
   expect(container).not.toHaveTextContent(
     "Strategy Research & Decision Design",
   );

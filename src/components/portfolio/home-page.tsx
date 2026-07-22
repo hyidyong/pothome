@@ -1,5 +1,6 @@
 import { DecisionSpine } from "@/components/portfolio/decision-spine";
 import { EvidenceRail } from "@/components/portfolio/evidence-rail";
+import { EvidenceGallery } from "@/components/portfolio/evidence-gallery";
 import { HeroSection } from "@/components/portfolio/hero-section";
 import { LawLensSection } from "@/components/portfolio/law-lens-section";
 import { Reveal } from "@/components/portfolio/reveal";
@@ -23,6 +24,7 @@ export function HomePage({ data }: HomePageProps) {
           <EvidenceRail />
         </Reveal>
         <SelectedWork cases={data.cases} />
+        <EvidenceGallery cases={data.cases} />
         <DecisionSpine />
         <Reveal>
           <LawLensSection />
