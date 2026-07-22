@@ -27,6 +27,7 @@ export type GalleryAsset = {
   label: string;
   title: string;
   description: string | null;
+  staticImageUrl?: string;
 };
 
 export type UploadedGalleryAssetInput = {
@@ -42,6 +43,53 @@ export type UploadedGalleryAssetInput = {
 
 const execFileAsync = promisify(execFile);
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const deploymentFallbackGalleryAssets: GalleryAsset[] = [
+  {
+    id: "static-dandi-mobile-handover-cover",
+    fileName: "dandi-mobile-handover-cover.png",
+    sourceGroup: "관리자 업로드",
+    mimeType: "image/png",
+    category: "result",
+    label: "프로젝트 결과물",
+    title: "단디모바일 업무 인수인계 자료",
+    description: "단디모바일 휴대폰 매장 업무 인수인계 자료 표지입니다.",
+    staticImageUrl: "/images/gallery/dandi-mobile-handover-cover.png",
+  },
+  {
+    id: "static-dandi-mobile-handover-index",
+    fileName: "dandi-mobile-handover-index.png",
+    sourceGroup: "관리자 업로드",
+    mimeType: "image/png",
+    category: "result",
+    label: "프로젝트 결과물",
+    title: "단디모바일 업무 인수인계 자료 목차",
+    description: "단디모바일 휴대폰 매장 업무 인수인계 자료의 구성입니다.",
+    staticImageUrl: "/images/gallery/dandi-mobile-handover-index.png",
+  },
+  {
+    id: "static-humanics-field-connect-report",
+    fileName: "humanics-field-connect-report.png",
+    sourceGroup: "관리자 업로드",
+    mimeType: "image/png",
+    category: "result",
+    label: "프로젝트 결과물",
+    title: "휴머닉스 현장 Connect 보고서",
+    description: "휴머닉스 프로젝트의 현장 Connect 보고서 표지입니다.",
+    staticImageUrl: "/images/gallery/humanics-field-connect-report.png",
+  },
+  {
+    id: "static-project-result-report",
+    fileName: "project-result-report.png",
+    sourceGroup: "관리자 업로드",
+    mimeType: "image/png",
+    category: "result",
+    label: "프로젝트 결과물",
+    title: "별도 프로젝트 결과 보고서",
+    description: "휴머닉스와 별도로 진행한 프로젝트 결과 보고서 표지입니다.",
+    staticImageUrl: "/images/gallery/project-result-report.png",
+  },
+];
 
 function getClient() {
   const client = createSupabaseAdminClient();
@@ -178,7 +226,7 @@ function mapGalleryAsset(
 
 export async function getSelectedGalleryAssets(): Promise<GalleryAsset[]> {
   if (!createSupabaseAdminClient() && !canUseLocalDatabaseFallback()) {
-    return [];
+    return deploymentFallbackGalleryAssets;
   }
   if (!createSupabaseAdminClient() && canUseLocalDatabaseFallback()) {
     const rows = await queryLocalDatabase(

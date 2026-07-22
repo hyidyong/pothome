@@ -57,7 +57,7 @@ if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
 }
 
 function imageSource(asset: GalleryAsset) {
-  return `/api/asset-picker/image/${asset.id}`;
+  return asset.staticImageUrl ?? `/api/asset-picker/image/${asset.id}`;
 }
 
 function normalizedGroup(value: string) {
