@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   ArrowLeftIcon,
   AwardIcon,
+  BadgeCheckIcon,
   BriefcaseIcon,
   FolderKanbanIcon,
   GraduationCapIcon,
@@ -32,6 +33,13 @@ export function ResumePage({ data }: ResumePageProps) {
     (entry) => entry.kind === "project",
   );
   const awards = experienceEntries.filter((entry) => entry.kind === "award");
+  const summaryAwards = [
+    {
+      period: "2026년 6월 20일",
+      title: "YLC 우수 운영진상",
+    },
+    ...awards,
+  ];
 
   return (
     <main className="resume-page">
@@ -102,12 +110,12 @@ export function ResumePage({ data }: ResumePageProps) {
               <h3 id="resume-summary-awards-heading">수상 내역</h3>
             </div>
             <ul>
-              {awards.map((entry) => (
+              {summaryAwards.map((entry) => (
                 <li key={entry.title}>
-                  <p>{entry.period}</p>
+                  <p className="resume-page__summary-award"><AwardIcon aria-hidden="true" /> 상장</p>
                   <div>
                     <h4>{entry.title}</h4>
-                    <span>{entry.summary}</span>
+                    <span>{entry.period}</span>
                   </div>
                 </li>
               ))}
@@ -227,10 +235,10 @@ export function ResumePage({ data }: ResumePageProps) {
         <ul className="resume-page__credentials-list">
           {data.credentials.map((entry) => (
             <li key={entry.title}>
-              <p>{entry.period}</p>
+              <BadgeCheckIcon aria-hidden="true" />
               <div>
                 <h3>{entry.title}</h3>
-                <span>{entry.summary}</span>
+                <span>{entry.period}</span>
               </div>
             </li>
           ))}

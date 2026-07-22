@@ -1587,9 +1587,10 @@ button:not(:disabled),
 }
 
 .resume-page__summary-heading {
-  display: grid;
-  grid-template-columns: minmax(120px, 0.34fr) minmax(0, 1.66fr);
-  gap: clamp(20px, 6vw, 96px);
+  display: flex;
+  max-width: 58rem;
+  flex-direction: column;
+  gap: 14px;
   margin-bottom: clamp(36px, 6vw, 80px);
 }
 
@@ -1602,7 +1603,6 @@ button:not(:disabled),
 }
 
 .resume-page__summary-heading h2 {
-  grid-column: 2;
   font-family: "Instrument Serif", Georgia, serif;
   font-size: clamp(2.25rem, 4vw, 4.75rem);
   font-weight: 400;
@@ -1611,7 +1611,6 @@ button:not(:disabled),
 }
 
 .resume-page__summary-heading > p:last-child {
-  grid-column: 2;
   max-width: 46ch;
   color: var(--faint-foreground);
   font-size: clamp(0.9375rem, 1.25vw, 1.0625rem);
@@ -1622,7 +1621,8 @@ button:not(:disabled),
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(24px, 5vw, 80px);
-  margin-left: calc(34% + clamp(20px, 6vw, 96px));
+  max-width: 58rem;
+  margin-left: 0;
 }
 
 .resume-page__summary-grid > section { min-width: 0; }
@@ -1632,6 +1632,8 @@ button:not(:disabled),
 .resume-page__summary-grid ul { margin: 0; padding: 0; list-style: none; }
 .resume-page__summary-grid li { display: grid; grid-template-columns: minmax(74px, 0.2fr) minmax(0, 1fr) auto; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--line); }
 .resume-page__summary-grid li > p { color: var(--signal); font-size: 0.75rem; font-weight: 740; line-height: 1.45; }
+.resume-page__summary-grid li > p.resume-page__summary-award { display: inline-flex; align-items: center; gap: 6px; min-width: 74px; }
+.resume-page__summary-award svg { width: 15px; height: 15px; }
 .resume-page__summary-grid li > div { display: grid; gap: 5px; min-width: 0; }
 .resume-page__summary-grid h4 { font-size: clamp(0.95rem, 1.3vw, 1.1rem); font-weight: 680; line-height: 1.35; }
 .resume-page__summary-grid li span { color: var(--faint-foreground); font-size: 0.8125rem; line-height: 1.5; }
@@ -1905,6 +1907,9 @@ button:not(:disabled),
   font-size: 0.875rem;
   line-height: 1.55;
 }
+
+.resume-page__credentials-list li { grid-template-columns: 26px minmax(0, 1fr); align-items: start; }
+.resume-page__credentials-list li > svg { width: 21px; height: 21px; margin-top: 2px; color: var(--signal); }
 
 .review-board {
   padding: clamp(72px, 10vw, 144px) var(--gutter);
