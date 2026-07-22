@@ -1877,6 +1877,73 @@ button:not(:disabled),
   line-height: 1.55;
 }
 
+.review-board {
+  padding: clamp(72px, 10vw, 144px) var(--gutter);
+  background: radial-gradient(circle at 82% 8%, rgba(123, 228, 182, 0.11), transparent 26%), var(--background);
+}
+
+.review-board__header {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.45fr) minmax(0, 1.55fr);
+  gap: clamp(24px, 6vw, 96px);
+  margin-bottom: clamp(44px, 7vw, 84px);
+}
+
+.review-board__header > p {
+  color: var(--signal);
+  font-size: 0.75rem;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+}
+
+.review-board__header > div { display: grid; gap: 18px; }
+.review-board__header h1 { max-width: 12ch; font-size: clamp(3.25rem, 7vw, 7.5rem); font-weight: 650; line-height: 0.9; letter-spacing: -0.07em; }
+.review-board__header span { max-width: 44ch; color: var(--muted-foreground); font-size: 1rem; line-height: 1.7; }
+
+.review-board__form {
+  display: grid;
+  gap: 22px;
+  max-width: 850px;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+}
+
+.review-board__form-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 24px; }
+.review-board__form label, .review-board__form fieldset { display: grid; gap: 8px; min-width: 0; border: 0; padding: 0; }
+.review-board__form label, .review-board__form legend { color: var(--foreground); font-size: 0.8125rem; font-weight: 720; }
+.review-board__form input, .review-board__form textarea { width: 100%; border: 1px solid var(--line); border-radius: 10px; background: rgba(0, 0, 0, 0.16); color: var(--foreground); font: inherit; outline: none; transition: border-color 160ms ease, background 160ms ease; }
+.review-board__form input { min-height: 44px; padding: 0 13px; }
+.review-board__form textarea { min-height: 132px; resize: vertical; padding: 13px; line-height: 1.65; }
+.review-board__form input:focus, .review-board__form textarea:focus { border-color: var(--signal); background: rgba(123, 228, 182, 0.04); }
+.review-board__stars { display: flex; gap: 2px; }
+.review-board__stars button { display: grid; width: 30px; height: 30px; place-items: center; border: 0; background: transparent; color: var(--warm); }
+.review-board__stars svg { width: 19px; }
+.review-board__form-foot { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.review-board__form-foot span { color: var(--signal); font-size: 0.8125rem; }
+.review-board__form-foot button { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; padding: 0 16px; border: 0; border-radius: 10px; background: var(--signal); color: var(--background); font: inherit; font-size: 0.875rem; font-weight: 760; transition: transform 160ms ease, opacity 160ms ease; }
+.review-board__form-foot button:hover:not(:disabled) { transform: translateY(-1px); }
+.review-board__form-foot button:disabled { cursor: wait; opacity: 0.65; }
+.review-board__form-foot svg { width: 16px; }
+.review-board__count { max-width: 850px; margin-top: clamp(48px, 7vw, 82px); padding-bottom: 14px; border-bottom: 2px solid var(--foreground); color: var(--muted-foreground); font-size: 0.875rem; }
+.review-board__count strong { margin-left: 5px; color: var(--foreground); }
+.review-board__list { display: grid; max-width: 850px; margin: 0; padding: 0; list-style: none; }
+.review-board__list > li { border-bottom: 1px solid var(--line); }
+.review-board__list article { padding: clamp(24px, 3vw, 34px) 0; }
+.review-board__list article > header, .review-board__list article > footer { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.review-board__list article header > div { display: flex; align-items: baseline; gap: 9px; }
+.review-board__list strong { color: var(--foreground); font-size: 0.9375rem; }
+.review-board__list article header span { color: var(--faint-foreground); font-size: 0.75rem; }
+.review-board__rating { display: inline-flex; color: var(--warm) !important; }
+.review-board__rating svg { width: 14px; }
+.review-board__list article > p { max-width: 70ch; margin: 16px 0 18px; color: var(--foreground); font-size: 0.9375rem; line-height: 1.8; white-space: pre-line; }
+.review-board__list footer { justify-content: flex-start !important; }
+.review-board__list footer button { display: inline-flex; min-height: 34px; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--faint-foreground); font: inherit; font-size: 0.75rem; font-weight: 700; transition: border-color 160ms ease, color 160ms ease, background 160ms ease; }
+.review-board__list footer button:hover, .review-board__list footer button:focus-visible { border-color: color-mix(in srgb, var(--signal) 60%, transparent); background: rgba(123, 228, 182, 0.08); color: var(--signal); }
+.review-board__list footer svg { width: 14px; }
+.review-board__list footer b { font-weight: 760; }
+
 @container (min-width: 820px) {
   .selected-work__grid > .case-study-card-reveal:first-child {
     grid-column: span 2;
@@ -1957,6 +2024,8 @@ button:not(:disabled),
     grid-template-columns: minmax(0, 1fr);
     margin-left: 0;
   }
+
+  .review-board__header { grid-template-columns: minmax(0, 1fr); }
 
   .content-studio__gallery-list {
     grid-template-columns: minmax(0, 1fr);
@@ -2086,6 +2155,8 @@ button:not(:disabled),
   .resume-page__entry {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .review-board__form-top { grid-template-columns: minmax(0, 1fr); align-items: start; }
 
   .case-study-page__footer,
   .resume-page__footer {

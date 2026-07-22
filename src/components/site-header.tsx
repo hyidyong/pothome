@@ -17,6 +17,7 @@ const destinations = [
   { label: "Work", href: "/#work" },
   { label: "Gallery", href: "/gallery" },
   { label: "PR Room", href: "/press" },
+  { label: "Reviews", href: "/reviews" },
   { label: "About", href: "/#about" },
   { label: "Resume", href: "/resume" },
 ] as const;
