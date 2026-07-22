@@ -17,6 +17,15 @@ type ProjectGalleryProps = {
   headingLevel?: 1 | 2;
 };
 
+type GalleryGroup = {
+  id: string;
+  title: string;
+  description: string | null;
+  label: string;
+  sourceGroup: string;
+  assets: GalleryAsset[];
+};
+
 const galleryTabs: ReadonlyArray<{
   value: GalleryAssetCategory;
   label: string;
@@ -51,13 +60,36 @@ function imageSource(asset: GalleryAsset) {
   return `/api/asset-picker/image/${asset.id}`;
 }
 
+function collectionId(asset: GalleryAsset) {
+  if (asset.title.includes("단디코인노래방 업무 인수인계 자료")) return "daily-coin-handover";
+  if (asset.sourceGroup === "피토리") return "fitory-product-record";
+  return asset.id;
+}
+
+function collectionTitle(asset: GalleryAsset) {
+  if (asset.title.includes("단디코인노래방 업무 인수인계 자료")) return "단디코인노래방 업무 인수인계 자료";
+  if (asset.sourceGroup === "피토리") return "피토리 제품 화면 기록";
+  return asset.title;
+}
+
+function groupAssets(assets: GalleryAsset[]) {
+  const groups = new Map<string, GalleryGroup>();
+  for (const asset of assets) {
+    const id = collectionId(asset);
+    const group = groups.get(id);
+    if (group) group.assets.push(asset);
+    else groups.set(id, { id, title: collectionTitle(asset), description: asset.description, label: asset.label, sourceGroup: asset.sourceGroup, assets: [asset] });
+  }
+  return [...groups.values()];
+}
+
 function GalleryCard({
-  asset,
+  group,
   onOpen,
   onHover,
 }: {
-  asset: GalleryAsset;
-  onOpen: (asset: GalleryAsset, element: HTMLButtonElement) => void;
+  group: GalleryGroup;
+  onOpen: (group: GalleryGroup, element: HTMLButtonElement) => void;
   onHover: (element: HTMLButtonElement | null) => void;
 }) {
   return (
@@ -65,18 +97,18 @@ function GalleryCard({
       type="button"
       className="project-gallery__card"
       data-gallery-card
-      onClick={(event) => onOpen(asset, event.currentTarget)}
+      onClick={(event) => onOpen(group, event.currentTarget)}
       onPointerEnter={(event) => onHover(event.currentTarget)}
       onPointerLeave={() => onHover(null)}
-      aria-label={`${asset.label}: ${asset.title} 상세 보기`}
+      aria-label={`${group.label}: ${group.title} 상세 보기`}
     >
       {/* The route streams the local file only when it has been selected in the DB. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={imageSource(asset)} alt="" />
+      <img src={imageSource(group.assets[0]!)} alt="" />
       <span className="project-gallery__card-shade" aria-hidden="true" />
       <span className="project-gallery__card-copy">
-        <small>{asset.label}</small>
-        <strong>{asset.title}</strong>
+        <small>{group.label}{group.assets.length > 1 ? ` · ${group.assets.length}장` : ""}</small>
+        <strong>{group.title}</strong>
       </span>
     </button>
   );
@@ -88,13 +120,14 @@ export function ProjectGallery({
 }: ProjectGalleryProps) {
   const rootRef = useRef<HTMLElement>(null);
   const sourceCardRef = useRef<HTMLButtonElement | null>(null);
-  const [activeAsset, setActiveAsset] = useState<GalleryAsset | null>(null);
+  const [activeGroup, setActiveGroup] = useState<GalleryGroup | null>(null);
   const [activeCategory, setActiveCategory] =
     useState<GalleryAssetCategory>("result");
   const activeTab = galleryTabs.find((tab) => tab.value === activeCategory)!;
   const visibleAssets = assets.filter(
     (asset) => asset.category === activeCategory,
   );
+  const visibleGroups = groupAssets(visibleAssets);
   const Heading = `h${headingLevel}` as "h1" | "h2";
 
   useGSAP(
@@ -155,9 +188,9 @@ export function ProjectGallery({
     },
   );
 
-  const openAsset = (asset: GalleryAsset, element: HTMLButtonElement) => {
+  const openGroup = (group: GalleryGroup, element: HTMLButtonElement) => {
     sourceCardRef.current = element;
-    setActiveAsset(asset);
+    setActiveGroup(group);
   };
 
   const hoverCard = (activeElement: HTMLButtonElement | null) => {
@@ -185,7 +218,7 @@ export function ProjectGallery({
   };
 
   const closeAsset = () => {
-    setActiveAsset(null);
+    setActiveGroup(null);
     requestAnimationFrame(() => sourceCardRef.current?.focus());
   };
 
@@ -240,11 +273,11 @@ export function ProjectGallery({
         </div>
         {visibleAssets.length > 0 ? (
           <div className="project-gallery__grid">
-            {visibleAssets.map((asset) => (
+            {visibleGroups.map((group) => (
               <GalleryCard
-                asset={asset}
-                key={asset.id}
-                onOpen={openAsset}
+                group={group}
+                key={group.id}
+                onOpen={openGroup}
                 onHover={hoverCard}
               />
             ))}
@@ -256,7 +289,7 @@ export function ProjectGallery({
         )}
       </section>
 
-      {activeAsset ? (
+      {activeGroup ? (
         <div
           className="project-gallery__dialog-backdrop"
           role="presentation"
@@ -266,7 +299,7 @@ export function ProjectGallery({
             className="project-gallery__dialog"
             role="dialog"
             aria-modal="true"
-            aria-label={`${activeAsset.label} 상세 보기`}
+            aria-label={`${activeGroup.label} 상세 보기`}
             tabIndex={-1}
             onKeyDown={onOverlayKeyDown}
             onMouseDown={(event) => event.stopPropagation()}
@@ -280,15 +313,17 @@ export function ProjectGallery({
               <X size={20} aria-hidden="true" />
             </button>
             <div className="project-gallery__image-scroll">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={imageSource(activeAsset)} alt={`${activeAsset.title} 원본`} />
+              {activeGroup.assets.map((asset, index) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={asset.id} src={imageSource(asset)} alt={`${activeGroup.title} ${index + 1}번 이미지`} />
+              ))}
             </div>
             <div className="project-gallery__dialog-copy">
-              <p>{activeAsset.label}</p>
-              <h2>{activeAsset.title}</h2>
-              <span>{activeAsset.sourceGroup}</span>
+              <p>{activeGroup.label} · {activeGroup.assets.length}장</p>
+              <h2>{activeGroup.title}</h2>
+              <span>{activeGroup.sourceGroup}</span>
               <p className="project-gallery__description">
-                {activeAsset.description ??
+                {activeGroup.description ??
                   "관리자 화면에서 이 사진의 맥락과 역할을 추가할 수 있습니다."}
               </p>
             </div>

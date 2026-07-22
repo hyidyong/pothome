@@ -7,28 +7,36 @@ function thumbnailSource(assetId: string) {
 }
 
 export function PrRoom({ releases }: PrRoomProps) {
+  const orderedReleases = [...releases].sort(
+    (left, right) => right.publishedOn.localeCompare(left.publishedOn),
+  );
   return (
     <section className="pr-room" aria-labelledby="pr-room-heading">
       <header className="pr-room__header">
         <p>PR ROOM</p>
         <div>
-          <h1 id="pr-room-heading">PR Room</h1>
-          <p>언론사와 핵심 메시지가 먼저 보이는 보도자료 아카이브입니다. 대표 이미지는 맥락을 보완할 때만 사용합니다.</p>
+          <h1 id="pr-room-heading">보도자료<br />아카이브.</h1>
+          <p>활동과 프로젝트가 외부 기사로 소개된 기록입니다. 최신 기사부터 시간순으로 정리했습니다.</p>
         </div>
       </header>
-      {releases.length ? (
+      {orderedReleases.length ? (
         <div className="pr-room__list">
-          {releases.map((release) => {
+          {orderedReleases.map((release, index) => {
             const content = (
               <>
-                {release.thumbnailAssetId ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img className="pr-room__thumbnail" src={thumbnailSource(release.thumbnailAssetId)} alt="" />
-                ) : null}
-                <div className="pr-room__meta"><strong>{release.publisher}</strong><time dateTime={release.publishedOn}>{release.publishedOn}</time></div>
-                <h2>{release.headline}</h2>
-                <p>{release.summary}</p>
-                <span aria-hidden="true">Read release →</span>
+                <div className="pr-room__image-wrap">
+                  <span className="pr-room__number">{String(index + 1).padStart(2, "0")}</span>
+                  {release.thumbnailAssetId ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className="pr-room__thumbnail" src={thumbnailSource(release.thumbnailAssetId)} alt="" />
+                  ) : <div className="pr-room__thumbnail pr-room__thumbnail--empty" />}
+                </div>
+                <div className="pr-room__content">
+                  <div className="pr-room__meta"><strong>{release.publisher}</strong><time dateTime={release.publishedOn}>{release.publishedOn}</time></div>
+                  <h2>{release.headline}</h2>
+                  <p>{release.summary}</p>
+                  <span className="pr-room__read">기사 보기 <b aria-hidden="true">↗</b></span>
+                </div>
               </>
             );
             return release.externalUrl ? (
