@@ -792,6 +792,7 @@ button:not(:disabled),
 
 .asset-picker { max-width: 1440px; margin: 0 auto; padding: clamp(40px, 6vw, 80px) var(--gutter); background: #f7f8f5; color: #111513; }
 .asset-picker__header { display: grid; gap: 10px; margin-bottom: 28px; }
+.asset-picker__back { display: inline-flex; width: fit-content; min-height: 40px; align-items: center; padding: 8px 0; color: var(--signal); font-size: 0.8125rem; font-weight: 760; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.42em; }
 .asset-picker__header p { color: #176345; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; }
 .asset-picker__header h1 { font-size: clamp(2rem, 4vw, 4.25rem); letter-spacing: -0.055em; line-height: 0.95; }
 .asset-picker__filters, .asset-picker__card footer, .content-studio__actions { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -808,6 +809,10 @@ button:not(:disabled),
 
 .content-studio { display: grid; gap: 72px; padding: clamp(60px, 9vw, 128px) var(--gutter); background: #f7f8f5; color: #111513; }
 .content-studio__header, .content-studio > section { display: grid; gap: 20px; width: 100%; max-width: 1200px; margin: 0 auto; }
+.content-studio__jump-nav { position: sticky; z-index: 20; top: 72px; display: flex; width: 100%; max-width: 1200px; gap: 24px; margin: 0 auto; padding: 14px 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--background) 92%, transparent); backdrop-filter: blur(12px); }
+.content-studio__jump-nav a { min-height: 32px; padding-bottom: 8px; border-bottom: 2px solid transparent; color: var(--faint-foreground); font-size: 0.8125rem; font-weight: 720; }
+.content-studio__jump-nav a:hover, .content-studio__jump-nav a:focus-visible { border-bottom-color: var(--signal); color: var(--signal); }
+.content-studio__press-form label:has(select[name="thumbnailAssetId"]) { display: none; }
 .content-studio__header p, .content-studio__section-heading p { color: #176345; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em; }
 .content-studio__header h1 { font-size: clamp(3rem, 7vw, 7rem); letter-spacing: -0.07em; line-height: 0.86; }
 .content-studio__header span, .content-studio__help { color: #5d625e; line-height: 1.6; }

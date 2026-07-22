@@ -92,7 +92,7 @@ export function ContentStudio({ assets, releases }: ContentStudioProps) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     try {
-      let thumbnailAssetId = form.get("thumbnailAssetId") || null;
+      let thumbnailAssetId: string | null = null;
       const thumbnailFile = pastedThumbnail ?? form.get("thumbnailFile");
       if (thumbnailFile instanceof File && thumbnailFile.size) {
         const thumbnailForm = new FormData();
@@ -133,6 +133,7 @@ export function ContentStudio({ assets, releases }: ContentStudioProps) {
   };
 
   return <main className="content-studio" id="main-content" tabIndex={-1}>
+    <nav className="content-studio__jump-nav" aria-label="Admin upload sections"><a href="#studio-gallery">Gallery upload</a><a href="#studio-press">Press upload</a></nav>
     <header className="content-studio__header"><p>LOCAL CONTENT STUDIO</p><h1>관리자 편집</h1><span>이 화면의 저장 API는 localhost에서만 작동합니다.</span></header>
     {notice ? <p className="content-studio__notice" role="status">{notice}</p> : null}
     <section aria-labelledby="studio-gallery"><div className="content-studio__section-heading"><div><p>GALLERY</p><h2 id="studio-gallery">프로젝트 갤러리</h2></div><Link href="/asset-picker">기존 사진 선택</Link></div>
