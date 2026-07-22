@@ -20,7 +20,21 @@ type CaseStudyPageProps = {
   caseStudy: CaseStudyDetail;
 };
 
+const projectLinks = {
+  "pacemate-academic-os": {
+    href: "https://pacemate-git-main-handhj03-3080s-projects.vercel.app/login",
+    label: "Substudy 배포 열기",
+  },
+  "fitory-market-validation": {
+    href: "https://fitory.atoms.world/home",
+    label: "Fitory 서비스 열기",
+  },
+} as const;
+
 export function CaseStudyPage({ caseStudy }: CaseStudyPageProps) {
+  const projectLink = projectLinks[
+    caseStudy.slug as keyof typeof projectLinks
+  ];
   const sectionByKind = new Map<CaseStudySection["kind"], CaseStudySection>(
     caseStudy.sections.map((section) => [section.kind, section]),
   );
@@ -48,14 +62,14 @@ export function CaseStudyPage({ caseStudy }: CaseStudyPageProps) {
         </div>
         <div className="case-study-page__summary-wrap">
           <p className="case-study-page__summary">{caseStudy.summary}</p>
-          {caseStudy.slug === "pacemate-academic-os" ? (
+          {projectLink ? (
             <a
               className="case-study-page__live-link"
-              href="https://pacemate-git-main-handhj03-3080s-projects.vercel.app/login"
+              href={projectLink.href}
               target="_blank"
               rel="noreferrer"
             >
-              Substudy 배포 열기 <span aria-hidden="true">↗</span>
+              {projectLink.label} <span aria-hidden="true">↗</span>
             </a>
           ) : null}
         </div>

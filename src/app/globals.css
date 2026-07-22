@@ -782,7 +782,7 @@ button:not(:disabled),
   box-shadow: 0 28px 100px rgba(0, 0, 0, 0.48);
 }
 
-.project-gallery__image-scroll { height: 100%; min-height: 0; overflow: auto; background: #050706; scrollbar-gutter: stable; }
+.project-gallery__image-scroll { height: 100%; min-height: 0; overflow: auto; background: #050706; scrollbar-gutter: stable; overscroll-behavior: contain; touch-action: pan-y; }
 .project-gallery__image-scroll img { display: block; width: 100%; height: auto; min-height: 0; object-fit: contain; }
 .project-gallery__image-scroll img + img { margin-top: 1px; border-top: 1px solid var(--line); }
 .project-gallery__dialog-copy { display: flex; min-width: 0; flex-direction: column; justify-content: center; gap: 16px; overflow: auto; padding: clamp(28px, 4vw, 52px); }

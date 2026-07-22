@@ -60,9 +60,27 @@ function imageSource(asset: GalleryAsset) {
   return `/api/asset-picker/image/${asset.id}`;
 }
 
-function collectionId(asset: GalleryAsset) {
+function normalizedGroup(value: string) {
+  return value.trim().toLocaleLowerCase("ko-KR");
+}
+
+function collectionId(
+  asset: GalleryAsset,
+  sourceGroupCounts: Map<string, number>,
+  titleCounts: Map<string, number>,
+) {
   if (asset.title.includes("단디모바일 업무 인수인계 자료")) return "dandi-mobile-handover";
   if (asset.sourceGroup === "피토리") return "fitory-product-record";
+  const sourceGroup = normalizedGroup(asset.sourceGroup);
+  const isNamedCollection =
+    sourceGroup !== "" &&
+    sourceGroup !== "관리자 업로드" &&
+    sourceGroup !== "admin upload" &&
+    (sourceGroupCounts.get(sourceGroup) ?? 0) > 1;
+  if (isNamedCollection) return `source:${sourceGroup}`;
+
+  const titleKey = `${asset.category}:${normalizedGroup(asset.title)}`;
+  if ((titleCounts.get(titleKey) ?? 0) > 1) return `title:${titleKey}`;
   return asset.id;
 }
 
@@ -73,9 +91,20 @@ function collectionTitle(asset: GalleryAsset) {
 }
 
 function groupAssets(assets: GalleryAsset[]) {
+  const sourceGroupCounts = new Map<string, number>();
+  const titleCounts = new Map<string, number>();
+  for (const asset of assets) {
+    const sourceGroup = normalizedGroup(asset.sourceGroup);
+    if (sourceGroup) {
+      sourceGroupCounts.set(sourceGroup, (sourceGroupCounts.get(sourceGroup) ?? 0) + 1);
+    }
+    const titleKey = `${asset.category}:${normalizedGroup(asset.title)}`;
+    titleCounts.set(titleKey, (titleCounts.get(titleKey) ?? 0) + 1);
+  }
+
   const groups = new Map<string, GalleryGroup>();
   for (const asset of assets) {
-    const id = collectionId(asset);
+    const id = collectionId(asset, sourceGroupCounts, titleCounts);
     const group = groups.get(id);
     if (group) group.assets.push(asset);
     else groups.set(id, { id, title: collectionTitle(asset), description: asset.description, label: asset.label, sourceGroup: asset.sourceGroup, assets: [asset] });

@@ -12,12 +12,14 @@ const proofMetrics = [
   { value: "6회", label: "AI·데이터 교육 수료 · 2026.05–07" },
 ] as const;
 
+const heroHeadline = "데이터로 판단하고, 실행력으로 증명합니다.";
+
 export function HeroSection({ profile }: HeroSectionProps) {
   return (
     <section className="hero-section" aria-labelledby="hero-title">
       <div className="hero-section__copy">
         <div className="hero-section__message">
-          <h1 id="hero-title">{profile.headline}</h1>
+          <h1 id="hero-title">{heroHeadline}</h1>
           <p>{profile.summary}</p>
         </div>
 
