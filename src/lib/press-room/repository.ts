@@ -2,6 +2,9 @@ import "server-only";
 
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type PressRelease = {
   id: string;
@@ -11,6 +14,16 @@ export type PressRelease = {
   publishedOn: string;
   thumbnailAssetId: string | null;
   externalUrl: string | null;
+};
+
+type PublicPressReleaseRow = {
+  id: string;
+  publisher: string;
+  headline: string;
+  summary: string;
+  published_on: string;
+  thumbnail_asset_id: string | null;
+  external_url: string | null;
 };
 
 const execFileAsync = promisify(execFile);
@@ -39,8 +52,25 @@ function quote(value: string) {
 }
 
 export async function getPressReleases(): Promise<PressRelease[]> {
-  if (process.env.NODE_ENV === "production" && !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    return [];
+  if (process.env.NODE_ENV === "production") {
+    // The database type snapshot predates this public archive table. Keep the
+    // external shape explicit until the generated snapshot is refreshed.
+    const supabase = createSupabaseServerClient() as unknown as SupabaseClient;
+    const { data, error } = await supabase
+      .from("press_releases")
+      .select("id, publisher, headline, summary, published_on, thumbnail_asset_id, external_url")
+      .order("published_on", { ascending: false })
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(`Unable to load press releases: ${error.message}`);
+    return (data as PublicPressReleaseRow[]).map((release) => ({
+      id: release.id,
+      publisher: release.publisher,
+      headline: release.headline,
+      summary: release.summary,
+      publishedOn: release.published_on,
+      thumbnailAssetId: release.thumbnail_asset_id,
+      externalUrl: release.external_url,
+    }));
   }
   const rows = await query(
     "select id, publisher, headline, summary, published_on::text, coalesce(thumbnail_asset_id::text, ''), coalesce(external_url, '') from public.press_releases order by published_on desc, created_at desc",

@@ -6,6 +6,21 @@ function thumbnailSource(assetId: string) {
   return `/api/asset-picker/image/${assetId}`;
 }
 
+const fallbackThumbnails: Record<string, { src: string; alt: string }> = {
+  "https://www.realfoods.co.kr/article/10684688": {
+    src: "/images/pr/terminal-espresso-future-leaders.png",
+    alt: "2026 퓨처리더스 캠프 후속 네트워킹 현장",
+  },
+  "https://news.nate.com/view/20260629n18422": {
+    src: "/images/pr/vision-pruner-camp.png",
+    alt: "2026 비전프러너 캠프 현장",
+  },
+  "https://www.etoday.co.kr/news/view/2550490": {
+    src: "/images/pr/future-leaders-camp.png",
+    alt: "2026 퓨처리더스 캠프 현장",
+  },
+};
+
 export function PrRoom({ releases }: PrRoomProps) {
   const orderedReleases = [...releases].sort(
     (left, right) => right.publishedOn.localeCompare(left.publishedOn),
@@ -22,6 +37,9 @@ export function PrRoom({ releases }: PrRoomProps) {
       {orderedReleases.length ? (
         <div className="pr-room__list">
           {orderedReleases.map((release, index) => {
+            const fallbackThumbnail = release.externalUrl
+              ? fallbackThumbnails[release.externalUrl]
+              : undefined;
             const content = (
               <>
                 <div className="pr-room__image-wrap">
@@ -29,6 +47,9 @@ export function PrRoom({ releases }: PrRoomProps) {
                   {release.thumbnailAssetId ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img className="pr-room__thumbnail" src={thumbnailSource(release.thumbnailAssetId)} alt="" />
+                  ) : fallbackThumbnail ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className="pr-room__thumbnail" src={fallbackThumbnail.src} alt={fallbackThumbnail.alt} />
                   ) : <div className="pr-room__thumbnail pr-room__thumbnail--empty" />}
                 </div>
                 <div className="pr-room__content">

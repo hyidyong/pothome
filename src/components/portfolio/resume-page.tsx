@@ -36,7 +36,7 @@ export function ResumePage({ data }: ResumePageProps) {
   const summaryAwards = [
     {
       period: "2026년 7월 15일",
-      title: "Substudy 제품 개발 프로젝트 최우수상(1위)",
+      title: "첨단산업 인재양성 AI 부트캠프 Human AI Foundation 프로젝트 최우수상(1위)",
     },
     {
       period: "2026년 6월 20일",
