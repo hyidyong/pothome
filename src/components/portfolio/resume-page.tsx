@@ -33,6 +33,13 @@ export function ResumePage({ data }: ResumePageProps) {
     (entry) => entry.kind === "project",
   );
   const awards = experienceEntries.filter((entry) => entry.kind === "award");
+  const summaryAwards = [
+    {
+      period: "2026년 6월 20일",
+      title: "YLC 우수 운영진상",
+    },
+    ...awards,
+  ];
 
   return (
     <main className="resume-page">
@@ -103,12 +110,12 @@ export function ResumePage({ data }: ResumePageProps) {
               <h3 id="resume-summary-awards-heading">수상 내역</h3>
             </div>
             <ul>
-              {awards.map((entry) => (
+              {summaryAwards.map((entry) => (
                 <li key={entry.title}>
-                  <p>{entry.period}</p>
+                  <p className="resume-page__summary-award"><AwardIcon aria-hidden="true" /> 상장</p>
                   <div>
                     <h4>{entry.title}</h4>
-                    <span>{entry.summary}</span>
+                    <span>{entry.period}</span>
                   </div>
                 </li>
               ))}
@@ -210,7 +217,6 @@ export function ResumePage({ data }: ResumePageProps) {
               <p>{entry.period}</p>
               <div>
                 <h3>{entry.title}</h3>
-                <span>{entry.summary}</span>
               </div>
             </li>
           ))}
@@ -229,39 +235,15 @@ export function ResumePage({ data }: ResumePageProps) {
         <ul className="resume-page__credentials-list">
           {data.credentials.map((entry) => (
             <li key={entry.title}>
-              <p>{entry.period}</p>
+              <BadgeCheckIcon aria-hidden="true" />
               <div>
                 <h3>{entry.title}</h3>
-                <span>{entry.summary}</span>
+                <span>{entry.period}</span>
               </div>
             </li>
           ))}
         </ul>
       </section>
-
-      {data.credentials.length > 0 ? (
-        <section
-          className="resume-page__training resume-page__credentials"
-          aria-labelledby="resume-credentials-heading"
-        >
-          <div className="resume-page__training-heading">
-            <p>Credentials</p>
-            <h2 id="resume-credentials-heading">자격 및 면허</h2>
-          </div>
-          <ul className="resume-page__training-list">
-            {data.credentials.map((entry) => (
-              <li key={`${entry.period}-${entry.title}`}>
-                <BadgeCheckIcon aria-hidden="true" />
-                <div>
-                  <strong>{entry.title}</strong>
-                  <span>{entry.period}</span>
-                  <p>{entry.summary}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
 
       <footer className="resume-page__footer">
         <p>Evidence before claims.</p>

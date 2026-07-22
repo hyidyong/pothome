@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element -- images are private local-file streams, not deployable assets. */
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import type { AssetDecision, AssetPickerAsset } from "@/lib/asset-picker/repository";
@@ -45,6 +46,7 @@ export function AssetPicker({ assets: initialAssets, page = 1, total }: AssetPic
   return (
     <main className="asset-picker" aria-label="이미지 셀렉터">
       <header className="asset-picker__header">
+        <Link className="asset-picker__back" href="/admin">Back to admin</Link>
         <p>PRIVATE ASSET CATALOG</p>
         <h1>현장 갤러리 이미지 셀렉터</h1>
         <span>{total ?? assets.length}개 후보</span>

@@ -36,6 +36,9 @@ export function SiteFooter() {
         >
           대표 프로젝트 보기
         </Link>
+        <Link className="site-footer__admin-link" href="/admin" aria-label="관리자 페이지 열기">
+          관리
+        </Link>
       </div>
     </footer>
   );

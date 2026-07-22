@@ -6,6 +6,7 @@ import { rejectNonLocalAssetPickerRequest } from "@/lib/asset-picker/local-only"
 
 const desktopRoot = resolve(process.env.USERPROFILE ?? "", "OneDrive", "Desktop");
 const extractedRoot = resolve(process.cwd(), "tmp", "asset-picker-extracted");
+const uploadRoot = resolve(process.cwd(), "tmp", "asset-picker-uploads");
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const rejected = rejectNonLocalAssetPickerRequest(request);
@@ -17,7 +18,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   }
 
   const filePath = resolve(asset.file_path);
-  const isAllowedPath = [desktopRoot, extractedRoot].some((root) => {
+  const isAllowedPath = [desktopRoot, extractedRoot, uploadRoot].some((root) => {
     const candidate = relative(root, filePath);
     return !candidate.startsWith("..") && !isAbsolute(candidate);
   });
