@@ -1206,6 +1206,36 @@ button:not(:disabled),
   line-height: 1.65;
 }
 
+.site-footer__contact {
+  display: grid;
+  gap: 10px;
+  font-style: normal;
+}
+
+.site-footer__contact a {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 30px;
+  align-items: center;
+  gap: 9px;
+  color: var(--primary);
+  font-size: 0.875rem;
+  font-weight: 680;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--primary) 38%, transparent);
+  text-underline-offset: 0.32em;
+}
+
+.site-footer__contact a:hover,
+.site-footer__contact a:focus-visible {
+  text-decoration-color: var(--primary);
+}
+
+.site-footer__contact svg {
+  width: 16px;
+  height: 16px;
+}
+
 .site-footer__cta {
   min-width: 48px;
   min-height: 48px;

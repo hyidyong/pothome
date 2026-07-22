@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CodeIcon, MailIcon, PhoneIcon } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -12,6 +13,20 @@ export function SiteFooter() {
           전략기획을 중심으로 HR과 PM의 실행 문제까지 연결하는 문제
           해결자입니다.
         </p>
+        <address className="site-footer__contact" aria-label="연락처">
+          <a href="https://github.com/hyidyong" rel="noreferrer" target="_blank">
+            <CodeIcon aria-hidden="true" />
+            <span>github.com/hyidyong</span>
+          </a>
+          <a href="mailto:dudn4291@naver.com">
+            <MailIcon aria-hidden="true" />
+            <span>dudn4291@naver.com</span>
+          </a>
+          <a href="tel:01080286655">
+            <PhoneIcon aria-hidden="true" />
+            <span>010-8028-6655</span>
+          </a>
+        </address>
         <Link
           className={cn(
             buttonVariants({ variant: "default", size: "lg" }),

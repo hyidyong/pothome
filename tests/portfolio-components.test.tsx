@@ -278,4 +278,16 @@ it("gives the law lens and footer stable headings and safe internal links", () =
   expect(
     screen.getByRole("link", { name: "대표 프로젝트 보기" }),
   ).toHaveAttribute("href", "/work/global-technical-talent-strategy");
+  expect(screen.getByRole("link", { name: "github.com/hyidyong" })).toHaveAttribute(
+    "href",
+    "https://github.com/hyidyong",
+  );
+  expect(screen.getByRole("link", { name: "dudn4291@naver.com" })).toHaveAttribute(
+    "href",
+    "mailto:dudn4291@naver.com",
+  );
+  expect(screen.getByRole("link", { name: "010-8028-6655" })).toHaveAttribute(
+    "href",
+    "tel:01080286655",
+  );
 });
