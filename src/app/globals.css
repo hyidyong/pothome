@@ -825,6 +825,13 @@ button:not(:disabled),
 .content-studio__upload-form input, .content-studio__upload-form select, .content-studio__upload-form textarea { width: 100%; border: 1px solid var(--line); background: var(--background); color: var(--foreground); font: inherit; padding: 10px 11px; }
 .content-studio__upload-form button { justify-self: start; border: 0; background: var(--signal); color: #04130d; cursor: pointer; font: inherit; font-weight: 750; padding: 11px 15px; }
 .content-studio__upload-form button:disabled { cursor: wait; opacity: 0.65; }
+.content-studio__move { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; }
+.content-studio__move > span { width: 100%; color: var(--faint-foreground); font-size: 0.72rem; font-weight: 700; }
+.content-studio__move button { min-height: 34px; border: 1px solid var(--line); background: transparent; color: var(--foreground); font: inherit; font-size: 0.75rem; font-weight: 680; padding: 6px 9px; }
+.content-studio__move button:hover, .content-studio__move button:focus-visible { border-color: var(--signal); color: var(--signal); }
+.content-studio__move button:disabled { border-color: color-mix(in srgb, var(--signal) 45%, var(--line)); color: var(--signal); cursor: default; opacity: 0.8; }
+.site-footer__admin-link { align-self: start; margin-top: 4px; color: var(--faint-foreground); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 0.35em; transition: color 180ms ease, text-decoration-color 180ms ease; }
+.site-footer__admin-link:hover, .site-footer__admin-link:focus-visible { color: var(--signal); text-decoration-color: currentColor; }
 .content-studio__asset { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 16px; border: 1px solid #d7dbd7; background: #fff; }
 .content-studio__asset > img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #e7e9e6; }
 .content-studio__asset > div { display: grid; gap: 10px; }
@@ -1941,6 +1948,10 @@ button:not(:disabled),
   }
 
   .content-studio__gallery-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .content-studio__upload-form {
     grid-template-columns: minmax(0, 1fr);
   }
 }

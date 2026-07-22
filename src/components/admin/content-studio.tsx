@@ -68,6 +68,21 @@ export function ContentStudio({ assets, releases }: ContentStudioProps) {
     }
   };
 
+  const moveGallery = async (asset: GalleryAsset, category: GalleryAssetCategory) => {
+    if (asset.category === category) return;
+    try {
+      await request(`/api/admin/gallery/${asset.id}`, {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ category, title: asset.title, description: asset.description }),
+      });
+      setNotice(`“${asset.title}”의 분류를 옮겼습니다.`);
+      window.setTimeout(() => window.location.reload(), 350);
+    } catch {
+      setNotice("분류를 옮기지 못했습니다. 다시 시도해 주세요.");
+    }
+  };
+
   const createPress = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -109,7 +124,7 @@ export function ContentStudio({ assets, releases }: ContentStudioProps) {
       <div className="content-studio__gallery-list">{assets.map((asset) => <form className="content-studio__asset" key={asset.id} onSubmit={(event) => updateGallery(event, asset)}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={`/api/asset-picker/image/${asset.id}`} alt="" />
-        <div><label>제목<input name="title" defaultValue={asset.title} maxLength={120} required /></label><label>분류<select name="category" defaultValue={asset.category}>{categories.map((category) => <option key={category.value} value={category.value}>{category.label}</option>)}</select></label><label>설명<textarea name="description" defaultValue={asset.description ?? ""} maxLength={600} rows={3} /></label><div className="content-studio__actions"><button type="submit">설명 저장</button><button type="button" onClick={() => removeGallery(asset)}>갤러리에서 숨기기</button></div></div>
+        <div><label>제목<input name="title" defaultValue={asset.title} maxLength={120} required /></label><label>분류<select name="category" defaultValue={asset.category}>{categories.map((category) => <option key={category.value} value={category.value}>{category.label}</option>)}</select></label><label>설명<textarea name="description" defaultValue={asset.description ?? ""} maxLength={600} rows={3} /></label><div className="content-studio__move" role="group" aria-label={`${asset.title} 분류 이동`}><span>빠른 이동</span>{categories.map((category) => <button type="button" key={category.value} disabled={asset.category === category.value} onClick={() => moveGallery(asset, category.value)}>{category.label}</button>)}</div><div className="content-studio__actions"><button type="submit">설명 저장</button><button type="button" onClick={() => removeGallery(asset)}>갤러리에서 숨기기</button></div></div>
       </form>)}</div>
     </section>
     <section aria-labelledby="studio-press"><div className="content-studio__section-heading"><div><p>PR ROOM</p><h2 id="studio-press">보도자료</h2></div></div>
