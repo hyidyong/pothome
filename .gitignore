@@ -28,6 +28,7 @@ Thumbs.db
 /coverage/
 /tmp/asset-picker-extracted/
 /tmp/asset-picker-review-sheets/
+/tmp/asset-picker-uploads/
 
 # Local Superpowers state, sessions, and credentials
 /.superpowers/
