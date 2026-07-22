@@ -330,7 +330,11 @@ export function normalizeResumeData(input: unknown): ResumeData {
     (left, right) => left.sort_order - right.sort_order,
   )) {
     if (entry.section === "training") {
-      training.push({ title: entry.title });
+      training.push({
+        title: entry.title,
+        period: entry.period,
+        summary: entry.summary,
+      });
       continue;
     }
 

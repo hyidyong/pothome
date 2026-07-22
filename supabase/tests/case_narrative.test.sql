@@ -10,8 +10,8 @@ select is(
       on cases.id = sections.case_study_id
     where cases.status = 'published'
   ),
-  54,
-  'each of the six published cases has nine narrative sections'
+  45,
+  'each of the five published cases has nine narrative sections'
 );
 
 select ok(

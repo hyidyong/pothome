@@ -204,14 +204,14 @@ select results_eq(
 
 select results_eq(
   $$select count(*)::bigint from public.case_studies where status = 'published'$$,
-  array[6::bigint],
-  'six published cases are seeded'
+  array[5::bigint],
+  'five published cases are seeded'
 );
 
 select results_eq(
   $$select count(*)::bigint from public.case_study_metrics where verified is true$$,
-  array[18::bigint],
-  'exactly eighteen approved metrics are seeded'
+  array[15::bigint],
+  'exactly fifteen approved metrics are seeded'
 );
 
 select results_eq(
@@ -221,7 +221,7 @@ select results_eq(
     group by case_study_id
     order by case_study_id
   $$,
-  $$values (3::bigint), (3::bigint), (3::bigint), (3::bigint), (3::bigint), (3::bigint)$$,
+  $$values (3::bigint), (3::bigint), (3::bigint), (3::bigint), (3::bigint)$$,
   'each case has exactly three evidence rows'
 );
 
@@ -243,11 +243,10 @@ select results_eq(
     ('Global Technical Talent Strategy'::text),
     ('RE100 × CF100 Transition Strategy'::text),
     ('Fitory Market Validation'::text),
-    ('PaceMate Academic OS'::text),
-    ('Vietnam Beauty Growth Thesis'::text),
+    ('Substudy'::text),
     ('AI Prediction Regulation'::text)
   $$,
-  'the six cases retain the approved public order'
+  'the five approved cases retain the public order'
 );
 
 select results_eq(
@@ -472,14 +471,14 @@ set local role anon;
 
 select results_eq(
   $$select count(*)::bigint from public.case_studies$$,
-  array[6::bigint],
-  'anon sees exactly the six published cases'
+  array[5::bigint],
+  'anon sees exactly the five published cases'
 );
 
 select results_eq(
   $$select count(*)::bigint from public.case_study_metrics$$,
-  array[18::bigint],
-  'anon sees exactly the eighteen verified metrics of published cases'
+  array[15::bigint],
+  'anon sees exactly the fifteen verified metrics of published cases'
 );
 
 select results_eq(

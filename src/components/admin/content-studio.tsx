@@ -9,10 +9,9 @@ import type { PressRelease } from "@/lib/press-room/repository";
 type ContentStudioProps = { assets: GalleryAsset[]; releases: PressRelease[] };
 
 const categories: Array<{ value: GalleryAssetCategory; label: string }> = [
-  { value: "field", label: "현장" },
-  { value: "strategy", label: "전략" },
-  { value: "execution", label: "실행" },
-  { value: "product", label: "제품" },
+  { value: "result", label: "프로젝트 결과물" },
+  { value: "field", label: "현장 활동" },
+  { value: "credential", label: "수료 · 상장" },
 ];
 
 async function request(path: string, options: RequestInit) {
@@ -75,8 +74,8 @@ export function ContentStudio({ assets, releases }: ContentStudioProps) {
   return <main className="content-studio" id="main-content" tabIndex={-1}>
     <header className="content-studio__header"><p>LOCAL CONTENT STUDIO</p><h1>관리자 편집</h1><span>이 화면의 저장 API는 localhost에서만 작동합니다.</span></header>
     {notice ? <p className="content-studio__notice" role="status">{notice}</p> : null}
-    <section aria-labelledby="studio-gallery"><div className="content-studio__section-heading"><div><p>GALLERY</p><h2 id="studio-gallery">프로젝트 갤러리</h2></div><Link href="/asset-picker">사진 추가 화면 열기</Link></div>
-      <p className="content-studio__help">바탕화면에서 고른 사진은 여기에서 제목·설명·분류를 붙여 공개합니다. 숨기기는 원본 파일을 삭제하지 않습니다.</p>
+    <section aria-labelledby="studio-gallery"><div className="content-studio__section-heading"><div><p>GALLERY</p><h2 id="studio-gallery">프로젝트 갤러리</h2></div><Link href="/asset-picker">사진 추가</Link></div>
+      <p className="content-studio__help">사진 추가에서 선택한 사진은 여기에서 제목·설명·분류를 붙여 공개합니다. 숨기기는 원본 파일을 삭제하지 않습니다.</p>
       <div className="content-studio__gallery-list">{assets.map((asset) => <form className="content-studio__asset" key={asset.id} onSubmit={(event) => updateGallery(event, asset)}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={`/api/asset-picker/image/${asset.id}`} alt="" />

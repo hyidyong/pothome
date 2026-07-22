@@ -1,21 +1,46 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { X } from "lucide-react";
 import { useRef, useState, type KeyboardEvent } from "react";
 
 import { getGalleryMotionPolicy } from "@/components/portfolio/gallery-motion";
-import type { GalleryAsset, GalleryAssetCategory } from "@/lib/asset-picker/repository";
+import type {
+  GalleryAsset,
+  GalleryAssetCategory,
+} from "@/lib/asset-picker/repository";
 
-type ProjectGalleryProps = { assets: GalleryAsset[] };
-type EvidenceTab = Exclude<GalleryAssetCategory, "field">;
+type ProjectGalleryProps = {
+  assets: GalleryAsset[];
+  headingLevel?: 1 | 2;
+};
 
-const evidenceTabs: ReadonlyArray<{ value: EvidenceTab; label: string }> = [
-  { value: "strategy", label: "전략" },
-  { value: "execution", label: "실행" },
-  { value: "product", label: "제품" },
+const galleryTabs: ReadonlyArray<{
+  value: GalleryAssetCategory;
+  label: string;
+  eyebrow: string;
+  description: string;
+}> = [
+  {
+    value: "result",
+    label: "프로젝트 결과물",
+    eyebrow: "PROJECT OUTPUT",
+    description: "문제 정의부터 화면·문서·프로토타입까지, 실제 결과물을 모았습니다.",
+  },
+  {
+    value: "field",
+    label: "현장 활동",
+    eyebrow: "FIELD ACTIVITY",
+    description: "사람·운영·협업의 맥락이 보이는 현장 기록입니다.",
+  },
+  {
+    value: "credential",
+    label: "수료 · 상장",
+    eyebrow: "CERTIFICATES & AWARDS",
+    description: "수료증과 상장을 비롯해 공개 가능한 증빙을 정리했습니다.",
+  },
 ];
 
 if (typeof window !== "undefined" && typeof window.matchMedia === "function") {
@@ -57,20 +82,28 @@ function GalleryCard({
   );
 }
 
-export function ProjectGallery({ assets }: ProjectGalleryProps) {
+export function ProjectGallery({
+  assets,
+  headingLevel = 1,
+}: ProjectGalleryProps) {
   const rootRef = useRef<HTMLElement>(null);
   const sourceCardRef = useRef<HTMLButtonElement | null>(null);
   const [activeAsset, setActiveAsset] = useState<GalleryAsset | null>(null);
-  const [activeTab, setActiveTab] = useState<EvidenceTab>("strategy");
-  const fieldAssets = assets.filter((asset) => asset.category === "field");
-  const evidenceAssets = assets.filter((asset) => asset.category !== "field");
-  const tabAssets = evidenceAssets.filter((asset) => asset.category === activeTab);
+  const [activeCategory, setActiveCategory] =
+    useState<GalleryAssetCategory>("result");
+  const activeTab = galleryTabs.find((tab) => tab.value === activeCategory)!;
+  const visibleAssets = assets.filter(
+    (asset) => asset.category === activeCategory,
+  );
+  const Heading = `h${headingLevel}` as "h1" | "h2";
 
   useGSAP(
     () => {
       const root = rootRef.current;
       if (!root || typeof window.matchMedia !== "function") return;
-      const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-gallery-card]"));
+      const cards = Array.from(
+        root.querySelectorAll<HTMLElement>("[data-gallery-card]"),
+      );
       const media = gsap.matchMedia();
 
       media.add(
@@ -79,7 +112,10 @@ export function ProjectGallery({ assets }: ProjectGalleryProps) {
           reduceMotion: "(prefers-reduced-motion: reduce)",
         },
         (context) => {
-          const conditions = context.conditions as { isDesktop: boolean; reduceMotion: boolean };
+          const conditions = context.conditions as {
+            isDesktop: boolean;
+            reduceMotion: boolean;
+          };
           const policy = getGalleryMotionPolicy({
             width: window.innerWidth,
             reducedMotion: conditions.reduceMotion,
@@ -92,15 +128,14 @@ export function ProjectGallery({ assets }: ProjectGalleryProps) {
             rotation: (index: number) => (index % 2 ? 1.2 : -1.2),
             transformOrigin: "50% 100%",
           });
-          const reveal = gsap.timeline({
+          gsap.timeline({
             defaults: { duration: 0.78, ease: "power3.out" },
             scrollTrigger: {
               trigger: root,
               start: "top 72%",
               toggleActions: "play none none reverse",
             },
-          });
-          reveal.to(cards, {
+          }).to(cards, {
             autoAlpha: 1,
             y: 0,
             rotation: 0,
@@ -113,7 +148,11 @@ export function ProjectGallery({ assets }: ProjectGalleryProps) {
 
       return () => media.revert();
     },
-    { scope: rootRef, dependencies: [assets.length], revertOnUpdate: true },
+    {
+      scope: rootRef,
+      dependencies: [assets.length, activeCategory],
+      revertOnUpdate: true,
+    },
   );
 
   const openAsset = (asset: GalleryAsset, element: HTMLButtonElement) => {
@@ -129,10 +168,13 @@ export function ProjectGallery({ assets }: ProjectGalleryProps) {
       reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     });
     if (!policy.hover) return;
-    const cards = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-gallery-card]"));
+    const cards = Array.from(
+      root.querySelectorAll<HTMLButtonElement>("[data-gallery-card]"),
+    );
     const activeIndex = activeElement ? cards.indexOf(activeElement) : -1;
     gsap.to(cards, {
-      x: (index: number) => (activeIndex < 0 ? 0 : index < activeIndex ? -12 : index > activeIndex ? 12 : 0),
+      x: (index: number) =>
+        activeIndex < 0 ? 0 : index < activeIndex ? -12 : index > activeIndex ? 12 : 0,
       y: (index: number) => (index === activeIndex ? -14 : 0),
       scale: (index: number) => (index === activeIndex ? 1.025 : 1),
       rotation: (index: number) => (index === activeIndex ? 0.6 : 0),
@@ -151,50 +193,92 @@ export function ProjectGallery({ assets }: ProjectGalleryProps) {
     if (event.key === "Escape") closeAsset();
   };
 
-  const shelfAssets = fieldAssets.length ? fieldAssets : assets.slice(0, 6);
-
   return (
-    <section className="project-gallery" ref={rootRef} aria-labelledby="project-gallery-heading">
+    <section
+      id="gallery"
+      className="project-gallery"
+      ref={rootRef}
+      aria-labelledby="project-gallery-heading"
+    >
       <header className="project-gallery__header">
         <p>PROJECT GALLERY</p>
         <div>
-          <h1 id="project-gallery-heading">프로젝트 갤러리</h1>
-          <p>현장과 실행의 기록을 같은 비율의 카드로 정리했습니다. 카드를 선택하면 원본을 편하게 확인할 수 있습니다.</p>
+          <Heading id="project-gallery-heading">프로젝트 갤러리</Heading>
+          <p>
+            결과물, 현장 활동, 수료·상장을 분리해 필요한 기록만 빠르게
+            살펴볼 수 있습니다.
+          </p>
         </div>
       </header>
 
-      <section className="project-gallery__panel" aria-label="현장 갤러리">
-        <div className="project-gallery__panel-intro">
-          <p>FIELD GALLERY</p>
-          <h2>현장 갤러리</h2>
-          <span>책장처럼 나열된 기록입니다. 데스크톱에서는 살짝 꺼내어 보듯 반응합니다.</span>
-        </div>
-        <div className="project-gallery__fan" data-gallery-fan>
-          {shelfAssets.map((asset) => <GalleryCard asset={asset} key={asset.id} onOpen={openAsset} onHover={hoverCard} />)}
-        </div>
-      </section>
+      <div className="project-gallery__tabs" role="tablist" aria-label="갤러리 분류">
+        {galleryTabs.map((tab) => (
+          <button
+            type="button"
+            key={tab.value}
+            id={`gallery-tab-${tab.value}`}
+            role="tab"
+            aria-controls={`gallery-panel-${tab.value}`}
+            aria-selected={activeCategory === tab.value}
+            onClick={() => setActiveCategory(tab.value)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
-      <section className="project-gallery__panel project-gallery__panel--evidence" aria-label="증빙 자료">
+      <section
+        className="project-gallery__panel"
+        id={`gallery-panel-${activeCategory}`}
+        role="tabpanel"
+        aria-labelledby={`gallery-tab-${activeCategory}`}
+      >
         <div className="project-gallery__panel-intro">
-          <p>DOCUMENTED WORK</p>
-          <h2>증빙 자료</h2>
-          <div className="project-gallery__tabs" role="tablist" aria-label="증빙 자료 분류">
-            {evidenceTabs.map((tab) => (
-              <button type="button" key={tab.value} role="tab" aria-selected={activeTab === tab.value} onClick={() => setActiveTab(tab.value)}>
-                {tab.label}
-              </button>
+          <p>{activeTab.eyebrow}</p>
+          <h2>{activeTab.label}</h2>
+          <span>{activeTab.description}</span>
+        </div>
+        {visibleAssets.length > 0 ? (
+          <div className="project-gallery__grid">
+            {visibleAssets.map((asset) => (
+              <GalleryCard
+                asset={asset}
+                key={asset.id}
+                onOpen={openAsset}
+                onHover={hoverCard}
+              />
             ))}
           </div>
-        </div>
-        <div className="project-gallery__grid" role="tabpanel" aria-label={`${evidenceTabs.find((tab) => tab.value === activeTab)?.label ?? "증빙"} 자료`}>
-          {(tabAssets.length ? tabAssets : evidenceAssets).map((asset) => <GalleryCard asset={asset} key={asset.id} onOpen={openAsset} onHover={hoverCard} />)}
-        </div>
+        ) : (
+          <p className="project-gallery__empty">
+            관리자 페이지에서 사진을 추가하고 이 분류를 지정하면 여기에 표시됩니다.
+          </p>
+        )}
       </section>
 
       {activeAsset ? (
-        <div className="project-gallery__dialog-backdrop" role="presentation" onMouseDown={closeAsset}>
-          <div className="project-gallery__dialog" role="dialog" aria-modal="true" aria-label={`${activeAsset.label} 상세 보기`} tabIndex={-1} onKeyDown={onOverlayKeyDown} onMouseDown={(event) => event.stopPropagation()}>
-            <button className="project-gallery__close" type="button" onClick={closeAsset} aria-label="상세 보기 닫기"><X size={20} aria-hidden="true" /></button>
+        <div
+          className="project-gallery__dialog-backdrop"
+          role="presentation"
+          onMouseDown={closeAsset}
+        >
+          <div
+            className="project-gallery__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${activeAsset.label} 상세 보기`}
+            tabIndex={-1}
+            onKeyDown={onOverlayKeyDown}
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <button
+              className="project-gallery__close"
+              type="button"
+              onClick={closeAsset}
+              aria-label="상세 보기 닫기"
+            >
+              <X size={20} aria-hidden="true" />
+            </button>
             <div className="project-gallery__image-scroll">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={imageSource(activeAsset)} alt={`${activeAsset.title} 원본`} />
@@ -203,7 +287,10 @@ export function ProjectGallery({ assets }: ProjectGalleryProps) {
               <p>{activeAsset.label}</p>
               <h2>{activeAsset.title}</h2>
               <span>{activeAsset.sourceGroup}</span>
-              <p className="project-gallery__description">{activeAsset.description ?? "관리자 화면에서 이 사진의 맥락과 역할을 추가할 수 있습니다."}</p>
+              <p className="project-gallery__description">
+                {activeAsset.description ??
+                  "관리자 화면에서 이 사진의 맥락과 역할을 추가할 수 있습니다."}
+              </p>
             </div>
           </div>
         </div>

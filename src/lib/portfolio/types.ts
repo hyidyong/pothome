@@ -69,7 +69,11 @@ export type ResumeEntry = {
 
 export type ResumeYear = { year: number; entries: ResumeEntry[] };
 
-export type ResumeTrainingEntry = { title: string };
+export type ResumeTrainingEntry = {
+  title: string;
+  period: string;
+  summary: string;
+};
 
 export type ResumeCredentialEntry = {
   title: string;

@@ -262,7 +262,11 @@ describe("PortfolioRepository metric query filters", () => {
       },
     ]);
     expect(resume.training).toEqual([
-      { title: "Human AI Foundation completion" },
+      {
+        title: "Human AI Foundation completion",
+        period: "Year undisclosed",
+        summary: "A publicly listed training completion.",
+      },
     ]);
     expect(resume.credentials).toEqual([]);
   });

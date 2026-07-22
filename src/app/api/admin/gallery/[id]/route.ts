@@ -8,7 +8,7 @@ import {
 import { rejectNonLocalAssetPickerRequest } from "@/lib/asset-picker/local-only";
 
 const metadataSchema = z.object({
-  category: z.enum(["field", "strategy", "execution", "product"]),
+  category: z.enum(["field", "result", "credential"]),
   title: z.string().trim().min(1).max(120),
   description: z.string().trim().max(600).nullable(),
 });

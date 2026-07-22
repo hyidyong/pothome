@@ -16,7 +16,7 @@ export type AssetPickerAsset = {
   decision: AssetDecision;
 };
 
-export type GalleryAssetCategory = "field" | "strategy" | "execution" | "product";
+export type GalleryAssetCategory = "field" | "result" | "credential";
 
 export type GalleryAsset = {
   id: string;
@@ -126,16 +126,13 @@ function classifyGalleryAsset(
 ): Pick<GalleryAsset, "category" | "label"> {
   const source = `${sourceGroup} ${fileName}`.toLowerCase();
 
-  if (/(해커톤|청년창업|kakaotalk)/.test(source)) {
-    return { category: "field", label: "현장 기록" };
+  if (/(수료|상장|상패|award|certificate|certification)/.test(source)) {
+    return { category: "credential", label: "수료 · 상장" };
   }
-  if (/(피토리|fitory|prototype|product)/.test(source)) {
-    return { category: "product", label: "제품 실행" };
+  if (/(해커톤|청년창업|kakaotalk|활동|현장)/.test(source)) {
+    return { category: "field", label: "현장 활동" };
   }
-  if (/(ylc|지원|실행|캡처|form)/.test(source)) {
-    return { category: "execution", label: "실행 증빙" };
-  }
-  return { category: "strategy", label: "전략 증빙" };
+  return { category: "result", label: "프로젝트 결과물" };
 }
 
 function mapGalleryAsset(
@@ -150,10 +147,9 @@ function mapGalleryAsset(
   const fallback = classifyGalleryAsset(fileName, sourceGroup);
   const resolvedCategory = (category as GalleryAssetCategory | null) ?? fallback.category;
   const labels: Record<GalleryAssetCategory, string> = {
-    field: "현장 기록",
-    strategy: "전략 증빙",
-    execution: "실행 증빙",
-    product: "제품 실행",
+    field: "현장 활동",
+    result: "프로젝트 결과물",
+    credential: "수료 · 상장",
   };
   return {
     id,

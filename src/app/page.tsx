@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { HomePage } from "@/components/portfolio/home-page";
+import { getSelectedGalleryAssets } from "@/lib/asset-picker/repository";
 import { createPortfolioRepository } from "@/lib/portfolio/repository";
 
 export const revalidate = 3600;
@@ -14,7 +15,10 @@ export const metadata: Metadata = {
 const repository = createPortfolioRepository();
 
 export default async function Home() {
-  const data = await repository.getHomePageData();
+  const [data, galleryAssets] = await Promise.all([
+    repository.getHomePageData(),
+    getSelectedGalleryAssets().catch(() => []),
+  ]);
 
-  return <HomePage data={data} />;
+  return <HomePage data={data} galleryAssets={galleryAssets} />;
 }

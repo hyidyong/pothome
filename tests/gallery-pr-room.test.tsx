@@ -8,9 +8,9 @@ import type { GalleryAsset } from "@/lib/asset-picker/repository";
 import type { PressRelease } from "@/lib/press-room/repository";
 
 const assets = [
-  { id: "ea222cac-a481-4e04-a55b-ca740ede4680", fileName: "field.jpg", sourceGroup: "현장", mimeType: "image/jpeg", category: "field", label: "현장 기록", title: "워크숍 현장", description: "참여자 논의 장면" },
-  { id: "37b1a405-9c14-427c-99cb-bcd8d0efa53b", fileName: "strategy.png", sourceGroup: "REWORK", mimeType: "image/png", category: "strategy", label: "전략 증빙", title: "리서치 보드", description: null },
-  { id: "0ce9ad01-2a59-4054-b4e3-21acdcaed056", fileName: "product.png", sourceGroup: "Fitory", mimeType: "image/png", category: "product", label: "제품 실행", title: "프로토타입", description: null },
+  { id: "ea222cac-a481-4e04-a55b-ca740ede4680", fileName: "field.jpg", sourceGroup: "현장", mimeType: "image/jpeg", category: "field", label: "현장 활동", title: "워크숍 현장", description: "참여자 논의 장면" },
+  { id: "37b1a405-9c14-427c-99cb-bcd8d0efa53b", fileName: "result.png", sourceGroup: "REWORK", mimeType: "image/png", category: "result", label: "프로젝트 결과물", title: "리서치 보드", description: null },
+  { id: "0ce9ad01-2a59-4054-b4e3-21acdcaed056", fileName: "certificate.png", sourceGroup: "YLC", mimeType: "image/png", category: "credential", label: "수료 · 상장", title: "수료증", description: null },
 ] satisfies GalleryAsset[];
 
 const releases = [
@@ -20,9 +20,11 @@ const releases = [
 describe("ProjectGallery", () => {
   it("uses uniform cards, category tabs, and a quiet detail reader", () => {
     render(<ProjectGallery assets={assets} />);
-    const field = screen.getByRole("region", { name: "현장 갤러리" });
-    fireEvent.click(within(field).getByRole("button", { name: /현장 기록: 워크숍 현장/ }));
-    const dialog = screen.getByRole("dialog", { name: "현장 기록 상세 보기" });
+    const gallery = screen.getByRole("region", { name: "프로젝트 갤러리" });
+    expect(within(gallery).getByRole("tab", { name: "프로젝트 결과물" })).toHaveAttribute("aria-selected", "true");
+    fireEvent.click(within(gallery).getByRole("tab", { name: "현장 활동" }));
+    fireEvent.click(within(gallery).getByRole("button", { name: /현장 활동: 워크숍 현장/ }));
+    const dialog = screen.getByRole("dialog", { name: "현장 활동 상세 보기" });
     expect(within(dialog).getByRole("heading", { name: "워크숍 현장" })).toBeInTheDocument();
     expect(within(dialog).getByText("참여자 논의 장면")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "상세 보기 닫기" }));
@@ -35,7 +37,12 @@ describe("PrRoom", () => {
     const { rerender } = render(<PrRoom releases={releases} />);
     const region = screen.getByRole("region", { name: "PR Room" });
     expect(within(region).getByText("한겨레")).toBeInTheDocument();
-    expect(within(region).getByRole("heading", { level: 2, name: releases[0].headline })).toBeInTheDocument();
+    expect(
+      within(region).getByRole("heading", {
+        level: 2,
+        name: releases[0]!.headline,
+      }),
+    ).toBeInTheDocument();
     rerender(<PrRoom releases={[]} />);
     expect(screen.getByText("공개된 보도자료가 아직 없습니다.")).toBeInTheDocument();
   });
